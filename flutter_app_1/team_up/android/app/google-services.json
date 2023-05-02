@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1052346169801",
+    "project_id": "team-up1",
+    "storage_bucket": "team-up1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1052346169801:android:7b7bc7b7944e93437f9018",
+        "android_client_info": {
+          "package_name": "com.example.team_up"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1052346169801-fk9lagjq5e8qg3bisg4hd37f4ckbndhl.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.team_up",
+            "certificate_hash": "660aeb34c2e40b6f8dfe2a90e5f2694c1e4665a4"
+          }
+        },
+        {
+          "client_id": "1052346169801-i6n8jh6g9uhj2f577qu31dqc3pehhgko.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyArefn51xvUEz4fUrLGCOqK_vuXZDfmbs8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1052346169801-i6n8jh6g9uhj2f577qu31dqc3pehhgko.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
