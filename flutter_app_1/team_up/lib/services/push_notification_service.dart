@@ -1,12 +1,19 @@
 import 'dart:io';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/material.dart';
 
 class PushNotificationService {
   static final FirebaseMessaging firebase_messenger =
       FirebaseMessaging.instance;
 
   final CHANNEL_ID = "Notification";
+
+  static Future<void> _firebaseMessagingBackgroundHandler(
+      RemoteMessage message) async {
+    print(
+        'Received a message while the app is in the background: ${message.notification}');
+  }
 
   static Future initialize() async {
     if (Platform.isIOS) {
@@ -22,11 +29,6 @@ class PushNotificationService {
       //NotificationChannel channel =
     });
 
-    FirebaseMessaging.onBackgroundMessage((RemoteMessage message) async {
-      if (message != null) {
-        print(
-            "Received a message while running in the background: ${message.notification}");
-      }
-    });
+    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   }
 }
