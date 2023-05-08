@@ -16,13 +16,17 @@ class PushNotificationService {
     }
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      print("Received a message: ${message.notification}");
+      if (message != null) {
+        print("Received a message: ${message.notification}");
+      }
       //NotificationChannel channel =
     });
 
     FirebaseMessaging.onBackgroundMessage((RemoteMessage message) async {
-      print(
-          "Received a message while running in the background: ${message.notification}");
+      if (message != null) {
+        print(
+            "Received a message while running in the background: ${message.notification}");
+      }
     });
   }
 }
