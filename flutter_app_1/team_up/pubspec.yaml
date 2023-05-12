@@ -40,6 +40,11 @@ dependencies:
   firebase_auth: ^4.4.2
   firebase_messaging: ^14.0.5
 
+  flutter_local_notifications: ^14.0.0+2
+  android_intent_plus: ^4.0.0 
+  flutter_logs: ^2.1.10
+  #ringtone_manager: ^0.2.3
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
