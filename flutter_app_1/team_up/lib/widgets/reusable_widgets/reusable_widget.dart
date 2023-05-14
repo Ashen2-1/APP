@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:team_up/constants/colors.dart';
 
 Image logoWidget(String imageName) {
   return Image.asset(
@@ -36,6 +37,32 @@ TextField reusableTextField(String text, IconData icon, bool isPasswordType,
     keyboardType: isPasswordType
         ? TextInputType.visiblePassword
         : TextInputType.emailAddress,
+  );
+}
+
+SizedBox reusableTextFieldRegular(
+    String text, TextEditingController controller, bool isStatusLabel) {
+  return SizedBox(
+    height: isStatusLabel ? 20.0 : 50.0,
+    child: TextField(
+      controller: controller,
+      cursorColor: Colors.black87,
+      style: TextStyle(color: Colors.black87.withOpacity(0.9)),
+      decoration: InputDecoration(
+        labelText: text,
+        labelStyle: TextStyle(color: Colors.black87.withOpacity(0.9)),
+        filled: true,
+        floatingLabelBehavior: FloatingLabelBehavior.never,
+        fillColor: isStatusLabel
+            ? tdBGColor
+            : Color.fromARGB(255, 199, 196, 196).withOpacity(0.3),
+        border: OutlineInputBorder(
+            borderRadius: isStatusLabel
+                ? BorderRadius.circular(10.0)
+                : BorderRadius.circular(30.0),
+            borderSide: const BorderSide(width: 0, style: BorderStyle.none)),
+      ),
+    ),
   );
 }
 

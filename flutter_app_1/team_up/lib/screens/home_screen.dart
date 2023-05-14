@@ -3,12 +3,36 @@ import 'package:flutter/material.dart';
 import '../constants/colors.dart';
 import '../widgets/reusable_widgets/reusable_widget.dart';
 import '../widgets/widgets.dart';
+import 'package:team_up/services/database_access.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
   @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  final TextEditingController _categoryTextController = TextEditingController();
+  final TextEditingController _taskTextController = TextEditingController();
+  final TextEditingController _dueDateTextController = TextEditingController();
+  final TextEditingController _skillsRequiredController =
+      TextEditingController();
+  final TextEditingController _estimatedTimeController =
+      TextEditingController();
+
+  final TextEditingController _submissionController = TextEditingController();
+
+  @override
   Widget build(BuildContext context) {
+    List<TextEditingController> controllerList = [
+      _categoryTextController,
+      _taskTextController,
+      _dueDateTextController,
+      _skillsRequiredController,
+      _estimatedTimeController
+    ];
+
     return Scaffold(
       backgroundColor: tdBGColor,
       appBar: _buildAppBar(),
@@ -36,7 +60,29 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
             ),
-            addToDatabaseButton(context),
+            reusableTextFieldRegular(
+                "Enter Subteam", _categoryTextController, false),
+            reusableTextFieldRegular(
+                "Enter Specific Task", _taskTextController, false),
+            reusableTextFieldRegular(
+                "Enter due date for task", _dueDateTextController, false),
+            reusableTextFieldRegular("Enter skills required for task",
+                _skillsRequiredController, false),
+            reusableTextFieldRegular(
+                "Enter estimated time needed", _estimatedTimeController, false),
+            addToDatabaseButton(context, () {
+              DatabaseAccess.getInstance().addToDatabase(
+                  _categoryTextController.text, _taskTextController.text, {
+                "estimated time": _estimatedTimeController.text,
+                "due date": _dueDateTextController.text,
+                "skills needed": _skillsRequiredController.text
+              });
+              for (TextEditingController controller in controllerList) {
+                controller.clear();
+              }
+              _submissionController.text = "Submitted!";
+            }),
+            reusableTextFieldRegular("", _submissionController, true),
           ],
         ),
       ),

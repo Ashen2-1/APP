@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:team_up/services/database_access.dart';
 
-Container addToDatabaseButton(BuildContext context) {
+Container addToDatabaseButton(BuildContext context, Function onPressed) {
   return Container(
     width: MediaQuery.of(context).size.width,
     height: 50,
@@ -9,8 +8,7 @@ Container addToDatabaseButton(BuildContext context) {
     decoration: BoxDecoration(borderRadius: BorderRadius.circular(90)),
     child: ElevatedButton(
       onPressed: () {
-        DatabaseAccess.getInstance().addToDatabase("tasks", "Assemble DT",
-            const {"time": 20, "due date": "May 23, 2023"});
+        onPressed();
       },
       style: ButtonStyle(
           backgroundColor: MaterialStateProperty.resolveWith((states) {
