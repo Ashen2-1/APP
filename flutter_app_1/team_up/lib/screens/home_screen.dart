@@ -36,7 +36,7 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
             ),
-            // addToDatabaseButton(context),
+            addToDatabaseButton(context),
           ],
         ),
       ),
