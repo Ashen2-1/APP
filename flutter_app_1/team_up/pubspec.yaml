@@ -43,6 +43,7 @@ dependencies:
   flutter_local_notifications: ^14.0.0+2
   android_intent_plus: ^4.0.0 
   flutter_logs: ^2.1.10
+  #cloud_firestore: ^4.7.0
   #ringtone_manager: ^0.2.3
 
 dev_dependencies:
