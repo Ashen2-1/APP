@@ -62,7 +62,7 @@ class PushNotificationService {
     FlutterLogs.logInfo("Push Notification Service", "Send Notification",
         "Sending Notification");
 
-    final String channelId = notification.data["channelId"];
+    final String channelId = "notif"; //notification.data["channelId"];
     // final Uri defaultSoundUri = RingtoneManager.getDefaultUri(
     //   RingtoneManager.TYPE_NOTIFICATION,
     // );
