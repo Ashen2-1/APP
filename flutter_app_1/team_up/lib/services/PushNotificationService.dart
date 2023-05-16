@@ -74,7 +74,7 @@ class PushNotificationService {
         //"Channel description",
         importance: Importance.defaultImportance,
         priority: Priority.defaultPriority,
-        sound: const RawResourceAndroidNotificationSound("notification"),
+        //sound: const RawResourceAndroidNotificationSound("notification"),
         playSound: true,
       ),
     );
@@ -87,7 +87,7 @@ class PushNotificationService {
       notification.notification?.title,
       notification.notification?.body,
       notificationDetails,
-      payload: notification.data["payload"],
+      //payload: notification.data["payload"],
     );
 
     FlutterLogs.logInfo(
