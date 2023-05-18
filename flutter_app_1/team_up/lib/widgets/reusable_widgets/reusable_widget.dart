@@ -66,6 +66,26 @@ SizedBox reusableTextFieldRegular(
   );
 }
 
+SizedBox regularTextField(String text) {
+  return SizedBox(
+    height: 30.0,
+    child: TextField(
+      cursorColor: Colors.black87,
+      style: TextStyle(color: Colors.black87.withOpacity(0.9)),
+      decoration: InputDecoration(
+        labelText: text,
+        labelStyle: TextStyle(color: Colors.black87.withOpacity(0.9)),
+        filled: true,
+        floatingLabelBehavior: FloatingLabelBehavior.never,
+        fillColor: const Color.fromARGB(255, 199, 196, 196).withOpacity(0.3),
+        border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(30.0),
+            borderSide: const BorderSide(width: 0, style: BorderStyle.none)),
+      ),
+    ),
+  );
+}
+
 Container signInSignUpButton(
     BuildContext context, bool isLogin, Function onTap) {
   return Container(

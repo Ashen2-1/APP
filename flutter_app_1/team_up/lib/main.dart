@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:team_up/screens/signin_screen.dart';
+import 'package:team_up/screens/student_progress_screen.dart';
 import 'package:team_up/services/PushNotificationService.dart';
 import 'package:flutter_logs/flutter_logs.dart';
 
@@ -50,7 +51,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: const SignInScreen(),
+      home: const StudentProgressScreen(), //const SignInScreen(),
     );
   }
 }
