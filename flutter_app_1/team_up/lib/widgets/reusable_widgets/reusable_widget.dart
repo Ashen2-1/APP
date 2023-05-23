@@ -66,6 +66,27 @@ SizedBox reusableTextFieldRegular(
   );
 }
 
+SizedBox textFieldInfo(String text, TextEditingController controller) {
+  return SizedBox(
+    height: 80.0,
+    child: TextField(
+      controller: controller,
+      cursorColor: Colors.black87,
+      style: TextStyle(color: Colors.black87.withOpacity(0.9)),
+      decoration: InputDecoration(
+        labelText: text,
+        labelStyle: TextStyle(color: Colors.black87.withOpacity(0.9)),
+        filled: true,
+        floatingLabelBehavior: FloatingLabelBehavior.never,
+        //fillColor: tdBGColor, 
+        border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(30.0),
+            borderSide: const BorderSide(width: 0, style: BorderStyle.none)),
+      ),
+    ),
+  );
+}
+
 SizedBox regularTextField(String text) {
   return SizedBox(
     height: 30.0,

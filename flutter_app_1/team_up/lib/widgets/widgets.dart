@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-Container addToDatabaseButton(BuildContext context, Function onPressed) {
+Container reusableButton(
+    String text, BuildContext context, Function onPressed) {
   return Container(
     width: MediaQuery.of(context).size.width,
     height: 50,
@@ -19,9 +20,9 @@ Container addToDatabaseButton(BuildContext context, Function onPressed) {
           }),
           shape: MaterialStateProperty.all<RoundedRectangleBorder>(
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)))),
-      child: const Text(
-        "ADD TO DATABASE",
-        style: TextStyle(
+      child: Text(
+        text,
+        style: const TextStyle(
             color: Color.fromARGB(221, 243, 181, 24),
             fontWeight: FontWeight.bold,
             fontSize: 16),

@@ -70,7 +70,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 _skillsRequiredController, false),
             reusableTextFieldRegular(
                 "Enter estimated time needed", _estimatedTimeController, false),
-            addToDatabaseButton(context, () {
+            reusableButton("ADD TO DATABASE", context, () {
               DatabaseAccess.getInstance().addToDatabase(
                   _categoryTextController.text, _taskTextController.text, {
                 "estimated time": _estimatedTimeController.text,
