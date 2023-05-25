@@ -13,7 +13,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final TextEditingController _categoryTextController = TextEditingController();
+  final TextEditingController _subTeamTextController = TextEditingController();
   final TextEditingController _taskTextController = TextEditingController();
   final TextEditingController _dueDateTextController = TextEditingController();
   final TextEditingController _skillsRequiredController =
@@ -26,7 +26,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     List<TextEditingController> controllerList = [
-      _categoryTextController,
+      _subTeamTextController,
       _taskTextController,
       _dueDateTextController,
       _skillsRequiredController,
@@ -61,7 +61,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             reusableTextFieldRegular(
-                "Enter Subteam", _categoryTextController, false),
+                "Enter Subteam", _subTeamTextController, false),
             reusableTextFieldRegular(
                 "Enter Specific Task", _taskTextController, false),
             reusableTextFieldRegular(
@@ -71,8 +71,9 @@ class _HomeScreenState extends State<HomeScreen> {
             reusableTextFieldRegular(
                 "Enter estimated time needed", _estimatedTimeController, false),
             reusableButton("ADD TO DATABASE", context, () {
-              DatabaseAccess.getInstance().addToDatabase(
-                  _categoryTextController.text, _taskTextController.text, {
+              DatabaseAccess.getInstance()
+                  .addToDatabase("Tasks", _subTeamTextController.text, {
+                "task": _taskTextController.text,
                 "estimated time": _estimatedTimeController.text,
                 "due date": _dueDateTextController.text,
                 "skills needed": _skillsRequiredController.text

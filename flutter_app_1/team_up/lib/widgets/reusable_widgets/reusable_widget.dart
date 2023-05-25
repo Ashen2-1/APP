@@ -66,43 +66,40 @@ SizedBox reusableTextFieldRegular(
   );
 }
 
-SizedBox textFieldInfo(String text, TextEditingController controller) {
-  return SizedBox(
-    height: 80.0,
-    child: TextField(
-      controller: controller,
-      cursorColor: Colors.black87,
-      style: TextStyle(color: Colors.black87.withOpacity(0.9)),
-      decoration: InputDecoration(
-        labelText: text,
-        labelStyle: TextStyle(color: Colors.black87.withOpacity(0.9)),
-        filled: true,
-        floatingLabelBehavior: FloatingLabelBehavior.never,
-        //fillColor: tdBGColor, 
-        border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(30.0),
-            borderSide: const BorderSide(width: 0, style: BorderStyle.none)),
-      ),
-    ),
-  );
+Container textFieldTaskInfo(
+    String taskTextController,
+    String dueDateTextController,
+    String instructionsTextController,
+    BuildContext context) {
+  return Container(
+      height: 100.0,
+      //width: 200.0, //MediaQuery.of(context).size.width,
+      // decoration: BoxDecoration(
+      //   color: Color.fromARGB(255, 193, 184, 184).withOpacity(0.3),
+      //   shape: BoxShape.circle,
+      //   border: Border.all(
+      //     color: Colors.black,
+      //     width: 2,
+      //   ),
+      // ),
+      color: Color.fromARGB(255, 193, 184, 184).withOpacity(0.3),
+      child: ListView(children: [
+        regularText(taskTextController, context, true),
+        regularText(dueDateTextController, context, false),
+        regularText(instructionsTextController, context, false)
+      ]));
 }
 
-SizedBox regularTextField(String text) {
+SizedBox regularText(String text, BuildContext context, bool isTitle) {
   return SizedBox(
     height: 30.0,
-    child: TextField(
-      cursorColor: Colors.black87,
-      style: TextStyle(color: Colors.black87.withOpacity(0.9)),
-      decoration: InputDecoration(
-        labelText: text,
-        labelStyle: TextStyle(color: Colors.black87.withOpacity(0.9)),
-        filled: true,
-        floatingLabelBehavior: FloatingLabelBehavior.never,
-        fillColor: const Color.fromARGB(255, 199, 196, 196).withOpacity(0.3),
-        border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(30.0),
-            borderSide: const BorderSide(width: 0, style: BorderStyle.none)),
-      ),
+    //width: MediaQuery.of(context).size.width -
+    //(MediaQuery.of(context).size.width / 100),
+    child: Text(
+      // style: TextStyle(color: Colors.black87.withOpacity(0.9)),
+      text, // Pass as parameter for the display text
+      selectionColor: isTitle ? Colors.black87 : Colors.black54,
+      textScaleFactor: isTitle ? 1.5 : 1.0,
     ),
   );
 }
