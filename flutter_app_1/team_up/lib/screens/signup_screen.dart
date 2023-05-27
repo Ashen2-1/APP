@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:team_up/widgets/reusable_widgets/reusable_widget.dart';
-import 'package:team_up/screens/home_screen.dart';
+import 'package:team_up/screens/add_tasks_screen.dart';
 import 'package:team_up/utils/color_utils.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -68,8 +68,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           password: _passwordTextController.text)
                       .then((value) {
                     print("Created New Account");
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => HomeScreen()));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => AddTasksScreen()));
                   }).onError((error, stackTrace) {
                     print("Error ${error.toString()}");
                   });

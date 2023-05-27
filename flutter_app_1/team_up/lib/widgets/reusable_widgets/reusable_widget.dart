@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:team_up/constants/colors.dart';
+import 'package:team_up/screens/page_navigation_screen.dart';
+import 'package:team_up/utils/configuration_util.dart';
+import 'package:team_up/widgets/widgets.dart';
 
 Image logoWidget(String imageName) {
   return Image.asset(
@@ -81,12 +84,12 @@ Container textFieldTaskInfo(
       //     color: Colors.black,
       //     width: 2,
       //   ),
-      // ),
       color: Color.fromARGB(255, 193, 184, 184).withOpacity(0.3),
       child: ListView(children: [
         regularText(taskTextController, context, true),
         regularText(dueDateTextController, context, false),
-        regularText(instructionsTextController, context, false)
+        regularText(instructionsTextController, context, false),
+        //reusableButton("Sign up for task", context, () {})
       ]));
 }
 
@@ -129,6 +132,29 @@ Container signInSignUpButton(
           }),
           shape: MaterialStateProperty.all<RoundedRectangleBorder>(
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)))),
+    ),
+  );
+}
+
+AppBar buildAppBar(void Function()? toggleExtended) {
+  return AppBar(
+    backgroundColor: tdBGColor,
+    elevation: 0,
+    title: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        IconButton(
+            icon: Icon(Icons.menu, color: tdBlack, size: 30),
+            onPressed: toggleExtended),
+        Container(
+          height: 50,
+          width: 50,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(25),
+            child: Image.asset("assets/images/avatar.jpeg"),
+          ),
+        ),
+      ],
     ),
   );
 }

@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_logs/flutter_logs.dart';
-import 'package:team_up/screens/home_screen.dart';
+import 'package:team_up/screens/add_tasks_screen.dart';
+import 'package:team_up/screens/page_navigation_screen.dart';
 import 'package:team_up/services/database_access.dart';
+import 'package:team_up/utils/configuration_util.dart';
 import 'package:team_up/widgets/reusable_widgets/reusable_widget.dart';
 import 'package:team_up/constants/colors.dart';
 import 'package:team_up/widgets/widgets.dart';
@@ -40,84 +42,74 @@ class _StudentProgressScreenState extends State<StudentProgressScreen> {
     });
   }
 
+  bool _isExpanded = false;
+  double _overlayHeight = 0.0;
+  void menuToggleExpansion() {
+    setState(() {
+      ConfigUtils.goToScreen(PageNavigationScreen(), context);
+      PageNavigationScreen.setIncomingScreen(StudentProgressScreen());
+    });
+  }
+
   bool buttonPressed = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: _buildAppBar(),
-        body: Column(children: [
-          Text("Available time: "),
-          ListTile(
-            title: const Text('10 mins'),
-            leading: Radio<int>(
-              value: 10,
-              groupValue: _time,
-              onChanged: (int? value) {
-                setState(() {
-                  _time = value!;
-                });
-              },
-            ),
-          ),
-          ListTile(
-            title: const Text('20 mins'),
-            leading: Radio<int>(
-              value: 20,
-              groupValue: _time,
-              onChanged: (int? value) {
-                setState(() {
-                  _time = value!;
-                });
-              },
-            ),
-          ),
-          reusableButton("Search for tasks", context, () async {
-            // _tasks_controller.text = await DatabaseAccess.getInstance()
-            //     .queryEqual("Programming (example)", "estimated time",
-            //         "${_time.toString()} mins");
-            addDynamicTaskFields(context);
-          }),
-          Expanded(
-            child: ListView.builder(
-              itemCount: dueDates.length,
-              itemBuilder: (context, index) {
-                return textFieldTaskInfo(
-                    tasksList[index],
-                    "Due date: ${dueDates[index]}",
-                    "Skills needed: ${skillsNeeded[index]}",
-                    context);
-              },
-            ),
-          ),
-          reusableButton("Go to add tasks", context, () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => const HomeScreen()));
-          }),
-        ]));
+        appBar: buildAppBar(menuToggleExpansion),
+        body: buildMainContent() //ConfigUtils.configForNavMenu(
+        //buildMainContent, _isExpanded, context)
+        );
   }
 
-  AppBar _buildAppBar() {
-    return AppBar(
-      backgroundColor: tdBGColor,
-      elevation: 0,
-      title: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Icon(
-            Icons.menu,
-            color: tdBlack,
-            size: 30,
-          ),
-          Container(
-            height: 50,
-            width: 50,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(25),
-              child: Image.asset("assets/images/avatar.jpeg"),
-            ),
-          ),
-        ],
+  Widget buildMainContent() {
+    return Column(children: [
+      Text("Available time: "),
+      ListTile(
+        title: const Text('10 mins'),
+        leading: Radio<int>(
+          value: 10,
+          groupValue: _time,
+          onChanged: (int? value) {
+            setState(() {
+              _time = value!;
+            });
+          },
+        ),
       ),
-    );
+      ListTile(
+        title: const Text('20 mins'),
+        leading: Radio<int>(
+          value: 20,
+          groupValue: _time,
+          onChanged: (int? value) {
+            setState(() {
+              _time = value!;
+            });
+          },
+        ),
+      ),
+      reusableButton("Search for tasks", context, () async {
+        // _tasks_controller.text = await DatabaseAccess.getInstance()
+        //     .queryEqual("Programming (example)", "estimated time",
+        //         "${_time.toString()} mins");
+        addDynamicTaskFields(context);
+      }),
+      Expanded(
+        child: ListView.builder(
+          itemCount: dueDates.length,
+          itemBuilder: (context, index) {
+            return textFieldTaskInfo(
+                tasksList[index],
+                "Due date: ${dueDates[index]}",
+                "Skills needed: ${skillsNeeded[index]}",
+                context);
+          },
+        ),
+      ),
+      reusableButton("Go to add tasks", context, () {
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const AddTasksScreen()));
+      }),
+    ]);
   }
 }
