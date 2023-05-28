@@ -23,6 +23,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    return ConfigUtils.configForBackButtonBehaviour(mainLayout, context);
+  }
+
+  Scaffold mainLayout() {
     return Scaffold(
       backgroundColor: tdBGColor,
       appBar: buildAppBar(menuToggleExpansion),

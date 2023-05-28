@@ -1,12 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_logs/flutter_logs.dart';
+import 'package:team_up/screens/page_navigation_screen.dart';
 
 import '../screens/add_tasks_screen.dart';
 import '../screens/home_screen.dart';
 import '../screens/student_progress_screen.dart';
 
 class ConfigUtils {
+  static List<Widget> previousScreens = [];
+  static Widget? scheduledScreen;
   static void goToScreen(Widget screen, BuildContext context) {
+    if (scheduledScreen != null &&
+        scheduledScreen.runtimeType != PageNavigationScreen().runtimeType &&
+        scheduledScreen != PageNavigationScreen.incomingScreen) {
+      previousScreens.add(scheduledScreen!);
+      FlutterLogs.logInfo(
+          "Navigation", "Go To Screen", "List screens: $previousScreens");
+    }
+    scheduledScreen = screen;
+    FlutterLogs.logInfo("Navigation", "Go To Screen",
+        "Scheduled current screen: $scheduledScreen");
     Navigator.push(context, MaterialPageRoute(builder: (context) => screen));
+  }
+
+  static Widget getLastScreen() {
+    return previousScreens.removeLast();
   }
 
   static Container configForNavMenu(BuildContext context) {
@@ -45,5 +63,16 @@ class ConfigUtils {
         ],
       ),
     );
+  }
+
+  static WillPopScope configForBackButtonBehaviour(
+      Scaffold Function() mainLayout, BuildContext context) {
+    return WillPopScope(
+        // to handle back button behaviour press
+        onWillPop: () async {
+          ConfigUtils.goToScreen(ConfigUtils.getLastScreen(), context);
+          return true;
+        },
+        child: mainLayout());
   }
 }

@@ -54,10 +54,14 @@ class _StudentProgressScreenState extends State<StudentProgressScreen> {
   bool buttonPressed = false;
   @override
   Widget build(BuildContext context) {
+    return ConfigUtils.configForBackButtonBehaviour(mainLayout, context);
+  }
+
+  Scaffold mainLayout() {
     return Scaffold(
         appBar: buildAppBar(menuToggleExpansion),
         body: buildMainContent() //ConfigUtils.configForNavMenu(
-        //buildMainContent, _isExpanded, context)
+        //buildMainContent, _isExpanded, context))
         );
   }
 

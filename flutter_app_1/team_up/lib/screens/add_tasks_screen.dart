@@ -38,6 +38,10 @@ class _AddTasksScreenState extends State<AddTasksScreen> {
 
   @override
   Widget build(BuildContext context) {
+    return ConfigUtils.configForBackButtonBehaviour(mainLayout, context);
+  }
+
+  Scaffold mainLayout() {
     return Scaffold(
       backgroundColor: tdBGColor,
       appBar: buildAppBar(menuToggleExpansion),
