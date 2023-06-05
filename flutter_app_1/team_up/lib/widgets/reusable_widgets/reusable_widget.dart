@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_logs/flutter_logs.dart';
 import 'package:team_up/constants/colors.dart';
 import 'package:team_up/screens/page_navigation_screen.dart';
+import 'package:team_up/services/database_access.dart';
 import 'package:team_up/utils/configuration_util.dart';
 import 'package:team_up/widgets/widgets.dart';
 
@@ -69,11 +71,40 @@ SizedBox reusableTextFieldRegular(
   );
 }
 
-Container textFieldTaskInfo(
-    String taskTextController,
-    String dueDateTextController,
-    String instructionsTextController,
-    BuildContext context) {
+Future<bool?> _askConfirmation(BuildContext context, String taskText) async {
+  bool? confirmation;
+  await showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('Confirmation'),
+        content: Text('Are you sure you want to proceed?'),
+        actions: [
+          TextButton(
+            child: Text('No'),
+            onPressed: () {
+              Navigator.of(context)
+                  .pop(false); // Return false when "No" is pressed
+              confirmation = false;
+            },
+          ),
+          TextButton(
+            child: Text('Yes'),
+            onPressed: () {
+              Navigator.of(context)
+                  .pop(true); // Return true when "Yes" is pressed
+              confirmation = true;
+            },
+          ),
+        ],
+      );
+    },
+  );
+  return confirmation;
+}
+
+Container textFieldTaskInfo(String taskText, String dueDateText,
+    String instructionsText, bool isSignUp, BuildContext context) {
   return Container(
       height: 100.0,
       //width: 200.0, //MediaQuery.of(context).size.width,
@@ -86,10 +117,32 @@ Container textFieldTaskInfo(
       //   ),
       color: Color.fromARGB(255, 193, 184, 184).withOpacity(0.3),
       child: ListView(children: [
-        regularText(taskTextController, context, true),
-        regularText(dueDateTextController, context, false),
-        regularText(instructionsTextController, context, false),
-        //reusableButton("Sign up for task", context, () {})
+        regularText(taskText, context, true),
+        regularText(dueDateText, context, false),
+        regularText(instructionsText, context, false),
+        if (isSignUp)
+          reusableButton("Sign up for task", context, () {
+            _askConfirmation(context, taskText).then((confirmation) async {
+              if (confirmation != null && confirmation) {
+                FlutterLogs.logInfo(
+                    "TASK FIELD", "Sign up button", "Adding $taskText");
+                List<Map<String, dynamic>>? prevTasks =
+                    await DatabaseAccess.getInstance().getStudentTasks();
+                Map<String, dynamic> taskToAdd = {
+                  "task": taskText,
+                  "due date": dueDateText,
+                  "skills needed": instructionsText
+                };
+                if (prevTasks != null) {
+                  prevTasks.add(taskToAdd);
+                } else {
+                  prevTasks = [taskToAdd];
+                }
+                DatabaseAccess.getInstance().addToDatabase(
+                    "student tasks", "Eric", {"tasks": prevTasks});
+              }
+            });
+          })
       ]));
 }
 

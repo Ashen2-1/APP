@@ -106,6 +106,7 @@ class _StudentProgressScreenState extends State<StudentProgressScreen> {
                 tasksList[index],
                 "Due date: ${dueDates[index]}",
                 "Skills needed: ${skillsNeeded[index]}",
+                true,
                 context);
           },
         ),

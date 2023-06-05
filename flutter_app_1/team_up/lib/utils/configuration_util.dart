@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_logs/flutter_logs.dart';
 import 'package:team_up/screens/page_navigation_screen.dart';
+import 'package:team_up/screens/student_tasks_screen.dart';
 
 import '../screens/add_tasks_screen.dart';
 import '../screens/home_screen.dart';
@@ -58,6 +59,12 @@ class ConfigUtils {
             title: Text('Home Page'),
             onTap: () {
               goToScreen(const HomeScreen(), context);
+            },
+          ),
+          ListTile(
+            title: Text('My Tasks Page'),
+            onTap: () {
+              goToScreen(const StudentTasksScreen(), context);
             },
           ),
         ],

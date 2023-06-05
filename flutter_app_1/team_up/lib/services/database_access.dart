@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_logs/flutter_logs.dart';
+import 'package:team_up/constants/student_data.dart';
 
 class DatabaseAccess {
   static DatabaseAccess? _instance;
@@ -23,6 +24,11 @@ class DatabaseAccess {
     // Adds the data to the appropriate location through its path
     // Merges data that may have been in previously
     db.collection(collectionId).doc(docId).set(data, SetOptions(merge: true));
+  }
+
+  void updateField(
+      String collectionId, String docId, Map<String, dynamic> data) {
+    db.collection(collectionId).doc(docId).update(data);
   }
 
   Future<QuerySnapshot<Map<String, dynamic>>?> query(
@@ -66,5 +72,45 @@ class DatabaseAccess {
           "Adding string to field results: ${data[searchField]}");
     }
     return fieldResults;
+  }
+
+  Future<DocumentSnapshot<Map<String, dynamic>>?> getDocumentByID(
+      String collection, String docId) async {
+    DocumentSnapshot<Map<String, dynamic>> docSnapshot =
+        await db.collection(collection).doc(docId).get();
+
+    if (docSnapshot.exists) {
+      return docSnapshot;
+    }
+    return null;
+  }
+
+  Future<List<Map<String, dynamic>>> parseStudentTaskData(String searchField,
+      DocumentSnapshot<Map<String, dynamic>>? docSnapshot) async {
+    List<Map<String, dynamic>> fieldResults = [];
+    FlutterLogs.logInfo(
+        "Cloud Firestore Database", "GET Operation", "In parse student data");
+    FlutterLogs.logInfo("Cloud Firestore Database", "GET Operation",
+        "Got data: ${docSnapshot!.data()}");
+    Map<String, dynamic>? data = docSnapshot.data();
+    List<dynamic> listData = data!['tasks'];
+    for (Map<String, dynamic> mapData in listData) {
+      fieldResults.add(mapData);
+    }
+    FlutterLogs.logInfo("Cloud Firestore Database", "GET Operation",
+        "Adding string to field results: ${data['tasks']}");
+
+    return fieldResults;
+  }
+
+  Future<List<Map<String, dynamic>>?> /* Future<List<String>>*/
+      getStudentTasks() async {
+    DocumentSnapshot<Map<String, dynamic>>? docSnapshot =
+        await getDocumentByID("student tasks", StudentData.studentName);
+
+    if (docSnapshot != null) {
+      return parseStudentTaskData("task", docSnapshot);
+    }
+    return null;
   }
 }

@@ -112,27 +112,4 @@ class _AddTasksScreenState extends State<AddTasksScreen> {
     Navigator.push(context,
         MaterialPageRoute(builder: (context) => StudentProgressScreen()));
   }
-
-  // AppBar _buildAppBar() {
-  //   return AppBar(
-  //     backgroundColor: tdBGColor,
-  //     elevation: 0,
-  //     title: Row(
-  //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //       children: [
-  //         IconButton(
-  //             icon: Icon(Icons.menu, color: tdBlack, size: 30),
-  //             onPressed: _toggleExpansion),
-  //         Container(
-  //           height: 50,
-  //           width: 50,
-  //           child: ClipRRect(
-  //             borderRadius: BorderRadius.circular(25),
-  //             child: Image.asset("assets/images/avatar.jpeg"),
-  //           ),
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
 }
