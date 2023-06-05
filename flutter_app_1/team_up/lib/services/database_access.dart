@@ -85,8 +85,8 @@ class DatabaseAccess {
     return null;
   }
 
-  Future<List<Map<String, dynamic>>> parseStudentTaskData(String searchField,
-      DocumentSnapshot<Map<String, dynamic>>? docSnapshot) async {
+  Future<List<Map<String, dynamic>>> parseStudentTaskData(
+      DocumentSnapshot<Map<String, dynamic>>? docSnapshot, int time) async {
     List<Map<String, dynamic>> fieldResults = [];
     FlutterLogs.logInfo(
         "Cloud Firestore Database", "GET Operation", "In parse student data");
@@ -95,7 +95,11 @@ class DatabaseAccess {
     Map<String, dynamic>? data = docSnapshot.data();
     List<dynamic> listData = data!['tasks'];
     for (Map<String, dynamic> mapData in listData) {
-      fieldResults.add(mapData);
+      if (time == -1) {
+        fieldResults.add(mapData);
+      } else if (mapData['estimated time'] == '$time mins') {
+        fieldResults.add(mapData);
+      }
     }
     FlutterLogs.logInfo("Cloud Firestore Database", "GET Operation",
         "Adding string to field results: ${data['tasks']}");
@@ -109,7 +113,18 @@ class DatabaseAccess {
         await getDocumentByID("student tasks", StudentData.studentName);
 
     if (docSnapshot != null) {
-      return parseStudentTaskData("task", docSnapshot);
+      return parseStudentTaskData(docSnapshot, -1);
+    }
+    return null;
+  }
+
+  Future<List<Map<String, dynamic>>?> getAvailableTasks(
+      int time, String subteam) async {
+    DocumentSnapshot<Map<String, dynamic>>? docSnapshot =
+        await getDocumentByID("Tasks", subteam);
+
+    if (docSnapshot != null) {
+      return parseStudentTaskData(docSnapshot, time);
     }
     return null;
   }

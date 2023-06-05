@@ -3,6 +3,7 @@ import 'package:team_up/screens/home_screen.dart';
 import 'package:team_up/screens/page_navigation_screen.dart';
 import 'package:team_up/screens/student_progress_screen.dart';
 import 'package:team_up/utils/configuration_util.dart';
+import 'package:team_up/utils/util.dart';
 
 import '../constants/colors.dart';
 import '../widgets/reusable_widgets/reusable_widget.dart';
@@ -90,14 +91,22 @@ class _AddTasksScreenState extends State<AddTasksScreen> {
             "Enter skills required for task", _skillsRequiredController, false),
         reusableTextFieldRegular(
             "Enter estimated time needed", _estimatedTimeController, false),
-        reusableButton("ADD TO DATABASE", context, () {
-          DatabaseAccess.getInstance()
-              .addToDatabase("Tasks", _subTeamTextController.text, {
+        reusableButton("ADD TO DATABASE", context, () async {
+          Map<String, dynamic> taskToAdd = {
             "task": _taskTextController.text,
             "estimated time": _estimatedTimeController.text,
             "due date": _dueDateTextController.text,
             "skills needed": _skillsRequiredController.text
-          });
+          };
+          List<Map<String, dynamic>> curTasks =
+              await Util.combineTaskIntoExisting(
+                  taskToAdd,
+                  await DatabaseAccess.getInstance().getAvailableTasks(
+                      int.parse(_estimatedTimeController.text.substring(0, 2)),
+                      _subTeamTextController.text));
+
+          DatabaseAccess.getInstance().addToDatabase(
+              "Tasks", _subTeamTextController.text, {"tasks": curTasks});
           for (TextEditingController controller in controllerList) {
             controller.clear();
           }

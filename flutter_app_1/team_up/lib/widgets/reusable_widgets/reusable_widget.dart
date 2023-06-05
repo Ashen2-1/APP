@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_logs/flutter_logs.dart';
 import 'package:team_up/constants/colors.dart';
+import 'package:team_up/constants/student_data.dart';
 import 'package:team_up/screens/page_navigation_screen.dart';
 import 'package:team_up/services/database_access.dart';
 import 'package:team_up/utils/configuration_util.dart';
+import 'package:team_up/utils/util.dart';
 import 'package:team_up/widgets/widgets.dart';
 
 Image logoWidget(String imageName) {
@@ -120,26 +122,24 @@ Container textFieldTaskInfo(String taskText, String dueDateText,
         regularText(taskText, context, true),
         regularText(dueDateText, context, false),
         regularText(instructionsText, context, false),
-        if (isSignUp)
+        if (isSignUp /*&& Util.isTaskIn(taskText)*/)
           reusableButton("Sign up for task", context, () {
             _askConfirmation(context, taskText).then((confirmation) async {
               if (confirmation != null && confirmation) {
                 FlutterLogs.logInfo(
                     "TASK FIELD", "Sign up button", "Adding $taskText");
-                List<Map<String, dynamic>>? prevTasks =
-                    await DatabaseAccess.getInstance().getStudentTasks();
                 Map<String, dynamic> taskToAdd = {
                   "task": taskText,
                   "due date": dueDateText,
                   "skills needed": instructionsText
                 };
-                if (prevTasks != null) {
-                  prevTasks.add(taskToAdd);
-                } else {
-                  prevTasks = [taskToAdd];
-                }
+                List<Map<String, dynamic>> curTasks =
+                    await Util.combineTaskIntoExisting(taskToAdd,
+                        await DatabaseAccess.getInstance().getStudentTasks());
                 DatabaseAccess.getInstance().addToDatabase(
-                    "student tasks", "Eric", {"tasks": prevTasks});
+                    "student tasks", "Eric", {"tasks": curTasks});
+                // Update status of current tasks to reflect unavailable
+                //DatabaseAccess.getInstance().updateField("", docId, data)
               }
             });
           })

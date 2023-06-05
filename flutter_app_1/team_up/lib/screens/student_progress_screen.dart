@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_logs/flutter_logs.dart';
+import 'package:team_up/constants/student_data.dart';
 import 'package:team_up/screens/add_tasks_screen.dart';
 import 'package:team_up/screens/page_navigation_screen.dart';
 import 'package:team_up/services/database_access.dart';
@@ -26,19 +27,24 @@ class _StudentProgressScreenState extends State<StudentProgressScreen> {
   List<Widget> taskBoxes = [];
 
   Future<void> addDynamicTaskFields(BuildContext context) async {
-    QuerySnapshot<Map<String, dynamic>>? queryResults =
+    List<Map<String, dynamic>>? queryResults =
         await DatabaseAccess.getInstance()
-            .query("Tasks", "estimated time", "${_time.toString()} mins");
+            .getAvailableTasks(_time, StudentData.current_subteam);
 
     FlutterLogs.logInfo(
         "MAINFRAME", "put widgets on screen", "query results: ${queryResults}");
 
     setState(() {
-      tasksList = DatabaseAccess.getInstance().parseData("task", queryResults);
-      dueDates =
-          DatabaseAccess.getInstance().parseData("due date", queryResults);
-      skillsNeeded =
-          DatabaseAccess.getInstance().parseData("skills needed", queryResults);
+      for (Map<String, dynamic> taskMap in queryResults!) {
+        tasksList.add(taskMap['task']);
+        dueDates.add(taskMap['due date']);
+        skillsNeeded.add(taskMap['skills needed']);
+      }
+      // tasksList = DatabaseAccess.getInstance().parseData("task", queryResults);
+      // dueDates =
+      //     DatabaseAccess.getInstance().parseData("due date", queryResults);
+      // skillsNeeded =
+      //     DatabaseAccess.getInstance().parseData("skills needed", queryResults);
     });
   }
 
