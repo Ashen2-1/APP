@@ -33,6 +33,7 @@ class _AddTasksScreenState extends State<AddTasksScreen> {
   bool _isExpanded = false;
 
   File file = File("");
+  bool fileInitialized = false;
 
   void menuToggleExpansion() {
     setState(() {
@@ -63,7 +64,8 @@ class _AddTasksScreenState extends State<AddTasksScreen> {
       _estimatedTimeController
     ];
 
-    return Column(
+    return SingleChildScrollView(
+        child: Column(
       children: [
         Container(
           padding: EdgeInsets.symmetric(horizontal: 15),
@@ -98,10 +100,11 @@ class _AddTasksScreenState extends State<AddTasksScreen> {
         reusableButton("Upload a file related to task", context, () async {
           File result = (await FileUploader.pickFile())!;
           setState(() {
+            fileInitialized = true;
             file = result;
           });
         }),
-        Image.file(file),
+        if (fileInitialized) Image.file(file),
         reusableButton("ADD TO DATABASE", context, () async {
           Map<String, dynamic> taskToAdd = {
             "task": _taskTextController.text,
@@ -125,7 +128,7 @@ class _AddTasksScreenState extends State<AddTasksScreen> {
         }),
         reusableTextFieldRegular("", _submissionController, true),
       ],
-    );
+    ));
   }
 
   void goToProgress() {
