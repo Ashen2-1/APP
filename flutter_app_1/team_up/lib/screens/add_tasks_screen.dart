@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:team_up/screens/home_screen.dart';
 import 'package:team_up/screens/page_navigation_screen.dart';
 import 'package:team_up/screens/student_progress_screen.dart';
+import 'package:team_up/services/file_uploader.dart';
 import 'package:team_up/utils/configuration_util.dart';
 import 'package:team_up/utils/util.dart';
+import 'dart:io';
 
 import '../constants/colors.dart';
 import '../widgets/reusable_widgets/reusable_widget.dart';
@@ -29,6 +31,8 @@ class _AddTasksScreenState extends State<AddTasksScreen> {
   final TextEditingController _submissionController = TextEditingController();
 
   bool _isExpanded = false;
+
+  File file = File("");
 
   void menuToggleExpansion() {
     setState(() {
@@ -91,6 +95,13 @@ class _AddTasksScreenState extends State<AddTasksScreen> {
             "Enter skills required for task", _skillsRequiredController, false),
         reusableTextFieldRegular(
             "Enter estimated time needed", _estimatedTimeController, false),
+        reusableButton("Upload a file related to task", context, () async {
+          File result = (await FileUploader.pickFile())!;
+          setState(() {
+            file = result;
+          });
+        }),
+        Image.file(file),
         reusableButton("ADD TO DATABASE", context, () async {
           Map<String, dynamic> taskToAdd = {
             "task": _taskTextController.text,
