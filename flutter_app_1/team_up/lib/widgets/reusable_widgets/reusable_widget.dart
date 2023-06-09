@@ -105,6 +105,36 @@ Future<bool?> _askConfirmation(BuildContext context, String taskText) async {
   return confirmation;
 }
 
+String removeFireBaseBrackets(String error_string) {
+  // Objective: remove firebase error type -- don't want user to see
+  // \[ part means to find and remove occurence of [
+  // [^\]]+ is to capture any filler characters inside the []
+  // \] removes the close ], space is for formatting
+  RegExp pattern = RegExp(r'\[[^\]]+\] ');
+  return error_string.replaceAll(pattern, "");
+}
+
+Future<void> displayError(Object error, BuildContext context) async {
+  await showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('Error'),
+        content: Text(removeFireBaseBrackets(error.toString())),
+        actions: [
+          TextButton(
+            child: Text('Ok'),
+            onPressed: () {
+              Navigator.of(context)
+                  .pop(true); // Return false when "No" is pressed
+            },
+          ),
+        ],
+      );
+    },
+  );
+}
+
 Container textFieldTaskInfo(String taskText, String dueDateText,
     String instructionsText, bool isSignUp, BuildContext context) {
   return Container(

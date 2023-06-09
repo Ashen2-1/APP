@@ -68,6 +68,7 @@ class _SignInScreenState extends State<SignInScreen> {
                         MaterialPageRoute(
                             builder: (context) => AddTasksScreen()));
                   }).onError((error, stackTrace) {
+                    displayError(error!, context);
                     print("Error ${error.toString()}");
                   });
                 }),

@@ -24,7 +24,10 @@ class ConfigUtils {
     Navigator.push(context, MaterialPageRoute(builder: (context) => screen));
   }
 
-  static Widget getLastScreen() {
+  static Widget? getLastScreen() {
+    if (previousScreens.isEmpty) {
+      return null;
+    }
     return previousScreens.removeLast();
   }
 
@@ -77,7 +80,10 @@ class ConfigUtils {
     return WillPopScope(
         // to handle back button behaviour press
         onWillPop: () async {
-          ConfigUtils.goToScreen(ConfigUtils.getLastScreen(), context);
+          Widget? lastScreen = getLastScreen();
+          if (lastScreen != null) {
+            ConfigUtils.goToScreen(lastScreen, context);
+          }
           return true;
         },
         child: mainLayout());
