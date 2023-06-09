@@ -135,8 +135,13 @@ Future<void> displayError(Object error, BuildContext context) async {
   );
 }
 
-Container textFieldTaskInfo(String taskText, String dueDateText,
-    String instructionsText, bool isSignUp, BuildContext context) {
+Container textFieldTaskInfo(
+    String taskText,
+    String dueDateText,
+    String instructionsText,
+    Image taskImage,
+    bool isSignUp,
+    BuildContext context) {
   return Container(
       height: 100.0,
       //width: 200.0, //MediaQuery.of(context).size.width,
@@ -150,8 +155,9 @@ Container textFieldTaskInfo(String taskText, String dueDateText,
       color: Color.fromARGB(255, 193, 184, 184).withOpacity(0.3),
       child: ListView(children: [
         regularText(taskText, context, true),
-        regularText(dueDateText, context, false),
-        regularText(instructionsText, context, false),
+        regularText("Due date: $dueDateText", context, false),
+        regularText("Skills needed: $instructionsText", context, false),
+        taskImage,
         if (isSignUp /*&& Util.isTaskIn(taskText)*/)
           reusableButton("Sign up for task", context, () {
             _askConfirmation(context, taskText).then((confirmation) async {
