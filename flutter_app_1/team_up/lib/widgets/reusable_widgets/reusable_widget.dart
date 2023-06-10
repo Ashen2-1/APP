@@ -105,8 +105,43 @@ Future<bool?> _askConfirmation(BuildContext context, String taskText) async {
   return confirmation;
 }
 
-Container textFieldTaskInfo(String taskText, String dueDateText,
-    String instructionsText, bool isSignUp, BuildContext context) {
+String removeFireBaseBrackets(String error_string) {
+  // Objective: remove firebase error type -- don't want user to see
+  // \[ part means to find and remove occurence of [
+  // [^\]]+ is to capture any filler characters inside the []
+  // \] removes the close ], space is for formatting
+  RegExp pattern = RegExp(r'\[[^\]]+\] ');
+  return error_string.replaceAll(pattern, "");
+}
+
+Future<void> displayError(Object error, BuildContext context) async {
+  await showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('Error'),
+        content: Text(removeFireBaseBrackets(error.toString())),
+        actions: [
+          TextButton(
+            child: Text('Ok'),
+            onPressed: () {
+              Navigator.of(context)
+                  .pop(true); // Return false when "No" is pressed
+            },
+          ),
+        ],
+      );
+    },
+  );
+}
+
+Container textFieldTaskInfo(
+    String taskText,
+    String dueDateText,
+    String instructionsText,
+    Image taskImage,
+    bool isSignUp,
+    BuildContext context) {
   return Container(
       height: 100.0,
       //width: 200.0, //MediaQuery.of(context).size.width,
@@ -120,8 +155,9 @@ Container textFieldTaskInfo(String taskText, String dueDateText,
       color: Color.fromARGB(255, 193, 184, 184).withOpacity(0.3),
       child: ListView(children: [
         regularText(taskText, context, true),
-        regularText(dueDateText, context, false),
-        regularText(instructionsText, context, false),
+        regularText("Due date: $dueDateText", context, false),
+        regularText("Skills needed: $instructionsText", context, false),
+        taskImage,
         if (isSignUp /*&& Util.isTaskIn(taskText)*/)
           reusableButton("Sign up for task", context, () {
             _askConfirmation(context, taskText).then((confirmation) async {

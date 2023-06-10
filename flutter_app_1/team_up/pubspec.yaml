@@ -46,6 +46,7 @@ dependencies:
   cloud_firestore: ^4.7.0
   #ringtone_manager: ^0.2.3
   file_picker: ^5.2.2
+  firebase_storage: ^11.2.2
 
 
 dev_dependencies:

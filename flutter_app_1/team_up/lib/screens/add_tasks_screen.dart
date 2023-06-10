@@ -1,4 +1,6 @@
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_logs/flutter_logs.dart';
 import 'package:team_up/screens/home_screen.dart';
 import 'package:team_up/screens/page_navigation_screen.dart';
 import 'package:team_up/screens/student_progress_screen.dart';
@@ -106,11 +108,17 @@ class _AddTasksScreenState extends State<AddTasksScreen> {
         }),
         if (fileInitialized) Image.file(file),
         reusableButton("ADD TO DATABASE", context, () async {
+          TaskSnapshot imageSnapshot =
+              await FileUploader.getInstance().addImageToFirebaseStorage(file);
+          String imageURL = await imageSnapshot.ref.getDownloadURL();
+          FlutterLogs.logInfo(
+              "Add to Database", "Upload image", "Image URL: $imageURL");
           Map<String, dynamic> taskToAdd = {
             "task": _taskTextController.text,
             "estimated time": _estimatedTimeController.text,
             "due date": _dueDateTextController.text,
-            "skills needed": _skillsRequiredController.text
+            "skills needed": _skillsRequiredController.text,
+            "image url": imageURL
           };
           List<Map<String, dynamic>> curTasks =
               await Util.combineTaskIntoExisting(
@@ -124,6 +132,9 @@ class _AddTasksScreenState extends State<AddTasksScreen> {
           for (TextEditingController controller in controllerList) {
             controller.clear();
           }
+          setState(() {
+            fileInitialized = false;
+          });
           _submissionController.text = "Submitted!";
         }),
         reusableTextFieldRegular("", _submissionController, true),

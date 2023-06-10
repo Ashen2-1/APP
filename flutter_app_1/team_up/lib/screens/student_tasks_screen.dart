@@ -23,6 +23,7 @@ class _StudentTasksScreenState extends State<StudentTasksScreen> {
   List<String> studentTasks = [];
   List<String> dueDates = [];
   List<String> skillsNeeded = [];
+  List<String> imageUrlList = [];
 
   Future<void> configure() async {
     //studentTasksMap
@@ -37,6 +38,7 @@ class _StudentTasksScreenState extends State<StudentTasksScreen> {
             "Displaying task: ${taskMap['task']}");
         dueDates.add(taskMap['due date']);
         skillsNeeded.add(taskMap['skills needed']);
+        imageUrlList.add(taskMap['image url']);
       }
     });
   }
@@ -69,8 +71,13 @@ class _StudentTasksScreenState extends State<StudentTasksScreen> {
           child: ListView.builder(
             itemCount: studentTasks.length,
             itemBuilder: (context, index) {
-              return textFieldTaskInfo(studentTasks[index], dueDates[index],
-                  skillsNeeded[index], false, context);
+              return textFieldTaskInfo(
+                  studentTasks[index],
+                  dueDates[index],
+                  skillsNeeded[index],
+                  Image.network(imageUrlList[index]),
+                  false,
+                  context);
             },
           ),
         ),

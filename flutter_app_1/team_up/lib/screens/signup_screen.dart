@@ -73,6 +73,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         MaterialPageRoute(
                             builder: (context) => AddTasksScreen()));
                   }).onError((error, stackTrace) {
+                    displayError(error!, context);
                     print("Error ${error.toString()}");
                   });
                 })

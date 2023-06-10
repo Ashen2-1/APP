@@ -24,7 +24,8 @@ class _StudentProgressScreenState extends State<StudentProgressScreen> {
   List<String> dueDates = [];
   List<String> skillsNeeded = [];
 
-  List<Widget> taskBoxes = [];
+  List<String> imageUrlList = [];
+  // List<Widget> taskBoxes = [];
 
   Future<void> addDynamicTaskFields(BuildContext context) async {
     List<Map<String, dynamic>>? queryResults =
@@ -39,6 +40,7 @@ class _StudentProgressScreenState extends State<StudentProgressScreen> {
         tasksList.add(taskMap['task']);
         dueDates.add(taskMap['due date']);
         skillsNeeded.add(taskMap['skills needed']);
+        imageUrlList.add(taskMap['image url']);
       }
       // tasksList = DatabaseAccess.getInstance().parseData("task", queryResults);
       // dueDates =
@@ -110,8 +112,9 @@ class _StudentProgressScreenState extends State<StudentProgressScreen> {
           itemBuilder: (context, index) {
             return textFieldTaskInfo(
                 tasksList[index],
-                "Due date: ${dueDates[index]}",
-                "Skills needed: ${skillsNeeded[index]}",
+                dueDates[index],
+                skillsNeeded[index],
+                Image.network(imageUrlList[index]),
                 true,
                 context);
           },
