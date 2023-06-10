@@ -10,6 +10,8 @@ import 'package:team_up/widgets/reusable_widgets/reusable_widget.dart';
 import 'package:team_up/constants/colors.dart';
 import 'package:team_up/widgets/widgets.dart';
 
+import '../utils/util.dart';
+
 class StudentProgressScreen extends StatefulWidget {
   const StudentProgressScreen({super.key});
 
@@ -25,6 +27,7 @@ class _StudentProgressScreenState extends State<StudentProgressScreen> {
   List<String> skillsNeeded = [];
 
   List<String> imageUrlList = [];
+  List<Image> resizedImageList = [];
   // List<Widget> taskBoxes = [];
 
   Future<void> addDynamicTaskFields(BuildContext context) async {
@@ -35,19 +38,22 @@ class _StudentProgressScreenState extends State<StudentProgressScreen> {
     FlutterLogs.logInfo(
         "MAINFRAME", "put widgets on screen", "query results: ${queryResults}");
 
-    setState(() {
-      for (Map<String, dynamic> taskMap in queryResults!) {
-        tasksList.add(taskMap['task']);
-        dueDates.add(taskMap['due date']);
-        skillsNeeded.add(taskMap['skills needed']);
-        imageUrlList.add(taskMap['image url']);
-      }
-      // tasksList = DatabaseAccess.getInstance().parseData("task", queryResults);
-      // dueDates =
-      //     DatabaseAccess.getInstance().parseData("due date", queryResults);
-      // skillsNeeded =
-      //     DatabaseAccess.getInstance().parseData("skills needed", queryResults);
-    });
+    for (Map<String, dynamic> taskMap in queryResults!) {
+      tasksList.add(taskMap['task']);
+      dueDates.add(taskMap['due date']);
+      skillsNeeded.add(taskMap['skills needed']);
+      imageUrlList.add(taskMap['image url']);
+    }
+    // tasksList = DatabaseAccess.getInstance().parseData("task", queryResults);
+    // dueDates =
+    //     DatabaseAccess.getInstance().parseData("due date", queryResults);
+    // skillsNeeded =
+    //     DatabaseAccess.getInstance().parseData("skills needed", queryResults);
+
+    for (String imageUrl in imageUrlList) {
+      resizedImageList.add(await Util.resizeImage(imageUrl, 1 / 8));
+    }
+    setState(() {});
   }
 
   bool _isExpanded = false;
@@ -114,7 +120,8 @@ class _StudentProgressScreenState extends State<StudentProgressScreen> {
                 tasksList[index],
                 dueDates[index],
                 skillsNeeded[index],
-                Image.network(imageUrlList[index]),
+                resizedImageList[index],
+                imageUrlList[index],
                 true,
                 context);
           },

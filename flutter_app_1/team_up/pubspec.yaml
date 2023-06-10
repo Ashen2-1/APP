@@ -47,6 +47,7 @@ dependencies:
   #ringtone_manager: ^0.2.3
   file_picker: ^5.2.2
   firebase_storage: ^11.2.2
+  image: ^3.2.2
 
 
 dev_dependencies:

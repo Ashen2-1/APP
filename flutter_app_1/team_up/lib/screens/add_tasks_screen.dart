@@ -102,8 +102,8 @@ class _AddTasksScreenState extends State<AddTasksScreen> {
         reusableButton("Upload a file related to task", context, () async {
           File result = (await FileUploader.pickFile())!;
           setState(() {
-            fileInitialized = true;
             file = result;
+            fileInitialized = true;
           });
         }),
         if (fileInitialized) Image.file(file),

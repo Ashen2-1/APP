@@ -6,6 +6,7 @@ import 'package:team_up/utils/configuration_util.dart';
 import 'package:team_up/widgets/reusable_widgets/reusable_widget.dart';
 import 'package:team_up/widgets/widgets.dart';
 import '../constants/colors.dart';
+import '../utils/util.dart';
 
 class StudentTasksScreen extends StatefulWidget {
   const StudentTasksScreen({Key? key}) : super(key: key);
@@ -24,23 +25,25 @@ class _StudentTasksScreenState extends State<StudentTasksScreen> {
   List<String> dueDates = [];
   List<String> skillsNeeded = [];
   List<String> imageUrlList = [];
+  List<Image> resizedImageList = [];
 
   Future<void> configure() async {
     //studentTasksMap
     studentTasksMap = await DatabaseAccess.getInstance().getStudentTasks();
-
-    setState(() {
+    FlutterLogs.logInfo(
+        "My Tasks", "Add to ListView", "studentTasksMap: ${studentTasksMap}");
+    for (Map<String, dynamic> taskMap in studentTasksMap!) {
+      studentTasks.add(taskMap['task']);
       FlutterLogs.logInfo(
-          "My Tasks", "Add to ListView", "studentTasksMap: ${studentTasksMap}");
-      for (Map<String, dynamic> taskMap in studentTasksMap!) {
-        studentTasks.add(taskMap['task']);
-        FlutterLogs.logInfo("My Tasks", "Add to ListView",
-            "Displaying task: ${taskMap['task']}");
-        dueDates.add(taskMap['due date']);
-        skillsNeeded.add(taskMap['skills needed']);
-        imageUrlList.add(taskMap['image url']);
-      }
-    });
+          "My Tasks", "Add to ListView", "Displaying task: ${taskMap['task']}");
+      dueDates.add(taskMap['due date']);
+      skillsNeeded.add(taskMap['skills needed']);
+      imageUrlList.add(taskMap['image url']);
+    }
+    for (String imageUrl in imageUrlList) {
+      resizedImageList.add(await Util.resizeImage(imageUrl, 1 / 8));
+    }
+    setState(() {});
   }
 
   void menuToggleExpansion() {
@@ -75,7 +78,8 @@ class _StudentTasksScreenState extends State<StudentTasksScreen> {
                   studentTasks[index],
                   dueDates[index],
                   skillsNeeded[index],
-                  Image.network(imageUrlList[index]),
+                  resizedImageList[index],
+                  imageUrlList[index],
                   false,
                   context);
             },
