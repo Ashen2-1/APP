@@ -1,6 +1,7 @@
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_logs/flutter_logs.dart';
+import 'package:team_up/constants/borders.dart';
 import 'package:team_up/screens/home_screen.dart';
 import 'package:team_up/screens/page_navigation_screen.dart';
 import 'package:team_up/screens/student_progress_screen.dart';
@@ -34,7 +35,8 @@ class _AddTasksScreenState extends State<AddTasksScreen> {
 
   bool _isExpanded = false;
 
-  File file = File("");
+  File? file;
+  String _subteam = "";
   bool fileInitialized = false;
 
   void menuToggleExpansion() {
@@ -69,28 +71,77 @@ class _AddTasksScreenState extends State<AddTasksScreen> {
     return SingleChildScrollView(
         child: Column(
       children: [
+        // Container(
+        //   padding: EdgeInsets.symmetric(horizontal: 15),
+        //   decoration: BoxDecoration(
+        //       color: Colors.white, borderRadius: BorderRadius.circular(20)),
+        //   child: TextField(
+        //     decoration: InputDecoration(
+        //       contentPadding: EdgeInsets.all(0),
+        //       prefixIcon: Icon(
+        //         Icons.search,
+        //         color: tdBlack,
+        //         size: 20,
+        //       ),
+        //       prefixIconConstraints:
+        //           BoxConstraints(maxHeight: 20, minWidth: 25),
+        //       border: InputBorder.none,
+        //       hintText: "Search",
+        //       hintStyle: TextStyle(color: tdGrey),
+        //     ),
+        //   ),
+        // ),
+        const Text("Add a task!",
+            style: TextStyle(fontSize: 30, decorationThickness: 1.5)),
+        const SizedBox(height: 10.0),
         Container(
-          padding: EdgeInsets.symmetric(horizontal: 15),
-          decoration: BoxDecoration(
-              color: Colors.white, borderRadius: BorderRadius.circular(20)),
-          child: TextField(
-            decoration: InputDecoration(
-              contentPadding: EdgeInsets.all(0),
-              prefixIcon: Icon(
-                Icons.search,
-                color: tdBlack,
-                size: 20,
+            decoration: BoxDecoration(
+                color: Color.fromARGB(255, 199, 196, 196).withOpacity(0.3),
+                borderRadius: Borders.imageBorderRadius),
+            child: Column(children: [
+              const Text(
+                "Select subteam:",
+                style: TextStyle(fontSize: 18),
+                textAlign: TextAlign.left,
               ),
-              prefixIconConstraints:
-                  BoxConstraints(maxHeight: 20, minWidth: 25),
-              border: InputBorder.none,
-              hintText: "Search",
-              hintStyle: TextStyle(color: tdGrey),
-            ),
-          ),
-        ),
-        reusableTextFieldRegular(
-            "Enter Subteam", _subTeamTextController, false),
+              ListTile(
+                title: const Text('Build'),
+                leading: Radio<String>(
+                  value: "Build",
+                  groupValue: _subteam,
+                  onChanged: (String? value) {
+                    setState(() {
+                      _subteam = value!;
+                    });
+                  },
+                ),
+              ),
+              ListTile(
+                title: const Text('Programming'),
+                leading: Radio<String>(
+                  value: "Programming",
+                  groupValue: _subteam,
+                  onChanged: (String? value) {
+                    setState(() {
+                      _subteam = value!;
+                    });
+                  },
+                ),
+              ),
+              ListTile(
+                title: const Text('Design'),
+                leading: Radio<String>(
+                  value: "Design",
+                  groupValue: _subteam,
+                  onChanged: (String? value) {
+                    setState(() {
+                      _subteam = value!;
+                    });
+                  },
+                ),
+              )
+            ])),
+        const SizedBox(height: 10.0),
         reusableTextFieldRegular(
             "Enter Specific Task", _taskTextController, false),
         reusableTextFieldRegular(
@@ -106,13 +157,16 @@ class _AddTasksScreenState extends State<AddTasksScreen> {
             fileInitialized = true;
           });
         }),
-        if (fileInitialized) Image.file(file),
+        if (fileInitialized && file != null) Image.file(file!),
         reusableButton("ADD TO DATABASE", context, () async {
-          TaskSnapshot imageSnapshot =
-              await FileUploader.getInstance().addImageToFirebaseStorage(file);
-          String imageURL = await imageSnapshot.ref.getDownloadURL();
-          FlutterLogs.logInfo(
-              "Add to Database", "Upload image", "Image URL: $imageURL");
+          String imageURL = "None";
+          if (file != null) {
+            TaskSnapshot imageSnapshot = await FileUploader.getInstance()
+                .addImageToFirebaseStorage(file!);
+            imageURL = await imageSnapshot.ref.getDownloadURL();
+            FlutterLogs.logInfo(
+                "Add to Database", "Upload image", "Image URL: $imageURL");
+          }
           Map<String, dynamic> taskToAdd = {
             "task": _taskTextController.text,
             "estimated time": _estimatedTimeController.text,

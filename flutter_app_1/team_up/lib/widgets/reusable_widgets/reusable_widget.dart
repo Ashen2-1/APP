@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_logs/flutter_logs.dart';
+import 'package:team_up/constants/borders.dart';
 import 'package:team_up/constants/colors.dart';
 import 'package:team_up/constants/student_data.dart';
 import 'package:team_up/screens/page_navigation_screen.dart';
@@ -80,7 +81,7 @@ Future<bool?> _askConfirmation(BuildContext context, String taskText) async {
     builder: (BuildContext context) {
       return AlertDialog(
         title: Text('Confirmation'),
-        content: Text('Are you sure you want to proceed?'),
+        content: Text('Are you sure you want to assign yourself $taskText?'),
         actions: [
           TextButton(
             child: Text('No'),
@@ -135,59 +136,64 @@ Future<void> displayError(Object error, BuildContext context) async {
   );
 }
 
-Container textFieldTaskInfo(
+SizedBox textFieldTaskInfo(
     String taskText,
     String dueDateText,
     String instructionsText,
-    Image taskImage,
     String imageUrl,
     bool isSignUp,
     BuildContext context) {
-  return Container(
-      height: 100.0,
-      //width: 200.0, //MediaQuery.of(context).size.width,
-      // decoration: BoxDecoration(
-      //   color: Color.fromARGB(255, 193, 184, 184).withOpacity(0.3),
-      //   shape: BoxShape.circle,
-      //   border: Border.all(
-      //     color: Colors.black,
-      //     width: 2,
-      //   ),
-      color: Color.fromARGB(255, 193, 184, 184).withOpacity(0.3),
-      child: ListView(children: [
-        Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            regularText(taskText, context, true),
-            regularText("Due date: $dueDateText", context, false),
-            regularText("Skills needed: $instructionsText", context, false),
-            if (isSignUp /*&& Util.isTaskIn(taskText)*/)
-              reusableSignUpTaskButton("Sign up for task", context, () {
-                _askConfirmation(context, taskText).then((confirmation) async {
-                  if (confirmation != null && confirmation) {
-                    FlutterLogs.logInfo(
-                        "TASK FIELD", "Sign up button", "Adding $taskText");
-                    Map<String, dynamic> taskToAdd = {
-                      "task": taskText,
-                      "due date": dueDateText,
-                      "skills needed": instructionsText,
-                      "image url": imageUrl
-                    };
-                    List<Map<String, dynamic>> curTasks =
-                        await Util.combineTaskIntoExisting(
-                            taskToAdd,
-                            await DatabaseAccess.getInstance()
-                                .getStudentTasks());
-                    DatabaseAccess.getInstance().addToDatabase(
-                        "student tasks", "Eric", {"tasks": curTasks});
-                    // Update status of current tasks to reflect unavailable
-                    //DatabaseAccess.getInstance().updateField("", docId, data)
-                  }
-                });
-              })
-          ]),
-          taskImage,
-        ]),
-      ]));
+  return SizedBox(
+      height: 200.0,
+      width: MediaQuery.of(context).size.width,
+      child: Container(
+          height: 100.0,
+          padding: const EdgeInsets.all(10.0),
+          margin: const EdgeInsets.all(10.0),
+          //width: 200.0, //MediaQuery.of(context).size.width,
+          decoration: BoxDecoration(
+              color: Color.fromARGB(255, 193, 184, 184).withOpacity(0.3),
+              borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(10),
+                  topRight: Radius.circular(10),
+                  bottomLeft: Radius.circular(10),
+                  bottomRight: Radius.circular(10))),
+          child: ListView(children: [
+            Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                regularText(taskText, context, true),
+                regularText("Due date: $dueDateText", context, false),
+                regularText("Skills needed: $instructionsText", context, false),
+                if (isSignUp /*&& Util.isTaskIn(taskText)*/)
+                  reusableSignUpTaskButton("Sign up for task", context, () {
+                    _askConfirmation(context, taskText)
+                        .then((confirmation) async {
+                      if (confirmation != null && confirmation) {
+                        FlutterLogs.logInfo(
+                            "TASK FIELD", "Sign up button", "Adding $taskText");
+                        Map<String, dynamic> taskToAdd = {
+                          "task": taskText,
+                          "due date": dueDateText,
+                          "skills needed": instructionsText,
+                          "image url": imageUrl
+                        };
+                        List<Map<String, dynamic>> curTasks =
+                            await Util.combineTaskIntoExisting(
+                                taskToAdd,
+                                await DatabaseAccess.getInstance()
+                                    .getStudentTasks());
+                        DatabaseAccess.getInstance().addToDatabase(
+                            "student tasks", "Eric", {"tasks": curTasks});
+                        // Update status of current tasks to reflect unavailable
+                        //DatabaseAccess.getInstance().updateField("", docId, data)
+                      }
+                    });
+                  })
+              ]),
+              const SizedBox(width: 10.0), // For spacing
+              if (imageUrl != "None") Flexible(child: Image.network(imageUrl)),
+            ]),
+          ])));
 }
 
 SizedBox regularText(String text, BuildContext context, bool isTitle) {

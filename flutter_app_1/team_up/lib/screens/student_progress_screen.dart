@@ -27,7 +27,7 @@ class _StudentProgressScreenState extends State<StudentProgressScreen> {
   List<String> skillsNeeded = [];
 
   List<String> imageUrlList = [];
-  List<Image> resizedImageList = [];
+  //List<Image> resizedImageList = [];
   // List<Widget> taskBoxes = [];
 
   Future<void> addDynamicTaskFields(BuildContext context) async {
@@ -50,9 +50,9 @@ class _StudentProgressScreenState extends State<StudentProgressScreen> {
     // skillsNeeded =
     //     DatabaseAccess.getInstance().parseData("skills needed", queryResults);
 
-    for (String imageUrl in imageUrlList) {
-      resizedImageList.add(await Util.resizeImage(imageUrl, 1 / 8));
-    }
+    // for (String imageUrl in imageUrlList) {
+    //   resizedImageList.add(await Util.resizeImage(imageUrl, 1 / 8));
+    // }
     setState(() {});
   }
 
@@ -80,8 +80,9 @@ class _StudentProgressScreenState extends State<StudentProgressScreen> {
   }
 
   Widget buildMainContent() {
-    return Column(children: [
-      Text("Available time: "),
+    return SingleChildScrollView(
+        child: Column(children: [
+      const Text("Available time: "),
       ListTile(
         title: const Text('10 mins'),
         leading: Radio<int>(
@@ -112,25 +113,15 @@ class _StudentProgressScreenState extends State<StudentProgressScreen> {
         //         "${_time.toString()} mins");
         addDynamicTaskFields(context);
       }),
-      Expanded(
-        child: ListView.builder(
-          itemCount: dueDates.length,
-          itemBuilder: (context, index) {
-            return textFieldTaskInfo(
-                tasksList[index],
-                dueDates[index],
-                skillsNeeded[index],
-                resizedImageList[index],
-                imageUrlList[index],
-                true,
-                context);
-          },
-        ),
-      ),
-      reusableButton("Go to add tasks", context, () {
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => const AddTasksScreen()));
-      }),
-    ]);
+      SizedBox(
+          height: 600.0,
+          child: ListView.builder(
+            itemCount: dueDates.length,
+            itemBuilder: (context, index) {
+              return textFieldTaskInfo(tasksList[index], dueDates[index],
+                  skillsNeeded[index], imageUrlList[index], true, context);
+            },
+          )),
+    ]));
   }
 }
