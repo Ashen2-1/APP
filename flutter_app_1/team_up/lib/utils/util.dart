@@ -18,6 +18,15 @@ class Util {
     return false;
   }
 
+  static bool contains(String item, List<String> list) {
+    for (String element in list) {
+      if (element == item) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   static Future<List<Map<String, dynamic>>> combineTaskIntoExisting(
       Map<String, dynamic> taskToAdd,
       List<Map<String, dynamic>>? prevTasks) async {

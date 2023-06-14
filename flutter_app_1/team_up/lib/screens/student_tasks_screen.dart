@@ -32,12 +32,14 @@ class _StudentTasksScreenState extends State<StudentTasksScreen> {
     FlutterLogs.logInfo(
         "My Tasks", "Add to ListView", "studentTasksMap: ${studentTasksMap}");
     for (Map<String, dynamic> taskMap in studentTasksMap!) {
-      studentTasks.add(taskMap['task']);
-      FlutterLogs.logInfo(
-          "My Tasks", "Add to ListView", "Displaying task: ${taskMap['task']}");
-      dueDates.add(taskMap['due date']);
-      skillsNeeded.add(taskMap['skills needed']);
-      imageUrlList.add(taskMap['image url']);
+      if (!Util.contains(taskMap['task'], studentTasks)) {
+        studentTasks.add(taskMap['task']);
+        FlutterLogs.logInfo("My Tasks", "Add to ListView",
+            "Displaying task: ${taskMap['task']}");
+        dueDates.add(taskMap['due date']);
+        skillsNeeded.add(taskMap['skills needed']);
+        imageUrlList.add(taskMap['image url']);
+      }
     }
     // for (String imageUrl in imageUrlList) {
     //   resizedImageList.add(await Util.resizeImage(imageUrl, 1 / 8));

@@ -23,7 +23,6 @@ class AddTasksScreen extends StatefulWidget {
 }
 
 class _AddTasksScreenState extends State<AddTasksScreen> {
-  final TextEditingController _subTeamTextController = TextEditingController();
   final TextEditingController _taskTextController = TextEditingController();
   final TextEditingController _dueDateTextController = TextEditingController();
   final TextEditingController _skillsRequiredController =
@@ -36,8 +35,17 @@ class _AddTasksScreenState extends State<AddTasksScreen> {
   bool _isExpanded = false;
 
   File? file;
-  String _subteam = "";
   bool fileInitialized = false;
+
+  final List<String> subteamList = [
+    'Select a subteam',
+    'Build',
+    'Programming',
+    'Design',
+    'Media'
+  ];
+
+  String subteam = 'Select a subteam';
 
   void menuToggleExpansion() {
     setState(() {
@@ -61,12 +69,12 @@ class _AddTasksScreenState extends State<AddTasksScreen> {
 
   Widget buildMainContent() {
     List<TextEditingController> controllerList = [
-      _subTeamTextController,
       _taskTextController,
       _dueDateTextController,
       _skillsRequiredController,
       _estimatedTimeController
     ];
+    //subteamList.add("Select subteam:");
 
     return SingleChildScrollView(
         child: Column(
@@ -95,52 +103,24 @@ class _AddTasksScreenState extends State<AddTasksScreen> {
             style: TextStyle(fontSize: 30, decorationThickness: 1.5)),
         const SizedBox(height: 10.0),
         Container(
-            decoration: BoxDecoration(
-                color: Color.fromARGB(255, 199, 196, 196).withOpacity(0.3),
-                borderRadius: Borders.imageBorderRadius),
-            child: Column(children: [
-              const Text(
-                "Select subteam:",
-                style: TextStyle(fontSize: 18),
-                textAlign: TextAlign.left,
-              ),
-              ListTile(
-                title: const Text('Build'),
-                leading: Radio<String>(
-                  value: "Build",
-                  groupValue: _subteam,
-                  onChanged: (String? value) {
-                    setState(() {
-                      _subteam = value!;
-                    });
-                  },
-                ),
-              ),
-              ListTile(
-                title: const Text('Programming'),
-                leading: Radio<String>(
-                  value: "Programming",
-                  groupValue: _subteam,
-                  onChanged: (String? value) {
-                    setState(() {
-                      _subteam = value!;
-                    });
-                  },
-                ),
-              ),
-              ListTile(
-                title: const Text('Design'),
-                leading: Radio<String>(
-                  value: "Design",
-                  groupValue: _subteam,
-                  onChanged: (String? value) {
-                    setState(() {
-                      _subteam = value!;
-                    });
-                  },
-                ),
-              )
-            ])),
+          decoration: BoxDecoration(
+              color: Color.fromARGB(255, 199, 196, 196).withOpacity(0.3),
+              borderRadius: Borders.imageBorderRadius),
+          child: DropdownButton<String>(
+              value: subteam,
+              // hint: const Text("Select subteam:",
+              //     style: TextStyle(fontSize: 18), textAlign: TextAlign.left),
+              onChanged: (String? newValue) {
+                setState(() {
+                  subteam = newValue!;
+                });
+              },
+              items:
+                  subteamList.map<DropdownMenuItem<String>>((String newValue) {
+                return DropdownMenuItem<String>(
+                    value: newValue, child: Text(newValue));
+              }).toList()),
+        ),
         const SizedBox(height: 10.0),
         reusableTextFieldRegular(
             "Enter Specific Task", _taskTextController, false),
@@ -167,29 +147,32 @@ class _AddTasksScreenState extends State<AddTasksScreen> {
             FlutterLogs.logInfo(
                 "Add to Database", "Upload image", "Image URL: $imageURL");
           }
-          Map<String, dynamic> taskToAdd = {
-            "task": _taskTextController.text,
-            "estimated time": _estimatedTimeController.text,
-            "due date": _dueDateTextController.text,
-            "skills needed": _skillsRequiredController.text,
-            "image url": imageURL
-          };
-          List<Map<String, dynamic>> curTasks =
-              await Util.combineTaskIntoExisting(
-                  taskToAdd,
-                  await DatabaseAccess.getInstance().getAvailableTasks(
-                      int.parse(_estimatedTimeController.text.substring(0, 2)),
-                      _subTeamTextController.text));
+          if (subteam != 'Select a subteam') {
+            Map<String, dynamic> taskToAdd = {
+              "task": _taskTextController.text,
+              "estimated time": _estimatedTimeController.text,
+              "due date": _dueDateTextController.text,
+              "skills needed": _skillsRequiredController.text,
+              "image url": imageURL
+            };
+            List<Map<String, dynamic>> curTasks =
+                await Util.combineTaskIntoExisting(
+                    taskToAdd,
+                    await DatabaseAccess.getInstance().getAvailableTasks(
+                        int.parse(
+                            _estimatedTimeController.text.substring(0, 2)),
+                        subteam));
 
-          DatabaseAccess.getInstance().addToDatabase(
-              "Tasks", _subTeamTextController.text, {"tasks": curTasks});
-          for (TextEditingController controller in controllerList) {
-            controller.clear();
+            DatabaseAccess.getInstance()
+                .addToDatabase("Tasks", subteam, {"tasks": curTasks});
+            for (TextEditingController controller in controllerList) {
+              controller.clear();
+            }
+            setState(() {
+              fileInitialized = false;
+            });
+            _submissionController.text = "Submitted!";
           }
-          setState(() {
-            fileInitialized = false;
-          });
-          _submissionController.text = "Submitted!";
         }),
         reusableTextFieldRegular("", _submissionController, true),
       ],
