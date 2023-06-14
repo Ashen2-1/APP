@@ -35,7 +35,7 @@ class _StudentProgressScreenState extends State<StudentProgressScreen> {
   Future<void> addDynamicTaskFields(BuildContext context) async {
     List<Map<String, dynamic>>? queryResults =
         await DatabaseAccess.getInstance()
-            .getAvailableTasks(_time, StudentData.current_subteam);
+            .getAvailableTasks(_time, StudentData.getQuerySubTeam());
 
     FlutterLogs.logInfo(
         "MAINFRAME", "put widgets on screen", "query results: ${queryResults}");
@@ -85,6 +85,8 @@ class _StudentProgressScreenState extends State<StudentProgressScreen> {
   }
 
   Widget buildMainContent() {
+    FlutterLogs.logInfo("Student Progress Screen", "Query Subteam",
+        "Current: ${StudentData.getQuerySubTeam()}");
     return SingleChildScrollView(
         child: Column(children: [
       const Text("Available time: "),
