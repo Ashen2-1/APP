@@ -69,6 +69,7 @@ class _AddTasksScreenState extends State<AddTasksScreen> {
     ];
 
     return SingleChildScrollView(
+      
         child: Column(
       children: [
         // Container(
@@ -144,12 +145,16 @@ class _AddTasksScreenState extends State<AddTasksScreen> {
         const SizedBox(height: 10.0),
         reusableTextFieldRegular(
             "Enter Specific Task", _taskTextController, false),
+        SizedBox(height: 10),
         reusableTextFieldRegular(
             "Enter due date for task", _dueDateTextController, false),
+        SizedBox(height: 10),
         reusableTextFieldRegular(
             "Enter skills required for task", _skillsRequiredController, false),
+        SizedBox(height: 10),
         reusableTextFieldRegular(
             "Enter estimated time needed", _estimatedTimeController, false),
+        SizedBox(height: 10),
         reusableButton("Upload a file related to task", context, () async {
           File result = (await FileUploader.pickFile())!;
           setState(() {
