@@ -26,6 +26,7 @@ class _MyAppState extends State<MyApp> {
             //Image(image:AssetImage("") )  //show image on the app
             Image.file(file),
             
+            
             Expanded(
               child: Align(
                 alignment: Alignment.center,
@@ -53,6 +54,7 @@ class _MyAppState extends State<MyApp> {
       ),
     );
   }
+  
   
   void pickFile() async{
     FilePickerResult? result = await FilePicker.platform.pickFiles(
