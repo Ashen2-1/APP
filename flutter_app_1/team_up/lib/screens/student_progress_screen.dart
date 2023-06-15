@@ -27,6 +27,7 @@ class _StudentProgressScreenState extends State<StudentProgressScreen> {
   List<String> skillsNeeded = [];
 
   List<String> imageUrlList = [];
+
   //List<Image> resizedImageList = [];
   // List<Widget> taskBoxes = [];
 
