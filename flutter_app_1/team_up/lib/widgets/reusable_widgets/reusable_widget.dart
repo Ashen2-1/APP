@@ -194,7 +194,7 @@ SizedBox textFieldTaskInfo(
                     });
                   })
                 else if (isAssignment)
-                  reusableButton("START this task", context, () {
+                  reusableSignUpTaskButton("START this task", context, () {
                     ConfigUtils.goToScreen(CountdownPage(), context);
                   })
               ]),
