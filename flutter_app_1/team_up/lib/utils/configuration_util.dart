@@ -52,12 +52,12 @@ class ConfigUtils {
               goToScreen(const AddTasksScreen(), context);
             },
           ),
-          ListTile(
-            title: Text('Student Progress Page'),
-            onTap: () {
-              goToScreen(const StudentProgressScreen(), context);
-            },
-          ),
+          // ListTile(
+          //   title: Text('Student Progress Page'),
+          //   onTap: () {
+          //     goToScreen(const StudentProgressScreen(), context);
+          //   },
+          // ),
           ListTile(
             title: Text('Home Page'),
             onTap: () {

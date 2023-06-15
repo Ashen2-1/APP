@@ -183,7 +183,9 @@ SizedBox textFieldTaskInfo(
                                 await DatabaseAccess.getInstance()
                                     .getStudentTasks());
                         DatabaseAccess.getInstance().addToDatabase(
-                            "student tasks", "Eric", {"tasks": curTasks});
+                            "student tasks",
+                            StudentData.studentEmail,
+                            {"tasks": curTasks});
                         // Update status of current tasks to reflect unavailable
                         //DatabaseAccess.getInstance().updateField("", docId, data)
                       }
