@@ -75,8 +75,14 @@ class _StudentTasksScreenState extends State<StudentTasksScreen> {
           child: ListView.builder(
             itemCount: studentTasks.length,
             itemBuilder: (context, index) {
-              return textFieldTaskInfo(studentTasks[index], dueDates[index],
-                  skillsNeeded[index], imageUrlList[index], false, context);
+              return textFieldTaskInfo(
+                  studentTasks[index],
+                  dueDates[index],
+                  skillsNeeded[index],
+                  imageUrlList[index],
+                  false,
+                  true,
+                  context);
             },
           ),
         ),

@@ -3,6 +3,7 @@ import 'package:flutter_logs/flutter_logs.dart';
 import 'package:team_up/constants/borders.dart';
 import 'package:team_up/constants/colors.dart';
 import 'package:team_up/constants/student_data.dart';
+import 'package:team_up/screens/countdown-page.dart';
 import 'package:team_up/screens/page_navigation_screen.dart';
 import 'package:team_up/services/database_access.dart';
 import 'package:team_up/utils/configuration_util.dart';
@@ -142,6 +143,7 @@ SizedBox textFieldTaskInfo(
     String instructionsText,
     String imageUrl,
     bool isSignUp,
+    bool isAssignment,
     BuildContext context) {
   return SizedBox(
       height: 200.0,
@@ -190,6 +192,10 @@ SizedBox textFieldTaskInfo(
                         //DatabaseAccess.getInstance().updateField("", docId, data)
                       }
                     });
+                  })
+                else if (isAssignment)
+                  reusableButton("START this task", context, () {
+                    ConfigUtils.goToScreen(CountdownPage(), context);
                   })
               ]),
               const SizedBox(width: 10.0), // For spacing

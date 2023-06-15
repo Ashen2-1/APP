@@ -117,15 +117,14 @@ class _StudentProgressScreenState extends State<StudentProgressScreen> {
         //         "${_time.toString()} mins");
         addDynamicTaskFields(context);
       }),
-      SizedBox(
-          height: 500.0,
+      Expanded(
           child: ListView.builder(
-            itemCount: dueDates.length,
-            itemBuilder: (context, index) {
-              return textFieldTaskInfo(tasksList[index], dueDates[index],
-                  skillsNeeded[index], imageUrlList[index], true, context);
-            },
-          )),
+        itemCount: dueDates.length,
+        itemBuilder: (context, index) {
+          return textFieldTaskInfo(tasksList[index], dueDates[index],
+              skillsNeeded[index], imageUrlList[index], true, false, context);
+        },
+      )),
     ]);
   }
 }

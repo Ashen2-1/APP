@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'views/countdown-page.dart';
+import 'screens/countdown-page.dart';
 
 void main() {
   runApp(MyApp());
