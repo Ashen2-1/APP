@@ -39,10 +39,12 @@ class _StudentProgressScreenState extends State<StudentProgressScreen> {
         "MAINFRAME", "put widgets on screen", "query results: ${queryResults}");
 
     for (Map<String, dynamic> taskMap in queryResults!) {
-      tasksList.add(taskMap['task']);
-      dueDates.add(taskMap['due date']);
-      skillsNeeded.add(taskMap['skills needed']);
-      imageUrlList.add(taskMap['image url']);
+      if (!Util.contains(taskMap['task'], tasksList)) {
+        tasksList.add(taskMap['task']);
+        dueDates.add(taskMap['due date']);
+        skillsNeeded.add(taskMap['skills needed']);
+        imageUrlList.add(taskMap['image url']);
+      }
     }
     // tasksList = DatabaseAccess.getInstance().parseData("task", queryResults);
     // dueDates =
@@ -82,8 +84,7 @@ class _StudentProgressScreenState extends State<StudentProgressScreen> {
   Widget buildMainContent() {
     FlutterLogs.logInfo("Student Progress Screen", "Query Subteam",
         "Current: ${StudentData.getQuerySubTeam()}");
-    return SingleChildScrollView(
-        child: Column(children: [
+    return Column(children: [
       const Text("Available time: "),
       ListTile(
         title: const Text('10 mins'),
@@ -116,7 +117,7 @@ class _StudentProgressScreenState extends State<StudentProgressScreen> {
         addDynamicTaskFields(context);
       }),
       SizedBox(
-          height: 600.0,
+          height: 500.0,
           child: ListView.builder(
             itemCount: dueDates.length,
             itemBuilder: (context, index) {
@@ -124,6 +125,6 @@ class _StudentProgressScreenState extends State<StudentProgressScreen> {
                   skillsNeeded[index], imageUrlList[index], true, context);
             },
           )),
-    ]));
+    ]);
   }
 }
