@@ -194,6 +194,7 @@ SizedBox textFieldTaskInfo(
                 regularText("Due date: $dueDateText", context, false),
                 regularText("Skills needed: $instructionsText", context, false),
                 ////////////////////////////////////////////////new
+                
                 ElevatedButton(
                     onPressed: (){
                       
@@ -219,7 +220,8 @@ SizedBox textFieldTaskInfo(
                           "task": taskText,
                           "due date": dueDateText,
                           "skills needed": instructionsText,
-                          "image url": imageUrl
+                          "image url": imageUrl,
+                          "description": description,
                         };
                         List<Map<String, dynamic>> curTasks =
                             await Util.combineTaskIntoExisting(

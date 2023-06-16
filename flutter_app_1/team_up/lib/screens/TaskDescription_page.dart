@@ -98,7 +98,7 @@ class _TaskDescription_pageState extends State<TaskDescription_page>
             
             Center(
               child: Text(
-                "Task Description: ${addDynamicTaskFields(context)}", ////${StudentData.currentDescrption!}
+                "Task Description: ${StudentData.currentDescrption}", ////${StudentData.currentDescrption!}, ${addDynamicTaskFields(context)}
                 style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
               ),
             ),
@@ -111,22 +111,7 @@ class _TaskDescription_pageState extends State<TaskDescription_page>
                 primary: Colors.green,
               ),
               onPressed: () async {
-                String fileURL = "None";
-                TaskSnapshot imageSnapshot = await FileUploader.getInstance()
-                    .addFileToFirebaseStorage(file!);///////////////
-                fileURL = await imageSnapshot.ref.getDownloadURL();
-                Map<String, dynamic> teamToAdd = {
-                  'team number': _teamnumberTextController.text,
-                  'team name': _teamnameTextController.text,
-                  'team passcode': _passcodeTextController.text,
-                  'team logo url': fileURL
-                };
-                DatabaseAccess.getInstance().addToDatabase(
-                    "Teams", _teamnumberTextController.text, teamToAdd);
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => HomeScreen()));
-
-                /// here we can Navigator to Team Channel!
+                ///// add the task to my task page
               },
               child: Text("Sign Up for task"),
             ),
