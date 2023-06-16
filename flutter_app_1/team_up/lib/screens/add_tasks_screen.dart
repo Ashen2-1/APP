@@ -43,7 +43,9 @@ class _AddTasksScreenState extends State<AddTasksScreen> {
     'Build',
     'Programming',
     'Design',
-    'Media'
+    'Media',
+    "Outreach",
+    "Business"
   ];
 
   String subteam = 'Select a subteam';
