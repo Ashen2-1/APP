@@ -11,6 +11,11 @@ class StudentData {
 
   static String? currentTask;
 
+
+  //////////////////////////////new
+  static String? currentDescrption;
+  /////////////////////////// Descrption
+
   static Future<String> getStudentTeamNumber() async {
     return (await DatabaseAccess.getInstance()
         .getStudentStats())!['team number'];
@@ -18,6 +23,9 @@ class StudentData {
 
   static void setCurrentTask(String newTask) {
     currentTask = newTask;
+  }
+  static void setCurrentDescrption(String newDescription) {
+    currentDescrption = newDescription;
   }
 
   static void setQuerySubTeam(String newSubTeam) {

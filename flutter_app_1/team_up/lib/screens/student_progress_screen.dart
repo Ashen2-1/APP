@@ -28,7 +28,7 @@ class _StudentProgressScreenState extends State<StudentProgressScreen> {
   List<String> skillsNeeded = [];
 
   List<String> imageUrlList = [];
-
+  List<String> description = [];
   //List<Image> resizedImageList = [];
   // List<Widget> taskBoxes = [];
 
@@ -46,6 +46,7 @@ class _StudentProgressScreenState extends State<StudentProgressScreen> {
         dueDates.add(taskMap['due date']);
         skillsNeeded.add(taskMap['skills needed']);
         imageUrlList.add(taskMap['image url']);
+        description.add(taskMap["description"]);
       }
     }
     // tasksList = DatabaseAccess.getInstance().parseData("task", queryResults);
@@ -134,7 +135,7 @@ class _StudentProgressScreenState extends State<StudentProgressScreen> {
         itemCount: dueDates.length,
         itemBuilder: (context, index) {
           return textFieldTaskInfo(tasksList[index], dueDates[index],
-              skillsNeeded[index], imageUrlList[index], true, false, context);
+              skillsNeeded[index], imageUrlList[index],description[index], true, false, context);
         },
       )),
     ]);

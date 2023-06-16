@@ -31,11 +31,7 @@ class _Signupteam_pageState extends State<Signupteam_page>
   File? file;
 
   @override
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
-  }
+  
 
   @override
   Widget build(BuildContext context) {

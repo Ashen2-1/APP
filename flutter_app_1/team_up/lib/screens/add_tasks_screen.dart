@@ -30,6 +30,9 @@ class _AddTasksScreenState extends State<AddTasksScreen> {
       TextEditingController();
   final TextEditingController _estimatedTimeController =
       TextEditingController();
+  final TextEditingController _taskdescriptionTextController =
+      TextEditingController();
+      
 
   final TextEditingController _submissionController = TextEditingController();
 
@@ -75,7 +78,8 @@ class _AddTasksScreenState extends State<AddTasksScreen> {
       _taskTextController,
       _dueDateTextController,
       _skillsRequiredController,
-      _estimatedTimeController
+      _estimatedTimeController,
+      _taskdescriptionTextController
     ];
     //subteamList.add("Select subteam:");
 
@@ -137,6 +141,11 @@ class _AddTasksScreenState extends State<AddTasksScreen> {
         reusableTextFieldRegular(
             "Enter estimated time needed", _estimatedTimeController, false),
         SizedBox(height: 10),
+        ///////////////////////////////////////////////// new
+        reusableTextFieldRegular(
+            "Enter the description of the task", _taskdescriptionTextController, false),
+        SizedBox(height: 10),
+        ///////////////////////////////////////////////////// Task description
         reusableButton("Upload a file related to task", context, () async {
           File result = (await FileUploader.pickFile())!;
           setState(() {
@@ -157,6 +166,9 @@ class _AddTasksScreenState extends State<AddTasksScreen> {
           if (subteam != 'Select a subteam') {
             Map<String, dynamic> taskToAdd = {
               "task": _taskTextController.text,
+              ///////////////////////////////////new
+              "description":_taskdescriptionTextController.text,
+              //////////////////////////////////// task description
               "estimated time": _estimatedTimeController.text,
               "due date": _dueDateTextController.text,
               "skills needed": _skillsRequiredController.text,
