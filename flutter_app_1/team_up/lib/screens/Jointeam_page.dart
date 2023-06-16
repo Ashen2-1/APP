@@ -35,6 +35,7 @@ class _Jointeam_pageState extends State<Jointeam_page> {
     FlutterLogs.logInfo(
         "Join team", "searching team", "Searching for $team_number");
     team = await DatabaseAccess.getInstance().getPotentialTeam(team_number);
+    setState(() {});
   }
 
   @override
