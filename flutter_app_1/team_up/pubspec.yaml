@@ -49,6 +49,8 @@ dependencies:
   file_picker: ^5.2.2
   firebase_storage: ^11.2.2
   image: ^3.2.2
+  url_launcher: ^6.0.12
+  webview_flutter: ^2.3.0
 
 
 dev_dependencies:

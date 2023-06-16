@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_logs/flutter_logs.dart';
 import 'package:team_up/screens/page_navigation_screen.dart';
 import 'package:team_up/screens/student_tasks_screen.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 import '../screens/add_tasks_screen.dart';
 import '../screens/home_screen.dart';
@@ -87,5 +89,16 @@ class ConfigUtils {
           return true;
         },
         child: mainLayout());
+  }
+
+  static Future<void> launchURL(String url) async {
+    if (await canLaunchUrl(Uri.parse(url))) {
+      //WebView(initialUrl: url);
+      await launch(
+        url,
+        forceWebView: true,
+        enableJavaScript: true,
+      );
+    }
   }
 }

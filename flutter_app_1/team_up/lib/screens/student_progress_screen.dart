@@ -21,6 +21,7 @@ class StudentProgressScreen extends StatefulWidget {
 
 class _StudentProgressScreenState extends State<StudentProgressScreen> {
   int _time = -1;
+  int _prev_time = -2;
 
   List<String> tasksList = [];
   List<String> dueDates = [];
@@ -56,6 +57,14 @@ class _StudentProgressScreenState extends State<StudentProgressScreen> {
     // for (String imageUrl in imageUrlList) {
     //   resizedImageList.add(await Util.resizeImage(imageUrl, 1 / 8));
     // }
+    setState(() {});
+  }
+
+  void clearTaskFields() {
+    tasksList.clear();
+    dueDates.clear();
+    skillsNeeded.clear();
+    imageUrlList.clear();
     setState(() {});
   }
 
@@ -115,6 +124,9 @@ class _StudentProgressScreenState extends State<StudentProgressScreen> {
         // _tasks_controller.text = await DatabaseAccess.getInstance()
         //     .queryEqual("Programming (example)", "estimated time",
         //         "${_time.toString()} mins");
+        if (_time != _prev_time) {
+          clearTaskFields();
+        }
         addDynamicTaskFields(context);
       }),
       Expanded(

@@ -85,6 +85,8 @@ class DatabaseAccess {
     return null;
   }
 
+  /// Performs parsing so document snapshot can be transferred to List<Map<String, dynamic>>
+  /// Also provides time query filters if needed, enter -1 if not needed
   Future<List<Map<String, dynamic>>> parseStudentTaskData(
       DocumentSnapshot<Map<String, dynamic>>? docSnapshot, int time) async {
     List<Map<String, dynamic>> fieldResults = [];
@@ -125,6 +127,16 @@ class DatabaseAccess {
 
     if (docSnapshot != null) {
       return parseStudentTaskData(docSnapshot, time);
+    }
+    return null;
+  }
+
+  Future<List<Map<String, dynamic>>?> getStudentSubmissions() async {
+    DocumentSnapshot<Map<String, dynamic>>? docSnapshot =
+        await getDocumentByID("submissions", StudentData.studentEmail);
+
+    if (docSnapshot != null) {
+      return parseStudentTaskData(docSnapshot, -1);
     }
     return null;
   }

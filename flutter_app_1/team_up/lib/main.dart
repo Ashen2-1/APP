@@ -53,8 +53,8 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home:
-          //const AddTasksScreen(), //StudentProgressScreen(), //const SignInScreen(),
-          const SignInScreen(),
+          const AddTasksScreen(), //StudentProgressScreen(), //const SignInScreen(),
+      //const SignInScreen(),
     );
   }
 }

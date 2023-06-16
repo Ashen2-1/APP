@@ -8,6 +8,7 @@ import 'package:team_up/screens/student_progress_screen.dart';
 import 'package:team_up/services/file_uploader.dart';
 import 'package:team_up/utils/configuration_util.dart';
 import 'package:team_up/utils/util.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 import 'dart:io';
 
 import '../constants/colors.dart';
@@ -77,7 +78,6 @@ class _AddTasksScreenState extends State<AddTasksScreen> {
     //subteamList.add("Select subteam:");
 
     return SingleChildScrollView(
-      
         child: Column(
       children: [
         // Container(
@@ -147,7 +147,7 @@ class _AddTasksScreenState extends State<AddTasksScreen> {
           String imageURL = "None";
           if (file != null) {
             TaskSnapshot imageSnapshot = await FileUploader.getInstance()
-                .addImageToFirebaseStorage(file!);
+                .addFileToFirebaseStorage(file!);
             imageURL = await imageSnapshot.ref.getDownloadURL();
             FlutterLogs.logInfo(
                 "Add to Database", "Upload image", "Image URL: $imageURL");

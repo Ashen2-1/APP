@@ -195,6 +195,7 @@ SizedBox textFieldTaskInfo(
                   })
                 else if (isAssignment)
                   reusableSignUpTaskButton("START this task", context, () {
+                    StudentData.currentTask = taskText;
                     ConfigUtils.goToScreen(CountdownPage(), context);
                   })
               ]),

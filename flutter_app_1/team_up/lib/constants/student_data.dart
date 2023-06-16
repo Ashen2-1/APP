@@ -7,6 +7,12 @@ class StudentData {
   static String default_subteam = "Programming";
   static String querying_subteam = default_subteam;
 
+  static String? currentTask;
+
+  static void setCurrentTask(String newTask) {
+    currentTask = newTask;
+  }
+
   static void setQuerySubTeam(String newSubTeam) {
     querying_subteam = newSubTeam;
   }
