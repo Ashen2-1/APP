@@ -44,7 +44,7 @@ class _Enterteampasscode_pageState extends State<Enterteampasscode_page>
       appBar: AppBar(
         backgroundColor: Color.fromARGB(231, 178, 34, 230),
         title: const Text(
-          "          Join a Team Channel!",
+          "Join a Team Channel!",
           style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
         ),
       ),
