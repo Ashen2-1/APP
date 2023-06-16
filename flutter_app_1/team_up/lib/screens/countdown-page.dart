@@ -176,7 +176,7 @@ class _CountdownPageState extends State<CountdownPage>
                   "Student task", "Submission", "Successfully submitted");
             }
           }),
-          SizedBox(height: 60),
+          SizedBox(height: 0),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 30),
             child: Row(
