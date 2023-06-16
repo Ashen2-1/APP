@@ -1,6 +1,8 @@
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:team_up/screens/home_screen.dart';
+import 'package:team_up/services/database_access.dart';
 
 import '../services/file_uploader.dart';
 import '../widgets/reusable_widgets/reusable_widget.dart';
@@ -81,7 +83,7 @@ class _Signupteam_pageState extends State<Signupteam_page>
             const SizedBox(
               height: 20,
             ),
-            reusableButton("Upload a file related to task", context, () async {
+            reusableButton("Upload a logo for the team", context, () async {
               File result = (await FileUploader.pickFile())!;
               setState(() {
                 file = result;
@@ -92,7 +94,19 @@ class _Signupteam_pageState extends State<Signupteam_page>
               style: ElevatedButton.styleFrom(
                 primary: Colors.green,
               ),
-              onPressed: () {
+              onPressed: () async {
+                String fileURL = "None";
+                TaskSnapshot imageSnapshot = await FileUploader.getInstance()
+                    .addFileToFirebaseStorage(file!);
+                fileURL = await imageSnapshot.ref.getDownloadURL();
+                Map<String, dynamic> teamToAdd = {
+                  'team number': _teamnumberTextController.text,
+                  'team name': _teamnameTextController.text,
+                  'team passcode': _passcodeTextController.text,
+                  'team logo url': fileURL
+                };
+                DatabaseAccess.getInstance().addToDatabase(
+                    "Teams", _teamnumberTextController.text, teamToAdd);
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => HomeScreen()));
 

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_logs/flutter_logs.dart';
+import 'package:team_up/screens/Enterteampasscode_page.dart';
+import 'package:team_up/screens/Jointeam_page.dart';
+import 'package:team_up/screens/Sign_Up_Team_page.dart';
 import 'package:team_up/screens/page_navigation_screen.dart';
 import 'package:team_up/screens/student_tasks_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -72,6 +75,24 @@ class ConfigUtils {
               goToScreen(const StudentTasksScreen(), context);
             },
           ),
+          ListTile(
+            title: Text('Sign up your team Page!'),
+            onTap: () {
+              goToScreen(const Signupteam_page(), context);
+            },
+          ),
+          ListTile(
+            title: Text('Join a team!'),
+            onTap: () {
+              goToScreen(const Enterteampasscode_page(), context);
+            },
+          ),
+          // ListTile(
+          //   title: Text('Sign up your team Page!'),
+          //   onTap: () {
+          //     goToScreen(const Signupteam_page(), context);
+          //   },
+          // ),
         ],
       ),
     );

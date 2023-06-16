@@ -140,4 +140,14 @@ class DatabaseAccess {
     }
     return null;
   }
+
+  Future<Map<String, dynamic>?> getPotentialTeam(String team_number) async {
+    DocumentSnapshot<Map<String, dynamic>>? docSnapshot =
+        await getDocumentByID("Teams", team_number);
+
+    if (docSnapshot != null) {
+      return docSnapshot.data();
+    }
+    return null;
+  }
 }

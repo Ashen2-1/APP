@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:flutter_logs/flutter_logs.dart';
 import 'package:team_up/screens/page_navigation_screen.dart';
@@ -22,17 +20,19 @@ class _Jointeam_pageState extends State<Jointeam_page> {
 
   List<Map<String, dynamic>>? studentTasksMap;
   //List<String> task = [];
+  Map<String, dynamic>? team;
 
   TextEditingController _teamnumberTextController = TextEditingController();
-  
-
-  
 
   void menuToggleExpansion() {
     setState(() {
       ConfigUtils.goToScreen(PageNavigationScreen(), context);
       PageNavigationScreen.setIncomingScreen(Jointeam_page());
     });
+  }
+
+  void searchTeams(String team_number) async {
+    team = await DatabaseAccess.getInstance().getPotentialTeam(team_number);
   }
 
   @override
@@ -43,45 +43,55 @@ class _Jointeam_pageState extends State<Jointeam_page> {
   Scaffold mainLayout() {
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 201, 141, 141),
-      appBar:  AppBar(
-
+      appBar: AppBar(
         backgroundColor: Color.fromARGB(231, 178, 34, 230),
         title: const Text(
           "          Join a Team Channel!",
           style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
         ),
-
       ),
-      
       body: buildMainContent(),
     );
   }
 
   Widget buildMainContent() {
     return Column(
-      
       children: [
-        SizedBox(height: 20,),
-        const Text("Available Teams: ",style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
-        SizedBox(height: 20,),
-        
+        SizedBox(
+          height: 20,
+        ),
+        const Text(
+          "Available Teams: ",
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        ),
+        SizedBox(
+          height: 20,
+        ),
+
         reusableTextFieldRegular(
             "Enter Specific Team Number", _teamnumberTextController, false),
-        
-         // to search their team by team number!
-        
+
+        // to search their team by team number!
+
         //ListTile(
-          //title: const Text('Team number:'),
-          
+        //title: const Text('Team number:'),
+
         //),
+        if (team != null)
+          Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+            Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              regularText(
+                  "Team Number: ${team!['team number']}", context, true),
+              regularText("Team Name: ${team!['team name']}", context, false),
+            ]),
+            Image.network(team!['team logo url']),
+          ]),
+        // SizedBox(
+        //   height: 300,
+        // ),
 
-        
-
-
-        SizedBox(height: 469,),
-        
         reusableButton("Update/Search The Teams", context, () async {
-          //configure();
+          searchTeams(_teamnumberTextController.text);
         }),
       ],
     );
