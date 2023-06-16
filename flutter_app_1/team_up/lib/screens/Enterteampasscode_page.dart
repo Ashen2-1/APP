@@ -32,11 +32,7 @@ class _Enterteampasscode_pageState extends State<Enterteampasscode_page>
   File? file;
 
   @override
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
-  }
+  
 
   @override
   Widget build(BuildContext context) {

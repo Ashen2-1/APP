@@ -1,8 +1,12 @@
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:team_up/constants/colors.dart';
+import 'package:team_up/screens/add_tasks_screen.dart';
 import 'package:team_up/screens/home_screen.dart';
+import 'package:team_up/screens/page_navigation_screen.dart';
 import 'package:team_up/services/database_access.dart';
+import 'package:team_up/utils/configuration_util.dart';
 
 import '../services/file_uploader.dart';
 import '../widgets/reusable_widgets/reusable_widget.dart';
@@ -31,15 +35,28 @@ class _Signupteam_pageState extends State<Signupteam_page>
   File? file;
 
   @override
-  
-
+  void menuToggleExpansion() {
+    setState(() {
+      ConfigUtils.goToScreen(PageNavigationScreen(), context);
+      PageNavigationScreen.setIncomingScreen(AddTasksScreen());
+    });
+  }
+  Scaffold mainLayout() {
+    return Scaffold(
+      backgroundColor: tdBGColor,
+      appBar: buildAppBar(menuToggleExpansion),
+      
+    );
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      
       appBar: AppBar(
+        
         backgroundColor: Color.fromARGB(231, 178, 34, 230),
         title: const Text(
-          "Sign Up for Your Team Channel!",
+          "Sign Up for Your Team!",
           style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
         ),
       ),
