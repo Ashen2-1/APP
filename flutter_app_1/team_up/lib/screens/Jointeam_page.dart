@@ -32,6 +32,8 @@ class _Jointeam_pageState extends State<Jointeam_page> {
   }
 
   void searchTeams(String team_number) async {
+    FlutterLogs.logInfo(
+        "Join team", "searching team", "Searching for $team_number");
     team = await DatabaseAccess.getInstance().getPotentialTeam(team_number);
   }
 
@@ -78,14 +80,34 @@ class _Jointeam_pageState extends State<Jointeam_page> {
 
         //),
         if (team != null)
-          Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-            Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              regularText(
-                  "Team Number: ${team!['team number']}", context, true),
-              regularText("Team Name: ${team!['team name']}", context, false),
-            ]),
-            Image.network(team!['team logo url']),
-          ]),
+          SizedBox(
+              height: 100.0,
+              width: MediaQuery.of(context).size.width,
+              child: Container(
+                height: 100.0,
+                padding: const EdgeInsets.all(10.0),
+                margin: const EdgeInsets.all(10.0),
+                //width: 200.0, //MediaQuery.of(context).size.width,
+                decoration: BoxDecoration(
+                    color: Color.fromARGB(255, 6, 227, 201).withOpacity(0.3),
+                    borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(10),
+                        topRight: Radius.circular(10),
+                        bottomLeft: Radius.circular(10),
+                        bottomRight: Radius.circular(10))),
+                child:
+                    Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+                  Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        regularText("Team Number: ${team!['team number']}",
+                            context, true),
+                        regularText(
+                            "Team Name: ${team!['team name']}", context, false),
+                      ]),
+                  Expanded(child: Image.network(team!['team logo url'])),
+                ]),
+              )),
         // SizedBox(
         //   height: 300,
         // ),
