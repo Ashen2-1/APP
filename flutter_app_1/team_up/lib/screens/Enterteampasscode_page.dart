@@ -1,0 +1,120 @@
+
+
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:team_up/screens/home_screen.dart';
+
+
+
+
+import '../services/file_uploader.dart';
+import '../widgets/reusable_widgets/reusable_widget.dart';
+import '../widgets/round-button2.dart';
+import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
+import 'dart:io';
+
+import '../widgets/widgets.dart';
+
+
+class Enterteampasscode_page extends StatefulWidget {
+  const Enterteampasscode_page({Key? key}) : super(key: key);
+
+  @override
+  _Enterteampasscode_pageState createState() => _Enterteampasscode_pageState();
+}
+
+class _Enterteampasscode_pageState extends State<Enterteampasscode_page>
+    with TickerProviderStateMixin {
+  TextEditingController _teamnumberTextController = TextEditingController();
+  //TextEditingController _teamnameTextController = TextEditingController();
+  TextEditingController _passcodeTextController = TextEditingController();
+      
+  late AnimationController controller;
+  
+  bool isPlaying = false;
+  File? file;
+  
+
+  
+
+  
+
+  @override
+  
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+
+        backgroundColor: Color.fromARGB(231, 178, 34, 230),
+        title: const Text(
+          "          Join a Team Channel!",
+          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+        ),
+
+      ),
+      backgroundColor: Color.fromARGB(255, 201, 141, 141),
+      
+      body: Container(
+        
+        child: Column(
+              children: <Widget>[
+                const SizedBox(
+                  height: 50,
+                ),
+                Text("Team Channel!",
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(
+                  height: 30,
+                ),
+                Text("    Note: Team Channel Will have the same functions as the public channel but it only serve for the team mabers!",
+                style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                
+                ),
+                const SizedBox(
+                  height: 40,
+                ),
+                reusableTextField("Enter Team Number", Icons.person_outline, false,
+                    _teamnumberTextController),
+                const SizedBox(
+                  height: 20,
+                ),
+                
+                
+                reusableTextField("Enter Pass Code", Icons.lock_clock_outlined,
+                    true, _passcodeTextController),
+                
+                const SizedBox(
+                  height: 20,
+                ),
+
+                //reusableButton("Join the Team", context, () async {
+                  //Navigator.push(context,
+                    //MaterialPageRoute(builder: (context) => HomeScreen()));
+                //}),
+
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    primary: Color.fromARGB(255, 19, 78, 218),
+                  ),
+                  onPressed: (){
+                  
+                  Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => HomeScreen())); 
+                    /// here we can Navigator to Team Channel!
+                },child: Text("Join the Team"),),
+
+              ],
+      ),
+    ),
+    );
+  }
+}
