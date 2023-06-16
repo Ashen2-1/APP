@@ -137,6 +137,27 @@ Future<void> displayError(Object error, BuildContext context) async {
   );
 }
 
+Future<void> displayErrorFromString(String error, BuildContext context) async {
+  await showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('Error'),
+        content: Text(error),
+        actions: [
+          TextButton(
+            child: Text('Ok'),
+            onPressed: () {
+              Navigator.of(context)
+                  .pop(true); // Return false when "No" is pressed
+            },
+          ),
+        ],
+      );
+    },
+  );
+}
+
 SizedBox textFieldTaskInfo(
     String taskText,
     String dueDateText,

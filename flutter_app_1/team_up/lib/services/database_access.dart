@@ -150,4 +150,14 @@ class DatabaseAccess {
     }
     return null;
   }
+
+  Future<Map<String, dynamic>?> getStudentStats() async {
+    DocumentSnapshot<Map<String, dynamic>>? docSnapshot =
+        await getDocumentByID("student tasks", StudentData.studentEmail);
+
+    if (docSnapshot != null) {
+      return docSnapshot.data();
+    }
+    return null;
+  }
 }
