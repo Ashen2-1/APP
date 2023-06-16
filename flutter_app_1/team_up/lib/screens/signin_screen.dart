@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:team_up/screens/add_tasks_screen.dart';
+import 'package:team_up/screens/home_screen.dart';
 import 'package:team_up/screens/signup_screen.dart';
 import 'package:team_up/utils/color_utils.dart';
 
@@ -66,7 +67,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => AddTasksScreen()));
+                            builder: (context) => HomeScreen()));
                   }).onError((error, stackTrace) {
                     displayError(error!, context);
                     print("Error ${error.toString()}");

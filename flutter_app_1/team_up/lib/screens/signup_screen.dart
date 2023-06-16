@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:team_up/screens/home_screen.dart';
 import 'package:team_up/widgets/reusable_widgets/reusable_widget.dart';
 import 'package:team_up/screens/add_tasks_screen.dart';
 import 'package:team_up/utils/color_utils.dart';
@@ -71,7 +72,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => AddTasksScreen()));
+                            builder: (context) => HomeScreen()));
                   }).onError((error, stackTrace) {
                     displayError(error!, context);
                     print("Error ${error.toString()}");
