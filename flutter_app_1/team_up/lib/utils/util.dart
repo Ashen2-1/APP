@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_logs/flutter_logs.dart';
 
 import '../services/database_access.dart';
 import 'package:image/image.dart' as IMG;
@@ -30,15 +31,31 @@ class Util {
   static Future<List<Map<String, dynamic>>> combineTaskIntoExisting(
       Map<String, dynamic> taskToAdd,
       List<Map<String, dynamic>>? prevTasks) async {
-    if (prevTasks != null || prevTasks!.isNotEmpty) {
+    FlutterLogs.logInfo("print prev tasks", " ", "$prevTasks");
+    if (prevTasks == null || prevTasks.isEmpty)
+      prevTasks = [taskToAdd];
+    else {
       if (!Util.isTaskIn(
           taskToAdd['task'], prevTasks.cast<Map<String, dynamic>>())) {
         prevTasks.add(taskToAdd);
       }
-    } else {
-      prevTasks = [taskToAdd];
     }
 
+    return prevTasks;
+  }
+
+  static List<Map<String, dynamic>> matchAndCombineExisting(
+      Map<String, dynamic> taskToAdd, List<Map<String, dynamic>>? prevTasks) {
+    if (prevTasks == null || prevTasks.isEmpty)
+      prevTasks = [taskToAdd];
+    else {
+      //for (Map<String, dynamic> taskMap in prevTasks) {
+      for (int i = 0; i < prevTasks.length; i++) {
+        if (prevTasks[i]['task'] == taskToAdd['task']) {
+          prevTasks[i] = taskToAdd;
+        }
+      }
+    }
     return prevTasks;
   }
 

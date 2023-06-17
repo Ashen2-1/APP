@@ -11,7 +11,12 @@ class StudentData {
 
   static String? currentTask;
 
-  static String? approvalTask;
+  static Map<String, dynamic>? approvalTask;
+
+  static Map<String, dynamic>? getApprovalTask() {
+    return approvalTask;
+  }
+
   static bool isAdmin = true;
 
   //////////////////////////////new
@@ -25,10 +30,6 @@ class StudentData {
 
   static void setCurrentTask(String newTask) {
     currentTask = newTask;
-  }
-
-  static void setCurrentDescrption(String newDescription) {
-    currentDescrption = newDescription;
   }
 
   static void setCurrentDescrption(String newDescription) {

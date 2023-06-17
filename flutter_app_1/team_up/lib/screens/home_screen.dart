@@ -51,8 +51,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void menuToggleExpansion() {
     setState(() {
-      ConfigUtils.goToScreen(PageNavigationScreen(), context);
       PageNavigationScreen.setIncomingScreen(HomeScreen());
+      ConfigUtils.goToScreen(PageNavigationScreen(), context);
     });
   }
 

@@ -56,7 +56,6 @@ class _TaskDescription_pageState extends State<TaskDescription_page>
         skillsNeeded.add(taskMap['skills needed']);
         imageUrlList.add(taskMap['image url']);
         description.add(taskMap["description"]);
-
       }
     }
     // tasksList = DatabaseAccess.getInstance().parseData("task", queryResults);
@@ -77,14 +76,13 @@ class _TaskDescription_pageState extends State<TaskDescription_page>
   File? file;
 
   @override
-  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      
       appBar: AppBar(
         backgroundColor: Color.fromARGB(231, 178, 34, 230),
-        title: const Text("Descriptions",
+        title: const Text(
+          "Descriptions",
           style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
         ),
       ),
@@ -95,7 +93,6 @@ class _TaskDescription_pageState extends State<TaskDescription_page>
             const SizedBox(
               height: 50,
             ),
-            
             Center(
               child: Text(
                 "Task Description: ${StudentData.currentDescrption}", ////${StudentData.currentDescrption!}, ${addDynamicTaskFields(context)}
@@ -105,7 +102,6 @@ class _TaskDescription_pageState extends State<TaskDescription_page>
             const SizedBox(
               height: 40,
             ),
-            
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                 primary: Colors.green,
@@ -115,16 +111,21 @@ class _TaskDescription_pageState extends State<TaskDescription_page>
               },
               child: Text("Sign Up for task"),
             ),
-            
-
             Expanded(
-          child: ListView.builder(
-        itemCount: dueDates.length,
-        itemBuilder: (context, index) {
-          return textFieldTaskInfo(tasksList[index], dueDates[index],
-              skillsNeeded[index], imageUrlList[index],description[index], true, false, context);
-        },
-      )),
+                child: ListView.builder(
+              itemCount: dueDates.length,
+              itemBuilder: (context, index) {
+                return textFieldTaskInfo(
+                    tasksList[index],
+                    dueDates[index],
+                    skillsNeeded[index],
+                    imageUrlList[index],
+                    description[index],
+                    true,
+                    false,
+                    context);
+              },
+            )),
           ],
         ),
       ),

@@ -85,7 +85,6 @@ class _StudentTasksScreenState extends State<StudentTasksScreen> {
                   description[index],
                   false,
                   true,
-                  false,
                   context);
             },
           ),

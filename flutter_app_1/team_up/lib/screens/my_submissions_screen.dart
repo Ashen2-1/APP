@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_logs/flutter_logs.dart';
+import 'package:team_up/screens/countdown-page.dart';
+import 'package:team_up/screens/home_screen.dart';
 import 'package:team_up/screens/page_navigation_screen.dart';
 import 'package:team_up/services/database_access.dart';
 import 'package:team_up/utils/configuration_util.dart';
@@ -10,14 +12,14 @@ import '../constants/student_data.dart';
 import '../utils/util.dart';
 import 'Approve_page.dart';
 
-class AllApproveTasksScreen extends StatefulWidget {
-  const AllApproveTasksScreen({Key? key}) : super(key: key);
+class MySubmissionsScreen extends StatefulWidget {
+  const MySubmissionsScreen({Key? key}) : super(key: key);
 
   @override
-  State<AllApproveTasksScreen> createState() => _AllApproveTasksScreenState();
+  State<MySubmissionsScreen> createState() => _MySubmissionsScreenState();
 }
 
-class _AllApproveTasksScreenState extends State<AllApproveTasksScreen> {
+class _MySubmissionsScreenState extends State<MySubmissionsScreen> {
   bool _isExpanded = false;
 
   List<Map<String, dynamic>>? studentTasksMap;
@@ -25,6 +27,8 @@ class _AllApproveTasksScreenState extends State<AllApproveTasksScreen> {
 
   List<String> studentTasks = [];
   List<String> imageURL = [];
+  List<String> feedback = [];
+  List<String> completePercentages = [];
 
   Future<void> configure() async {
     //studentTasksMap
@@ -36,6 +40,8 @@ class _AllApproveTasksScreenState extends State<AllApproveTasksScreen> {
       if (!Util.contains(taskMap['task'], studentTasks)) {
         studentTasks.add(taskMap['task']);
         imageURL.add(taskMap['file url']);
+        feedback.add(taskMap['feedback']);
+        completePercentages.add(taskMap['complete percentage']);
         FlutterLogs.logInfo("My Tasks", "Add to ListView",
             "Displaying task: ${taskMap['task']}");
       }
@@ -49,7 +55,7 @@ class _AllApproveTasksScreenState extends State<AllApproveTasksScreen> {
   void menuToggleExpansion() {
     setState(() {
       ConfigUtils.goToScreen(PageNavigationScreen(), context);
-      PageNavigationScreen.setIncomingScreen(AllApproveTasksScreen());
+      PageNavigationScreen.setIncomingScreen(MySubmissionsScreen());
     });
   }
 
@@ -88,20 +94,37 @@ class _AllApproveTasksScreenState extends State<AllApproveTasksScreen> {
                       child: Row(children: [
                         Column(children: [
                           regularText(studentTasks[index], context, true),
-                          reusableSignUpTaskButton("APPROVE this task", context,
-                              () {
-                            StudentData.approvalTask = studentTasksMap![index];
-                            if (StudentData.isAdmin) {
+                          if (feedback[index] != "None")
+                            regularText(
+                                "Feedback: ${feedback[index]}", context, false),
+                          if (completePercentages[index] != "None")
+                            regularText(
+                                "Complete percentage: ${completePercentages[index]}",
+                                context,
+                                false),
+                          if (completePercentages[index] == "100%")
+                            reusableSignUpTaskButton("Clear this task", context,
+                                () {
+                              studentTasksMap!.removeAt(index);
+                              DatabaseAccess.getInstance().addToDatabase(
+                                  "submissions",
+                                  StudentData.studentEmail,
+                                  {'tasks': studentTasksMap});
                               ConfigUtils.goToScreen(
-                                  const Approve_page(), context);
-                            }
-                          })
+                                  const HomeScreen(), context);
+                            })
+                          else
+                            reusableSignUpTaskButton(
+                                "Keep completing task", context, () {
+                              StudentData.currentTask = studentTasks[index];
+                              ConfigUtils.goToScreen(CountdownPage(), context);
+                            })
                         ]),
                         if (imageURL[index] != "None")
                           Expanded(child: Image.network(imageURL[index]))
                       ]));
                 })),
-        reusableButton("Update tasks to approve", context, () async {
+        reusableButton("Update submitted tasks", context, () async {
           configure();
         }),
       ],

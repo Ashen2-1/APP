@@ -171,18 +171,16 @@ SizedBox textFieldTaskInfo(
     String description,
     bool isSignUp,
     bool isAssignment,
-    bool isApproval,
     BuildContext context) {
   return SizedBox(
       height: 200.0,
       width: MediaQuery.of(context).size.width,
       child: Container(
           height: 100.0,
-          
           padding: const EdgeInsets.all(12.0),
           margin: const EdgeInsets.all(10.0),
           //width: 200.0, //MediaQuery.of(context).size.width,
-          
+
           decoration: BoxDecoration(
               color: Color.fromARGB(255, 193, 184, 184).withOpacity(0.3),
               borderRadius: const BorderRadius.only(
@@ -197,22 +195,24 @@ SizedBox textFieldTaskInfo(
                 regularText("Due date: $dueDateText", context, false),
                 regularText("Skills needed: $instructionsText", context, false),
                 ////////////////////////////////////////////////new
-                
-                ElevatedButton(
-                    onPressed: (){
-                      
-                      Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => TaskDescription_page())); ///TaskDescription_page
-                    }, 
-                    child: Text("Description"),
-                    style: ElevatedButton.styleFrom(
-                      primary: Colors.blue,
-                    ),
 
+                ElevatedButton(
+                  onPressed: () {
+                    StudentData.setCurrentDescrption(description);
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => TaskDescription_page()));
+
+                    ///TaskDescription_page
+                  },
+                  child: Text("Description"),
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.blue,
                   ),
-                  //////////////////////////////////////// Task Descriptions
+                ),
+                //////////////////////////////////////// Task Descriptions
                 if (isSignUp /*&& Util.isTaskIn(taskText)*/)
-                  
                   reusableSignUpTaskButton("Sign up for task", context, () {
                     _askConfirmation(context, taskText)
                         .then((confirmation) async {
@@ -245,24 +245,13 @@ SizedBox textFieldTaskInfo(
                     StudentData.currentTask = taskText;
                     ConfigUtils.goToScreen(CountdownPage(), context);
                   })
-                else if (isApproval)
-                  reusableSignUpTaskButton("APPROVE this task", context, () {
-                    StudentData.approvalTask = taskText;
-                    if (StudentData.isAdmin) {
-                      ConfigUtils.goToScreen(Approve_page(), context);
-                    }
-                  })
               ]),
               const SizedBox(width: 10.0), // For spacing
               if (imageUrl != "None") Flexible(child: Image.network(imageUrl)),
             ]),
           ])));
   //////////////////////////////////////////////////////////////////////new
-  
- 
-
 }
-
 
 SizedBox regularText(String text, BuildContext context, bool isTitle) {
   return SizedBox(

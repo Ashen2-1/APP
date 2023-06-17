@@ -142,7 +142,6 @@ class _StudentProgressScreenState extends State<StudentProgressScreen> {
               description[index],
               true,
               false,
-              false,
               context);
         },
       )),

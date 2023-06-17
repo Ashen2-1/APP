@@ -160,8 +160,10 @@ class _CountdownPageState extends State<CountdownPage>
               }),
           reusableButton("Submit for approval", context, () async {
             Map<String, dynamic> taskToAdd = {
-              'task completed': StudentData.currentTask,
-              'file url': fileURL
+              'task': StudentData.currentTask,
+              'file url': fileURL,
+              'feedback': "None",
+              'complete percentage': "None"
             };
 
             List<Map<String, dynamic>> curPendingTasks =
@@ -173,6 +175,8 @@ class _CountdownPageState extends State<CountdownPage>
 
             FlutterLogs.logInfo(
                 "Student task", "Submission", "Successfully submitted");
+
+            ConfigUtils.goToScreen(HomeScreen(), context);
           }),
           SizedBox(height: 0),
           Padding(
