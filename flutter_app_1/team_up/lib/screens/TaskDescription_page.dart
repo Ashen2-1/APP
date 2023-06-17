@@ -3,11 +3,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_logs/flutter_logs.dart';
 import 'package:team_up/screens/home_screen.dart';
+import 'package:team_up/screens/web_view_page.dart';
 import 'package:team_up/services/database_access.dart';
 import 'package:team_up/utils/configuration_util.dart';
 import 'package:team_up/utils/util.dart';
 import '../constants/student_data.dart';
 import '../services/file_uploader.dart';
+import '../utils/fonts.dart';
 import '../widgets/reusable_widgets/reusable_widget.dart';
 import '../widgets/round-button2.dart';
 import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
@@ -95,37 +97,56 @@ class _TaskDescription_pageState extends State<TaskDescription_page>
             ),
             Center(
               child: Text(
-                "Task Description: ${StudentData.currentDescrption}", ////${StudentData.currentDescrption!}, ${addDynamicTaskFields(context)}
+                "Task: ${StudentData.viewingTask!['task']}", ////${StudentData.currentDescrption!}, ${addDynamicTaskFields(context)}
+                style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+              ),
+            ),
+            const SizedBox(
+              height: 25,
+            ),
+            Center(
+              child: Text(
+                "Task Description: ${StudentData.viewingTask!['description']}", ////${StudentData.currentDescrption!}, ${addDynamicTaskFields(context)}
                 style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
               ),
             ),
             const SizedBox(
               height: 40,
             ),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                primary: Colors.green,
-              ),
-              onPressed: () async {
-                ///// add the task to my task page
-              },
-              child: Text("Sign Up for task"),
+            if (StudentData.viewingTask!['image url'] != "None")
+              Expanded(
+                  child: Image.network(StudentData.viewingTask!['image url'])),
+            const SizedBox(
+              height: 40,
             ),
-            Expanded(
-                child: ListView.builder(
-              itemCount: dueDates.length,
-              itemBuilder: (context, index) {
-                return textFieldTaskInfo(
-                    tasksList[index],
-                    dueDates[index],
-                    skillsNeeded[index],
-                    imageUrlList[index],
-                    description[index],
-                    true,
-                    false,
-                    context);
-              },
-            )),
+            if (StudentData.descriptionIncomingPage == "search tasks")
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.green,
+                ),
+                onPressed: () async {
+                  ///// add the task to my task page
+                  askConfirmation(context, StudentData.viewingTask!['task'])
+                      .then((confirmation) async {
+                    if (confirmation != null && confirmation) {
+                      FlutterLogs.logInfo("TASK FIELD", "Sign up button",
+                          "Adding ${StudentData.viewingTask!['task']}");
+                      Map<String, dynamic> taskToAdd = StudentData.viewingTask!;
+                      List<Map<String, dynamic>> curTasks =
+                          await Util.combineTaskIntoExisting(
+                              taskToAdd,
+                              await DatabaseAccess.getInstance()
+                                  .getStudentTasks());
+                      DatabaseAccess.getInstance().addToDatabase(
+                          "student tasks",
+                          StudentData.studentEmail,
+                          {"tasks": curTasks});
+                    }
+                  });
+                },
+                child: Text("Sign Up for task"),
+              ),
+            const SizedBox(height: 20),
           ],
         ),
       ),
