@@ -140,9 +140,11 @@ class _CountdownPageState extends State<CountdownPage>
               file = result;
               isPlaying = true;
             });
-            TaskSnapshot imageSnapshot = await FileUploader.getInstance()
-                .addFileToFirebaseStorage(file!);
-            fileURL = await imageSnapshot.ref.getDownloadURL();
+            if (file != null) {
+              TaskSnapshot imageSnapshot = await FileUploader.getInstance()
+                  .addFileToFirebaseStorage(file!);
+              fileURL = await imageSnapshot.ref.getDownloadURL();
+            }
             setState(() {});
           }),
           // if (fileURL != "None") WebView(initialUrl: fileURL),
@@ -157,24 +159,20 @@ class _CountdownPageState extends State<CountdownPage>
                 ConfigUtils.goToScreen(OpenUrlInWebView(url: fileURL), context);
               }),
           reusableButton("Submit for approval", context, () async {
-            if (file != null) {
-              Map<String, dynamic> taskToAdd = {
-                'task completed': StudentData.currentTask,
-                'file url': fileURL
-              };
+            Map<String, dynamic> taskToAdd = {
+              'task completed': StudentData.currentTask,
+              'file url': fileURL
+            };
 
-              List<Map<String, dynamic>> curPendingTasks =
-                  await Util.combineTaskIntoExisting(
-                      taskToAdd,
-                      await DatabaseAccess.getInstance()
-                          .getStudentSubmissions());
+            List<Map<String, dynamic>> curPendingTasks =
+                await Util.combineTaskIntoExisting(taskToAdd,
+                    await DatabaseAccess.getInstance().getStudentSubmissions());
 
-              DatabaseAccess.getInstance().addToDatabase("submissions",
-                  StudentData.studentEmail, {'submission': curPendingTasks});
+            DatabaseAccess.getInstance().addToDatabase("submissions",
+                StudentData.studentEmail, {'tasks': curPendingTasks});
 
-              FlutterLogs.logInfo(
-                  "Student task", "Submission", "Successfully submitted");
-            }
+            FlutterLogs.logInfo(
+                "Student task", "Submission", "Successfully submitted");
           }),
           SizedBox(height: 0),
           Padding(

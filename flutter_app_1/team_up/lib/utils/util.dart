@@ -30,8 +30,9 @@ class Util {
   static Future<List<Map<String, dynamic>>> combineTaskIntoExisting(
       Map<String, dynamic> taskToAdd,
       List<Map<String, dynamic>>? prevTasks) async {
-    if (prevTasks != null) {
-      if (!Util.isTaskIn(taskToAdd['task'], prevTasks)) {
+    if (prevTasks != null || prevTasks!.isNotEmpty) {
+      if (!Util.isTaskIn(
+          taskToAdd['task'], prevTasks.cast<Map<String, dynamic>>())) {
         prevTasks.add(taskToAdd);
       }
     } else {

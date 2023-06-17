@@ -3,6 +3,8 @@ import 'package:flutter_logs/flutter_logs.dart';
 import 'package:team_up/constants/borders.dart';
 import 'package:team_up/constants/colors.dart';
 import 'package:team_up/constants/student_data.dart';
+import 'package:team_up/screens/Approve_page.dart';
+import 'package:team_up/screens/all_approve_tasks_screen.dart';
 import 'package:team_up/screens/countdown-page.dart';
 import 'package:team_up/screens/page_navigation_screen.dart';
 import 'package:team_up/services/database_access.dart';
@@ -165,6 +167,7 @@ SizedBox textFieldTaskInfo(
     String imageUrl,
     bool isSignUp,
     bool isAssignment,
+    bool isApproval,
     BuildContext context) {
   return SizedBox(
       height: 200.0,
@@ -218,6 +221,13 @@ SizedBox textFieldTaskInfo(
                   reusableSignUpTaskButton("START this task", context, () {
                     StudentData.currentTask = taskText;
                     ConfigUtils.goToScreen(CountdownPage(), context);
+                  })
+                else if (isApproval)
+                  reusableSignUpTaskButton("APPROVE this task", context, () {
+                    StudentData.approvalTask = taskText;
+                    if (StudentData.isAdmin) {
+                      ConfigUtils.goToScreen(Approve_page(), context);
+                    }
                   })
               ]),
               const SizedBox(width: 10.0), // For spacing

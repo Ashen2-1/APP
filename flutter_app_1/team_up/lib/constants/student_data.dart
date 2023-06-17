@@ -11,6 +11,9 @@ class StudentData {
 
   static String? currentTask;
 
+  static String? approvalTask;
+  static bool isAdmin = true;
+
   static Future<String> getStudentTeamNumber() async {
     return (await DatabaseAccess.getInstance()
         .getStudentStats())!['team number'];

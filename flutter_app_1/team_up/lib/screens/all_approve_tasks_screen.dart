@@ -8,14 +8,14 @@ import 'package:team_up/widgets/widgets.dart';
 import '../constants/colors.dart';
 import '../utils/util.dart';
 
-class StudentTasksScreen extends StatefulWidget {
-  const StudentTasksScreen({Key? key}) : super(key: key);
+class AllApproveTasksScreen extends StatefulWidget {
+  const AllApproveTasksScreen({Key? key}) : super(key: key);
 
   @override
-  State<StudentTasksScreen> createState() => _StudentTasksScreenState();
+  State<AllApproveTasksScreen> createState() => _AllApproveTasksScreenState();
 }
 
-class _StudentTasksScreenState extends State<StudentTasksScreen> {
+class _AllApproveTasksScreenState extends State<AllApproveTasksScreen> {
   bool _isExpanded = false;
 
   List<Map<String, dynamic>>? studentTasksMap;
@@ -28,7 +28,8 @@ class _StudentTasksScreenState extends State<StudentTasksScreen> {
 
   Future<void> configure() async {
     //studentTasksMap
-    studentTasksMap = await DatabaseAccess.getInstance().getStudentTasks();
+    studentTasksMap =
+        await DatabaseAccess.getInstance().getStudentSubmissions();
     FlutterLogs.logInfo(
         "My Tasks", "Add to ListView", "studentTasksMap: ${studentTasksMap}");
     for (Map<String, dynamic> taskMap in studentTasksMap!) {
@@ -50,7 +51,7 @@ class _StudentTasksScreenState extends State<StudentTasksScreen> {
   void menuToggleExpansion() {
     setState(() {
       ConfigUtils.goToScreen(PageNavigationScreen(), context);
-      PageNavigationScreen.setIncomingScreen(StudentTasksScreen());
+      PageNavigationScreen.setIncomingScreen(AllApproveTasksScreen());
     });
   }
 
@@ -70,7 +71,7 @@ class _StudentTasksScreenState extends State<StudentTasksScreen> {
   Widget buildMainContent() {
     return Column(
       children: [
-        regularText("My Tasks", context, true),
+        regularText("Approving Tasks", context, true),
         Expanded(
           child: ListView.builder(
             itemCount: studentTasks.length,
@@ -81,13 +82,13 @@ class _StudentTasksScreenState extends State<StudentTasksScreen> {
                   skillsNeeded[index],
                   imageUrlList[index],
                   false,
-                  true,
                   false,
+                  true,
                   context);
             },
           ),
         ),
-        reusableButton("Update my tasks", context, () async {
+        reusableButton("Update tasks to approve", context, () async {
           configure();
         }),
       ],

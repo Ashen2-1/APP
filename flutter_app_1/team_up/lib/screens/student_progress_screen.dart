@@ -133,8 +133,15 @@ class _StudentProgressScreenState extends State<StudentProgressScreen> {
           child: ListView.builder(
         itemCount: dueDates.length,
         itemBuilder: (context, index) {
-          return textFieldTaskInfo(tasksList[index], dueDates[index],
-              skillsNeeded[index], imageUrlList[index], true, false, context);
+          return textFieldTaskInfo(
+              tasksList[index],
+              dueDates[index],
+              skillsNeeded[index],
+              imageUrlList[index],
+              true,
+              false,
+              false,
+              context);
         },
       )),
     ]);

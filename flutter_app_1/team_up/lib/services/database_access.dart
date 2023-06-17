@@ -95,17 +95,18 @@ class DatabaseAccess {
     FlutterLogs.logInfo("Cloud Firestore Database", "GET Operation",
         "Got data: ${docSnapshot!.data()}");
     Map<String, dynamic>? data = docSnapshot.data();
-    List<dynamic> listData = data!['tasks'];
-    for (Map<String, dynamic> mapData in listData) {
-      if (time == -1) {
-        fieldResults.add(mapData);
-      } else if (mapData['estimated time'] == '$time mins') {
-        fieldResults.add(mapData);
+    if (data!.isNotEmpty) {
+      List<dynamic> listData = data['tasks'];
+      for (Map<String, dynamic> mapData in listData) {
+        if (time == -1) {
+          fieldResults.add(mapData);
+        } else if (mapData['estimated time'] == '$time mins') {
+          fieldResults.add(mapData);
+        }
       }
+      FlutterLogs.logInfo("Cloud Firestore Database", "GET Operation",
+          "Adding string to field results: ${data['tasks']}");
     }
-    FlutterLogs.logInfo("Cloud Firestore Database", "GET Operation",
-        "Adding string to field results: ${data['tasks']}");
-
     return fieldResults;
   }
 
