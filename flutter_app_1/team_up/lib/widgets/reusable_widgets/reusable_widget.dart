@@ -142,6 +142,27 @@ Future<void> displayError(Object error, BuildContext context) async {
   );
 }
 
+Future<void> displayAlert(Object error, BuildContext context) async {
+  await showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('Alert'),
+        content: Text(removeFireBaseBrackets(error.toString())),
+        actions: [
+          TextButton(
+            child: Text('Ok'),
+            onPressed: () {
+              Navigator.of(context)
+                  .pop(true); // Return false when "No" is pressed
+            },
+          ),
+        ],
+      );
+    },
+  );
+}
+
 Future<void> displayErrorFromString(String error, BuildContext context) async {
   await showDialog(
     context: context,

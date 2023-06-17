@@ -40,9 +40,36 @@ class _CountdownPageState extends State<CountdownPage>
 
   double progress = 1.0;
 
+  Future<void> submit() async {
+    Map<String, dynamic> taskToAdd = {
+      'task': StudentData.currentTask,
+      'file url': fileURL,
+      'feedback': "None",
+      'complete percentage': "None"
+    };
+
+    List<Map<String, dynamic>> curPendingTasks =
+        await Util.combineTaskIntoExisting(taskToAdd,
+            await DatabaseAccess.getInstance().getStudentSubmissions());
+
+    DatabaseAccess.getInstance().addToDatabase(
+        "submissions", StudentData.studentEmail, {'tasks': curPendingTasks});
+
+    FlutterLogs.logInfo("Student task", "Submission", "Successfully submitted");
+
+    ConfigUtils.goToScreen(HomeScreen(), context);
+  }
+
   void notify() {
     if (countText == '0:00:00') {
+      FlutterRingtonePlayer.stop();
+      submit();
+    }
+    if (countText == "0:01:00") {
+      FlutterRingtonePlayer.playAlarm(looping: false, asAlarm: false);
+    } else if (countText == '0:05:00') {
       FlutterRingtonePlayer.playNotification();
+      displayAlert("5 minutes left! Will auto submit at time 0 sec", context);
     }
   }
 
@@ -161,24 +188,7 @@ class _CountdownPageState extends State<CountdownPage>
                 ConfigUtils.goToScreen(OpenUrlInWebView(url: fileURL), context);
               }),
           reusableButton("Submit for approval", context, () async {
-            Map<String, dynamic> taskToAdd = {
-              'task': StudentData.currentTask,
-              'file url': fileURL,
-              'feedback': "None",
-              'complete percentage': "None"
-            };
-
-            List<Map<String, dynamic>> curPendingTasks =
-                await Util.combineTaskIntoExisting(taskToAdd,
-                    await DatabaseAccess.getInstance().getStudentSubmissions());
-
-            DatabaseAccess.getInstance().addToDatabase("submissions",
-                StudentData.studentEmail, {'tasks': curPendingTasks});
-
-            FlutterLogs.logInfo(
-                "Student task", "Submission", "Successfully submitted");
-
-            ConfigUtils.goToScreen(HomeScreen(), context);
+            await submit();
           }),
           SizedBox(height: 0),
           Padding(

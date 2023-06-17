@@ -149,6 +149,16 @@ class DatabaseAccess {
     return null;
   }
 
+  Future<List<Map<String, dynamic>>?> getAllStudentSubmissions() async {
+    DocumentSnapshot<Map<String, dynamic>>? docSnapshot =
+        await getDocumentByID("submissions", StudentData.studentEmail);
+
+    if (docSnapshot != null) {
+      return parseStudentTaskData(docSnapshot, "");
+    }
+    return null;
+  }
+
   Future<List<Map<String, dynamic>>?> getStudentSubmissions() async {
     DocumentSnapshot<Map<String, dynamic>>? docSnapshot =
         await getDocumentByID("submissions", StudentData.studentEmail);

@@ -113,9 +113,9 @@ class _StudentProgressScreenState extends State<StudentProgressScreen> {
         ),
       ),
       ListTile(
-        title: const Text('20 minutes - 40 minutes'),
+        title: const Text('30 minutes - 40 minutes'),
         leading: Radio<String>(
-          value: '20 minutes - 40 minutes',
+          value: '30 minutes - 40 minutes',
           groupValue: _time,
           onChanged: (String? value) {
             setState(() {
