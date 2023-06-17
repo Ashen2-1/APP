@@ -10,6 +10,7 @@ import 'package:team_up/screens/web_view_page.dart';
 import '../constants/colors.dart';
 import '../services/database_access.dart';
 import '../utils/configuration_util.dart';
+import '../utils/fonts.dart';
 import '../utils/util.dart';
 import '../widgets/reusable_widgets/reusable_widget.dart';
 import '../widgets/round-button2.dart';
@@ -28,7 +29,6 @@ class _Approve_pageState extends State<Approve_page>
   late AnimationController controller;
 
   bool isPlaying = false;
-  TextStyle defaultFont = TextStyle(fontSize: 25, fontWeight: FontWeight.bold);
 
   @override
   void dispose() {

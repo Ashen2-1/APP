@@ -80,7 +80,7 @@ SizedBox reusableTextFieldRegular(
   );
 }
 
-Future<bool?> _askConfirmation(BuildContext context, String taskText) async {
+Future<bool?> askConfirmation(BuildContext context, String taskText) async {
   bool? confirmation;
   await showDialog(
     context: context,
@@ -171,6 +171,7 @@ SizedBox textFieldTaskInfo(
     String description,
     bool isSignUp,
     bool isAssignment,
+    String incomingPage,
     BuildContext context) {
   return SizedBox(
       height: 200.0,
@@ -198,7 +199,14 @@ SizedBox textFieldTaskInfo(
 
                 ElevatedButton(
                   onPressed: () {
-                    StudentData.setCurrentDescrption(description);
+                    StudentData.setViewingTask({
+                      "task": taskText,
+                      "due date": dueDateText,
+                      "skills needed": instructionsText,
+                      "image url": imageUrl,
+                      "description": description
+                    });
+                    StudentData.descriptionIncomingPage = incomingPage;
                     Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -214,7 +222,7 @@ SizedBox textFieldTaskInfo(
                 //////////////////////////////////////// Task Descriptions
                 if (isSignUp /*&& Util.isTaskIn(taskText)*/)
                   reusableSignUpTaskButton("Sign up for task", context, () {
-                    _askConfirmation(context, taskText)
+                    askConfirmation(context, taskText)
                         .then((confirmation) async {
                       if (confirmation != null && confirmation) {
                         FlutterLogs.logInfo(

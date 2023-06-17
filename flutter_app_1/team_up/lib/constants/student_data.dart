@@ -20,20 +20,25 @@ class StudentData {
   static bool isAdmin = true;
 
   //////////////////////////////new
-  static String? currentDescrption;
+  static Map<String, dynamic>? viewingTask;
   /////////////////////////// Descrption
+  static String? descriptionIncomingPage;
 
   static Future<String> getStudentTeamNumber() async {
     return (await DatabaseAccess.getInstance()
         .getStudentStats())!['team number'];
   }
 
+  static setDescriptionIncomingPage(String incomingPage) {
+    descriptionIncomingPage = incomingPage;
+  }
+
   static void setCurrentTask(String newTask) {
     currentTask = newTask;
   }
 
-  static void setCurrentDescrption(String newDescription) {
-    currentDescrption = newDescription;
+  static void setViewingTask(Map<String, dynamic> newViewingTask) {
+    viewingTask = newViewingTask;
   }
 
   static void setQuerySubTeam(String newSubTeam) {
