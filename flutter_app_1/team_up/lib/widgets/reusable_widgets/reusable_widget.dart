@@ -6,11 +6,14 @@ import 'package:team_up/constants/student_data.dart';
 import 'package:team_up/screens/Approve_page.dart';
 import 'package:team_up/screens/all_approve_tasks_screen.dart';
 import 'package:team_up/screens/countdown-page.dart';
+import 'package:team_up/screens/home_screen.dart';
 import 'package:team_up/screens/page_navigation_screen.dart';
 import 'package:team_up/services/database_access.dart';
 import 'package:team_up/utils/configuration_util.dart';
 import 'package:team_up/utils/util.dart';
 import 'package:team_up/widgets/widgets.dart';
+
+import '../../screens/TaskDescription_page.dart';
 
 Image logoWidget(String imageName) {
   return Image.asset(
@@ -165,6 +168,7 @@ SizedBox textFieldTaskInfo(
     String dueDateText,
     String instructionsText,
     String imageUrl,
+    String description,
     bool isSignUp,
     bool isAssignment,
     bool isApproval,
@@ -174,9 +178,11 @@ SizedBox textFieldTaskInfo(
       width: MediaQuery.of(context).size.width,
       child: Container(
           height: 100.0,
-          padding: const EdgeInsets.all(10.0),
+          
+          padding: const EdgeInsets.all(12.0),
           margin: const EdgeInsets.all(10.0),
           //width: 200.0, //MediaQuery.of(context).size.width,
+          
           decoration: BoxDecoration(
               color: Color.fromARGB(255, 193, 184, 184).withOpacity(0.3),
               borderRadius: const BorderRadius.only(
@@ -190,7 +196,23 @@ SizedBox textFieldTaskInfo(
                 regularText(taskText, context, true),
                 regularText("Due date: $dueDateText", context, false),
                 regularText("Skills needed: $instructionsText", context, false),
+                ////////////////////////////////////////////////new
+                
+                ElevatedButton(
+                    onPressed: (){
+                      
+                      Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => TaskDescription_page())); ///TaskDescription_page
+                    }, 
+                    child: Text("Description"),
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.blue,
+                    ),
+
+                  ),
+                  //////////////////////////////////////// Task Descriptions
                 if (isSignUp /*&& Util.isTaskIn(taskText)*/)
+                  
                   reusableSignUpTaskButton("Sign up for task", context, () {
                     _askConfirmation(context, taskText)
                         .then((confirmation) async {
@@ -201,7 +223,8 @@ SizedBox textFieldTaskInfo(
                           "task": taskText,
                           "due date": dueDateText,
                           "skills needed": instructionsText,
-                          "image url": imageUrl
+                          "image url": imageUrl,
+                          "description": description,
                         };
                         List<Map<String, dynamic>> curTasks =
                             await Util.combineTaskIntoExisting(
@@ -234,7 +257,12 @@ SizedBox textFieldTaskInfo(
               if (imageUrl != "None") Flexible(child: Image.network(imageUrl)),
             ]),
           ])));
+  //////////////////////////////////////////////////////////////////////new
+  
+ 
+
 }
+
 
 SizedBox regularText(String text, BuildContext context, bool isTitle) {
   return SizedBox(
