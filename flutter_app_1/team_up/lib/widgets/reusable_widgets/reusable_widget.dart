@@ -207,6 +207,7 @@ SizedBox textFieldTaskInfo(
                       "due date": dueDateText,
                       "skills needed": instructionsText,
                       "image url": imageUrl,
+                      "estimated time": taskTime,
                       "description": description
                     });
                     StudentData.descriptionIncomingPage = incomingPage;
@@ -309,25 +310,27 @@ Container signInSignUpButton(
   );
 }
 
-AppBar buildAppBar(void Function()? toggleExtended) {
+AppBar buildAppBar(void Function()? toggleExtended,
+    {Color backgroundColor = tdBGColor, Widget? title}) {
   return AppBar(
-    backgroundColor: tdBGColor,
+    backgroundColor: backgroundColor,
     elevation: 0,
-    title: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        IconButton(
-            icon: Icon(Icons.menu, color: tdBlack, size: 30),
-            onPressed: toggleExtended),
-        Container(
-          height: 50,
-          width: 50,
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(25),
-            child: Image.asset("assets/images/avatar.jpeg"),
-          ),
+    title: title ??
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            IconButton(
+                icon: Icon(Icons.menu, color: tdBlack, size: 30),
+                onPressed: toggleExtended),
+            Container(
+              height: 50,
+              width: 50,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(25),
+                child: Image.asset("assets/images/avatar.jpeg"),
+              ),
+            ),
+          ],
         ),
-      ],
-    ),
   );
 }

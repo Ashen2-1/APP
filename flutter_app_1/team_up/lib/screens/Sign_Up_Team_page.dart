@@ -38,43 +38,60 @@ class _Signupteam_pageState extends State<Signupteam_page>
   void menuToggleExpansion() {
     setState(() {
       ConfigUtils.goToScreen(PageNavigationScreen(), context);
-      PageNavigationScreen.setIncomingScreen(AddTasksScreen());
+      PageNavigationScreen.setIncomingScreen(const Signupteam_page());
     });
   }
-  Scaffold mainLayout() {
-    return Scaffold(
-      backgroundColor: tdBGColor,
-      appBar: buildAppBar(menuToggleExpansion),
-      
-    );
-  }
+
   @override
   Widget build(BuildContext context) {
+    return ConfigUtils.configForBackButtonBehaviour(() {
+      return mainLayout(context);
+    }, context);
+  }
+
+  Scaffold mainLayout(BuildContext context) {
+    return buildMainContent(context);
+  }
+
+  Scaffold buildMainContent(BuildContext context) {
     return Scaffold(
-      
-      appBar: AppBar(
-        
-        backgroundColor: Color.fromARGB(231, 178, 34, 230),
-        title: const Text(
-          "Sign Up for Your Team!",
-          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-        ),
-      ),
-      backgroundColor: Color.fromARGB(255, 201, 141, 141),
+      appBar: buildAppBar(menuToggleExpansion,
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              IconButton(
+                  icon: const Icon(Icons.menu, color: tdBlack, size: 30),
+                  onPressed: menuToggleExpansion),
+              const Text(
+                "Sign Up for Your Team!",
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              Container(
+                height: 50,
+                width: 50,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(25),
+                  child: Image.asset("assets/images/avatar.jpeg"),
+                ),
+              ),
+            ],
+          ),
+          backgroundColor: const Color.fromARGB(231, 178, 34, 230)),
+      backgroundColor: const Color.fromARGB(255, 201, 141, 141),
       body: Container(
         child: Column(
           children: <Widget>[
             const SizedBox(
               height: 50,
             ),
-            Text(
+            const Text(
               "Team Channel!",
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             const SizedBox(
               height: 30,
             ),
-            Text(
+            const Text(
               "    Note: Team Channel Will have the same functions as the public channel but it only serve for the team members!",
               style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
             ),
@@ -120,12 +137,14 @@ class _Signupteam_pageState extends State<Signupteam_page>
                 };
                 DatabaseAccess.getInstance().addToDatabase(
                     "Teams", _teamnumberTextController.text, teamToAdd);
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => HomeScreen()));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const HomeScreen()));
 
                 /// here we can Navigator to Team Channel!
               },
-              child: Text("Sign Up"),
+              child: const Text("Sign Up"),
             ),
           ],
         ),

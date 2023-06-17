@@ -59,13 +59,19 @@ class _TaskDescription_pageState extends State<TaskDescription_page> {
             ),
             Center(
               child: Text(
-                "Task Description: ${StudentData.viewingTask!['description']}", ////${StudentData.currentDescrption!}, ${addDynamicTaskFields(context)}
-                style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                "Task Description: ${StudentData.viewingTask!['description']}",
               ),
             ),
             const SizedBox(
-              height: 40,
+              height: 25,
             ),
+            Center(
+              child: Text(
+                "Task time: ${StudentData.viewingTask!['estimated time']}",
+                style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+              ),
+            ),
+            const SizedBox(height: 25),
             if (StudentData.viewingTask!['image url'] != "None")
               Expanded(
                   child: Image.network(StudentData.viewingTask!['image url'])),

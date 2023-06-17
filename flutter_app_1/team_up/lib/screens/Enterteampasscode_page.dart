@@ -3,9 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_logs/flutter_logs.dart';
 import 'package:team_up/constants/student_data.dart';
 import 'package:team_up/screens/home_screen.dart';
+import 'package:team_up/screens/page_navigation_screen.dart';
 import 'package:team_up/services/database_access.dart';
 
+import '../constants/colors.dart';
 import '../services/file_uploader.dart';
+import '../utils/configuration_util.dart';
 import '../widgets/reusable_widgets/reusable_widget.dart';
 import '../widgets/round-button2.dart';
 import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
@@ -31,17 +34,38 @@ class _Enterteampasscode_pageState extends State<Enterteampasscode_page>
   bool isPlaying = false;
   File? file;
 
-  @override
-  
+  void menuToggleExpansion() {
+    setState(() {
+      ConfigUtils.goToScreen(PageNavigationScreen(), context);
+      PageNavigationScreen.setIncomingScreen(const Enterteampasscode_page());
+    });
+  }
 
+  @override
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color.fromARGB(231, 178, 34, 230),
-        title: const Text(
-          "Join a Team Channel!",
-          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            IconButton(
+                icon: const Icon(Icons.menu, color: tdBlack, size: 30),
+                onPressed: menuToggleExpansion),
+            const Text(
+              "Join a team channel!",
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            Container(
+              height: 50,
+              width: 50,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(25),
+                child: Image.asset("assets/images/avatar.jpeg"),
+              ),
+            ),
+          ],
         ),
       ),
       backgroundColor: Color.fromARGB(255, 201, 141, 141),

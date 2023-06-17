@@ -48,9 +48,25 @@ class _Jointeam_pageState extends State<Jointeam_page> {
       backgroundColor: Color.fromARGB(255, 201, 141, 141),
       appBar: AppBar(
         backgroundColor: Color.fromARGB(231, 178, 34, 230),
-        title: const Text(
-          "          Join a Team Channel!",
-          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            IconButton(
+                icon: const Icon(Icons.menu, color: tdBlack, size: 30),
+                onPressed: menuToggleExpansion),
+            const Text(
+              "Join a team channel!",
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            Container(
+              height: 50,
+              width: 50,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(25),
+                child: Image.asset("assets/images/avatar.jpeg"),
+              ),
+            ),
+          ],
         ),
       ),
       body: buildMainContent(),

@@ -184,11 +184,15 @@ class _AddTasksScreenState extends State<AddTasksScreen> {
             _taskdescriptionTextController, false),
         const SizedBox(height: 10),
         ///////////////////////////////////////////////////// Task description
-        reusableButton("Upload a file related to task", context, () async {
+        reusableButton("Upload a image related to task", context, () async {
           File result = (await FileUploader.pickFile())!;
           setState(() {
-            file = result;
-            fileInitialized = true;
+            if (file!.path.split(".").last.toLowerCase() == "png") {
+              file = result;
+              fileInitialized = true;
+            } else {
+              displayError("Invalid file type selected", context);
+            }
           });
         }),
         if (fileInitialized && file != null) Image.file(file!),
