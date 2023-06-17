@@ -28,11 +28,8 @@ class _AddTasksScreenState extends State<AddTasksScreen> {
   final TextEditingController _dueDateTextController = TextEditingController();
   final TextEditingController _skillsRequiredController =
       TextEditingController();
-  final TextEditingController _estimatedTimeController =
-      TextEditingController();
   final TextEditingController _taskdescriptionTextController =
       TextEditingController();
-      
 
   final TextEditingController _submissionController = TextEditingController();
 
@@ -51,12 +48,37 @@ class _AddTasksScreenState extends State<AddTasksScreen> {
     "Business"
   ];
 
+  List<TextEditingController>? controllerList;
+
+  final List<String> timeList = [
+    'Select an amount of time for task completion',
+    '10 minutes',
+    '20 minutes',
+    '30 minutes',
+    '40 minutes',
+    '1 hour',
+    '1 and 1/2 hour',
+    '2 hours'
+  ];
+
   String subteam = 'Select a subteam';
+  String time = 'Select an amount of time for task completion';
 
   void menuToggleExpansion() {
     setState(() {
       ConfigUtils.goToScreen(PageNavigationScreen(), context);
-      PageNavigationScreen.setIncomingScreen(AddTasksScreen());
+      PageNavigationScreen.setIncomingScreen(const AddTasksScreen());
+    });
+  }
+
+  void clearFields() {
+    for (TextEditingController controller in controllerList!) {
+      controller.clear();
+    }
+    subteam = 'Select a subteam';
+    time = 'Select an amount of time for task completion';
+    setState(() {
+      fileInitialized = false;
     });
   }
 
@@ -74,11 +96,10 @@ class _AddTasksScreenState extends State<AddTasksScreen> {
   }
 
   Widget buildMainContent() {
-    List<TextEditingController> controllerList = [
+    controllerList = [
       _taskTextController,
       _dueDateTextController,
       _skillsRequiredController,
-      _estimatedTimeController,
       _taskdescriptionTextController
     ];
     //subteamList.add("Select subteam:");
@@ -111,7 +132,7 @@ class _AddTasksScreenState extends State<AddTasksScreen> {
         const SizedBox(height: 10.0),
         Container(
           decoration: BoxDecoration(
-              color: Color.fromARGB(255, 199, 196, 196).withOpacity(0.3),
+              color: const Color.fromARGB(255, 199, 196, 196).withOpacity(0.3),
               borderRadius: Borders.imageBorderRadius),
           child: DropdownButton<String>(
               value: subteam,
@@ -131,20 +152,37 @@ class _AddTasksScreenState extends State<AddTasksScreen> {
         const SizedBox(height: 10.0),
         reusableTextFieldRegular(
             "Enter Specific Task", _taskTextController, false),
-        SizedBox(height: 10),
+        const SizedBox(height: 10),
         reusableTextFieldRegular(
             "Enter due date for task", _dueDateTextController, false),
-        SizedBox(height: 10),
+        const SizedBox(height: 10),
         reusableTextFieldRegular(
             "Enter skills required for task", _skillsRequiredController, false),
-        SizedBox(height: 10),
-        reusableTextFieldRegular(
-            "Enter estimated time needed", _estimatedTimeController, false),
-        SizedBox(height: 10),
+        const SizedBox(height: 10),
+        Container(
+            decoration: BoxDecoration(
+                color:
+                    const Color.fromARGB(255, 199, 196, 196).withOpacity(0.3),
+                borderRadius: Borders.imageBorderRadius),
+            child: DropdownButton<String>(
+                value: time,
+                // hint: const Text("Select subteam:",
+                //     style: TextStyle(fontSize: 18), textAlign: TextAlign.left),
+                onChanged: (String? newValue) {
+                  setState(() {
+                    time = newValue!;
+                  });
+                },
+                items:
+                    timeList.map<DropdownMenuItem<String>>((String newValue) {
+                  return DropdownMenuItem<String>(
+                      value: newValue, child: Text(newValue));
+                }).toList())),
+        const SizedBox(height: 10),
         ///////////////////////////////////////////////// new
-        reusableTextFieldRegular(
-            "Enter the description of the task", _taskdescriptionTextController, false),
-        SizedBox(height: 10),
+        reusableTextFieldRegular("Enter the description of the task",
+            _taskdescriptionTextController, false),
+        const SizedBox(height: 10),
         ///////////////////////////////////////////////////// Task description
         reusableButton("Upload a file related to task", context, () async {
           File result = (await FileUploader.pickFile())!;
@@ -163,13 +201,14 @@ class _AddTasksScreenState extends State<AddTasksScreen> {
             FlutterLogs.logInfo(
                 "Add to Database", "Upload image", "Image URL: $imageURL");
           }
-          if (subteam != 'Select a subteam') {
+          if (subteam != 'Select a subteam' &&
+              time != 'Select an amount of time for task completion') {
             Map<String, dynamic> taskToAdd = {
               "task": _taskTextController.text,
               ///////////////////////////////////new
-              "description":_taskdescriptionTextController.text,
+              "description": _taskdescriptionTextController.text,
               //////////////////////////////////// task description
-              "estimated time": _estimatedTimeController.text,
+              "estimated time": time,
               "due date": _dueDateTextController.text,
               "skills needed": _skillsRequiredController.text,
               "image url": imageURL
@@ -177,19 +216,12 @@ class _AddTasksScreenState extends State<AddTasksScreen> {
             List<Map<String, dynamic>> curTasks =
                 await Util.combineTaskIntoExisting(
                     taskToAdd,
-                    await DatabaseAccess.getInstance().getAvailableTasks(
-                        int.parse(
-                            _estimatedTimeController.text.substring(0, 2)),
-                        subteam));
+                    await DatabaseAccess.getInstance()
+                        .getAllTasks(time, subteam));
 
             DatabaseAccess.getInstance()
                 .addToDatabase("Tasks", subteam, {"tasks": curTasks});
-            for (TextEditingController controller in controllerList) {
-              controller.clear();
-            }
-            setState(() {
-              fileInitialized = false;
-            });
+            clearFields();
             _submissionController.text = "Submitted!";
           }
         }),
@@ -200,6 +232,6 @@ class _AddTasksScreenState extends State<AddTasksScreen> {
 
   void goToProgress() {
     Navigator.push(context,
-        MaterialPageRoute(builder: (context) => StudentProgressScreen()));
+        MaterialPageRoute(builder: (context) => const StudentProgressScreen()));
   }
 }

@@ -59,6 +59,30 @@ class Util {
     return prevTasks;
   }
 
+  static List<String> getTimeInRange(String timeRange) {
+    if (timeRange == "20 minutes or less") {
+      return ['10 minutes', '20 minutes'];
+    } else if (timeRange == "30 minutes - 40 minutes") {
+      return ['30 minutes', '40 minutes'];
+    } else if (timeRange == "1 hour - 2 hours") {
+      return ['1 hour', '1 and 1/2 hour', '2 hours'];
+    }
+    return [];
+  }
+
+  static int convertStringTimeToIntMinutes(String time) {
+    if (time.contains('minutes')) {
+      return int.parse(time.substring(0, 2));
+    } else if (time.contains('hour')) {
+      time = time.replaceAll("s", "");
+      time = time.replaceAll(" and 1/2 ", ".5");
+      time = time.substring(0, time.length - 4);
+      FlutterLogs.logInfo("parsing time", "calc", "string: $time");
+      return (double.parse(time) * 60).toInt();
+    }
+    return -1;
+  }
+
   static Future<Image> resizeImage(/*Image image*/ String url,
       /*double newWidth, double newHeight*/ double scaleFactor) async {
     // PictureRecorder recorder = PictureRecorder();
