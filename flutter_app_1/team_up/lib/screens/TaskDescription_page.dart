@@ -46,7 +46,7 @@ class _TaskDescription_pageState extends State<TaskDescription_page> {
         child: Column(
           children: <Widget>[
             const SizedBox(
-              height: 50,
+              height: 70,
             ),
             Center(
               child: Text(
