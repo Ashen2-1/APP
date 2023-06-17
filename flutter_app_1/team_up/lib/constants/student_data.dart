@@ -10,6 +10,7 @@ class StudentData {
   static String? studentTeamNumber;
 
   static String? currentTask;
+  static String? currentTaskTimeLimit;
 
   static Map<String, dynamic>? approvalTask;
 

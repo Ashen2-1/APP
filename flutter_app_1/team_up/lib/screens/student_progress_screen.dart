@@ -20,12 +20,13 @@ class StudentProgressScreen extends StatefulWidget {
 }
 
 class _StudentProgressScreenState extends State<StudentProgressScreen> {
-  int _time = -1;
-  int _prev_time = -2;
+  String _time = "";
+  String _prev_time = "None";
 
   List<String> tasksList = [];
   List<String> dueDates = [];
   List<String> skillsNeeded = [];
+  List<String> timeLimit = [];
 
   List<String> imageUrlList = [];
   List<String> description = [];
@@ -45,6 +46,7 @@ class _StudentProgressScreenState extends State<StudentProgressScreen> {
         tasksList.add(taskMap['task']);
         dueDates.add(taskMap['due date']);
         skillsNeeded.add(taskMap['skills needed']);
+        timeLimit.add(taskMap['estimated time']);
         imageUrlList.add(taskMap['image url']);
         description.add(taskMap["description"]);
       }
@@ -66,6 +68,7 @@ class _StudentProgressScreenState extends State<StudentProgressScreen> {
     dueDates.clear();
     skillsNeeded.clear();
     imageUrlList.clear();
+    timeLimit.clear();
     setState(() {});
   }
 
@@ -96,13 +99,13 @@ class _StudentProgressScreenState extends State<StudentProgressScreen> {
     FlutterLogs.logInfo("Student Progress Screen", "Query Subteam",
         "Current: ${StudentData.getQuerySubTeam()}");
     return Column(children: [
-      const Text("Available time: "),
+      const Text("Available time (inclusive): "),
       ListTile(
-        title: const Text('10 mins'),
-        leading: Radio<int>(
-          value: 10,
+        title: const Text('20 minutes or less'),
+        leading: Radio<String>(
+          value: '20 minutes or less',
           groupValue: _time,
-          onChanged: (int? value) {
+          onChanged: (String? value) {
             setState(() {
               _time = value!;
             });
@@ -110,11 +113,23 @@ class _StudentProgressScreenState extends State<StudentProgressScreen> {
         ),
       ),
       ListTile(
-        title: const Text('20 mins'),
-        leading: Radio<int>(
-          value: 20,
+        title: const Text('20 minutes - 40 minutes'),
+        leading: Radio<String>(
+          value: '20 minutes - 40 minutes',
           groupValue: _time,
-          onChanged: (int? value) {
+          onChanged: (String? value) {
+            setState(() {
+              _time = value!;
+            });
+          },
+        ),
+      ),
+      ListTile(
+        title: const Text('1 hour - 2 hours'),
+        leading: Radio<String>(
+          value: '1 hour - 2 hours',
+          groupValue: _time,
+          onChanged: (String? value) {
             setState(() {
               _time = value!;
             });
@@ -140,6 +155,7 @@ class _StudentProgressScreenState extends State<StudentProgressScreen> {
               skillsNeeded[index],
               imageUrlList[index],
               description[index],
+              timeLimit[index],
               true,
               false,
               "search tasks",

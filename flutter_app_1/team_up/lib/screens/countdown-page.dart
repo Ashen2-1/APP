@@ -49,9 +49,11 @@ class _CountdownPageState extends State<CountdownPage>
   @override
   void initState() {
     super.initState();
+    int time =
+        Util.convertStringTimeToIntMinutes(StudentData.currentTaskTimeLimit!);
     controller = AnimationController(
       vsync: this,
-      duration: Duration(minutes: 60),
+      duration: Duration(minutes: time),
 
       /// change time here
     );

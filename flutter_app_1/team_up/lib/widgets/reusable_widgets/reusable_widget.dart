@@ -169,6 +169,7 @@ SizedBox textFieldTaskInfo(
     String instructionsText,
     String imageUrl,
     String description,
+    String taskTime,
     bool isSignUp,
     bool isAssignment,
     String incomingPage,
@@ -177,7 +178,7 @@ SizedBox textFieldTaskInfo(
       height: 200.0,
       width: MediaQuery.of(context).size.width,
       child: Container(
-          height: 100.0,
+          height: 120.0,
           padding: const EdgeInsets.all(12.0),
           margin: const EdgeInsets.all(10.0),
           //width: 200.0, //MediaQuery.of(context).size.width,
@@ -195,6 +196,8 @@ SizedBox textFieldTaskInfo(
                 regularText(taskText, context, true),
                 regularText("Due date: $dueDateText", context, false),
                 regularText("Skills needed: $instructionsText", context, false),
+                const SizedBox(height: 5),
+                regularText("Task time: $taskTime", context, false),
                 ////////////////////////////////////////////////new
 
                 ElevatedButton(
@@ -232,6 +235,7 @@ SizedBox textFieldTaskInfo(
                           "due date": dueDateText,
                           "skills needed": instructionsText,
                           "image url": imageUrl,
+                          "estimated time": taskTime,
                           "description": description,
                         };
                         List<Map<String, dynamic>> curTasks =
@@ -251,6 +255,7 @@ SizedBox textFieldTaskInfo(
                 else if (isAssignment)
                   reusableSignUpTaskButton("START this task", context, () {
                     StudentData.currentTask = taskText;
+                    StudentData.currentTaskTimeLimit = taskTime;
                     ConfigUtils.goToScreen(CountdownPage(), context);
                   })
               ]),
