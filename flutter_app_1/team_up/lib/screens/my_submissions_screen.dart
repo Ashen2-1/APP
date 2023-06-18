@@ -75,7 +75,7 @@ class _MySubmissionsScreenState extends State<MySubmissionsScreen> {
   Widget buildMainContent() {
     return Column(
       children: [
-        regularText("Approving Tasks", context, true),
+        regularText("My Submissions", context, true),
         Expanded(
             child: ListView.builder(
                 itemCount: studentTasks.length,
@@ -108,7 +108,7 @@ class _MySubmissionsScreenState extends State<MySubmissionsScreen> {
                               studentTasksMap!.removeAt(index);
                               DatabaseAccess.getInstance().addToDatabase(
                                   "submissions",
-                                  StudentData.studentEmail,
+                                  "student submissions",
                                   {'tasks': studentTasksMap});
                               ConfigUtils.goToScreen(
                                   const HomeScreen(), context);

@@ -42,7 +42,9 @@ class _CountdownPageState extends State<CountdownPage>
 
   Future<void> submit() async {
     Map<String, dynamic> taskToAdd = {
+      'submitter': StudentData.studentEmail,
       'task': StudentData.currentTask,
+      'assigner': StudentData.currentTaskAssigner,
       'file url': fileURL,
       'feedback': "None",
       'complete percentage': "None"
@@ -50,26 +52,30 @@ class _CountdownPageState extends State<CountdownPage>
 
     List<Map<String, dynamic>> curPendingTasks =
         await Util.combineTaskIntoExisting(taskToAdd,
-            await DatabaseAccess.getInstance().getStudentSubmissions());
+            await DatabaseAccess.getInstance().getAllStudentSubmissions());
 
     DatabaseAccess.getInstance().addToDatabase(
-        "submissions", StudentData.studentEmail, {'tasks': curPendingTasks});
+        "submissions", 'student submissions', {'tasks': curPendingTasks});
 
     FlutterLogs.logInfo("Student task", "Submission", "Successfully submitted");
 
     ConfigUtils.goToScreen(HomeScreen(), context);
   }
 
-  void notify() {
+  void notify() async {
     if (countText == '0:00:00') {
       FlutterRingtonePlayer.stop();
       submit();
     }
     if (countText == "0:01:00") {
+      FlutterRingtonePlayer.playNotification();
       FlutterRingtonePlayer.playAlarm(looping: false, asAlarm: false);
+      await displayAlert(
+          "1 minute left! Will auto submit at time 0 sec", context);
     } else if (countText == '0:05:00') {
       FlutterRingtonePlayer.playNotification();
-      displayAlert("5 minutes left! Will auto submit at time 0 sec", context);
+      await displayAlert(
+          "5 minutes left! Will auto submit at time 0 sec", context);
     }
   }
 

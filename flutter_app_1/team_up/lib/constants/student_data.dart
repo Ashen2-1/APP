@@ -11,6 +11,7 @@ class StudentData {
 
   static String? currentTask;
   static String? currentTaskTimeLimit;
+  static String? currentTaskAssigner;
 
   static Map<String, dynamic>? approvalTask;
 

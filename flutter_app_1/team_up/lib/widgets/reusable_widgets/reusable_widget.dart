@@ -191,6 +191,7 @@ SizedBox textFieldTaskInfo(
     String imageUrl,
     String description,
     String taskTime,
+    String taskAssigner,
     bool isSignUp,
     bool isAssignment,
     String incomingPage,
@@ -259,6 +260,7 @@ SizedBox textFieldTaskInfo(
                           "image url": imageUrl,
                           "estimated time": taskTime,
                           "description": description,
+                          'assigner': taskAssigner,
                         };
                         List<Map<String, dynamic>> curTasks =
                             await Util.combineTaskIntoExisting(
@@ -278,6 +280,7 @@ SizedBox textFieldTaskInfo(
                   reusableSignUpTaskButton("START this task", context, () {
                     StudentData.currentTask = taskText;
                     StudentData.currentTaskTimeLimit = taskTime;
+                    StudentData.currentTaskAssigner = taskAssigner;
                     ConfigUtils.goToScreen(CountdownPage(), context);
                   })
               ]),

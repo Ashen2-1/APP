@@ -27,6 +27,7 @@ class _StudentTasksScreenState extends State<StudentTasksScreen> {
   List<String> imageUrlList = [];
   List<String> description = [];
   List<String> timeLimit = [];
+  List<String> taskAssigners = [];
 
   Future<void> configure() async {
     //studentTasksMap
@@ -43,6 +44,7 @@ class _StudentTasksScreenState extends State<StudentTasksScreen> {
         timeLimit.add(taskMap['estimated time']);
         imageUrlList.add(taskMap['image url']);
         description.add(taskMap["description"]);
+        taskAssigners.add(taskMap['assigner']);
       }
     }
     // for (String imageUrl in imageUrlList) {
@@ -86,6 +88,7 @@ class _StudentTasksScreenState extends State<StudentTasksScreen> {
                   imageUrlList[index],
                   description[index],
                   timeLimit[index],
+                  taskAssigners[index],
                   false,
                   true,
                   "my tasks",

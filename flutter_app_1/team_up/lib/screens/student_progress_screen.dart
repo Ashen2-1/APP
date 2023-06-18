@@ -30,6 +30,7 @@ class _StudentProgressScreenState extends State<StudentProgressScreen> {
 
   List<String> imageUrlList = [];
   List<String> description = [];
+  List<String> taskAssigners = [];
   //List<Image> resizedImageList = [];
   // List<Widget> taskBoxes = [];
 
@@ -49,6 +50,7 @@ class _StudentProgressScreenState extends State<StudentProgressScreen> {
         timeLimit.add(taskMap['estimated time']);
         imageUrlList.add(taskMap['image url']);
         description.add(taskMap["description"]);
+        taskAssigners.add(taskMap['assigner']);
       }
     }
     // tasksList = DatabaseAccess.getInstance().parseData("task", queryResults);
@@ -69,6 +71,8 @@ class _StudentProgressScreenState extends State<StudentProgressScreen> {
     skillsNeeded.clear();
     imageUrlList.clear();
     timeLimit.clear();
+    description.clear();
+    taskAssigners.clear();
     setState(() {});
   }
 
@@ -156,6 +160,7 @@ class _StudentProgressScreenState extends State<StudentProgressScreen> {
               imageUrlList[index],
               description[index],
               timeLimit[index],
+              taskAssigners[index],
               true,
               false,
               "search tasks",

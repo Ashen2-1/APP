@@ -116,9 +116,9 @@ class _Approve_pageState extends State<Approve_page>
                         Util.matchAndCombineExisting(
                             existingTaskData,
                             await DatabaseAccess.getInstance()
-                                .getStudentSubmissions());
-                    DatabaseAccess.getInstance().addToDatabase("submissions",
-                        StudentData.studentEmail, {"tasks": tasks});
+                                .getAllStudentSubmissions());
+                    DatabaseAccess.getInstance().addToDatabase(
+                        "submissions", 'student submissions', {"tasks": tasks});
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) => HomeScreen()));
                   },

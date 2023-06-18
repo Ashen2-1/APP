@@ -29,7 +29,7 @@ class _AllApproveTasksScreenState extends State<AllApproveTasksScreen> {
   Future<void> configure() async {
     //studentTasksMap
     studentTasksMap =
-        await DatabaseAccess.getInstance().getStudentSubmissions();
+        await DatabaseAccess.getInstance().getMyAssignedStudentSubmissions();
     FlutterLogs.logInfo(
         "My Tasks", "Add to ListView", "studentTasksMap: ${studentTasksMap}");
     for (Map<String, dynamic> taskMap in studentTasksMap!) {

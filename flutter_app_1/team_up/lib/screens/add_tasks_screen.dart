@@ -2,6 +2,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_logs/flutter_logs.dart';
 import 'package:team_up/constants/borders.dart';
+import 'package:team_up/constants/student_data.dart';
 import 'package:team_up/screens/home_screen.dart';
 import 'package:team_up/screens/page_navigation_screen.dart';
 import 'package:team_up/screens/student_progress_screen.dart';
@@ -215,7 +216,8 @@ class _AddTasksScreenState extends State<AddTasksScreen> {
               "estimated time": time,
               "due date": _dueDateTextController.text,
               "skills needed": _skillsRequiredController.text,
-              "image url": imageURL
+              "image url": imageURL,
+              'assigner': StudentData.studentEmail,
             };
             List<Map<String, dynamic>> curTasks =
                 await Util.combineTaskIntoExisting(
