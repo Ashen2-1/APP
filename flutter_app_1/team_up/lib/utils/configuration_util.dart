@@ -16,6 +16,7 @@ import '../screens/student_progress_screen.dart';
 class ConfigUtils {
   static List<Widget> previousScreens = [];
   static Widget? scheduledScreen;
+
   static void goToScreen(Widget screen, BuildContext context) {
     if (scheduledScreen != null &&
         scheduledScreen.runtimeType != PageNavigationScreen().runtimeType &&

@@ -158,6 +158,27 @@ class DatabaseAccess {
     return fieldResults;
   }
 
+  Future<int> getNumberOfSubteamTasks(String subteam) async {
+    DocumentSnapshot<Map<String, dynamic>>? docSnapshot =
+        await getDocumentByID("Tasks", subteam);
+
+    int taskCounter = 0;
+
+    if (docSnapshot != null) {
+      Map<String, dynamic>? data = docSnapshot.data();
+      if (data!.isNotEmpty) {
+        List<dynamic> listData = data['tasks'];
+        for (Map<String, dynamic> mapData in listData) {
+          if (mapData['team number'] ==
+              await StudentData.getStudentTeamNumber()) {
+            taskCounter += 1;
+          }
+        }
+      }
+    }
+    return taskCounter;
+  }
+
   Future<List<Map<String, dynamic>>?> getAllTasks(
       String time, String subteam) async {
     DocumentSnapshot<Map<String, dynamic>>? docSnapshot =

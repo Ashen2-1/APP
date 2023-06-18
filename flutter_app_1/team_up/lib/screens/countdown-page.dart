@@ -23,6 +23,8 @@ class CountdownPage extends StatefulWidget {
   _CountdownPageState createState() => _CountdownPageState();
 }
 
+class AppLifecycleObserver extends WidgetsBindingObserver {}
+
 class _CountdownPageState extends State<CountdownPage>
     with TickerProviderStateMixin {
   late AnimationController controller;
