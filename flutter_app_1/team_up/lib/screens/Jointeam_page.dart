@@ -127,7 +127,8 @@ class _Jointeam_pageState extends State<Jointeam_page> {
                         regularText(
                             "Team Name: ${team!['team name']}", context, false),
                       ]),
-                  Expanded(child: Image.network(team!['team logo url'])),
+                  if (team!['team logo url'] != "None")
+                    Expanded(child: Image.network(team!['team logo url'])),
                 ]),
               )),
         // SizedBox(

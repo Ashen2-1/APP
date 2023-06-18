@@ -127,10 +127,12 @@ class _Signupteam_pageState extends State<Signupteam_page>
                   ),
                   onPressed: () async {
                     String fileURL = "None";
-                    TaskSnapshot imageSnapshot =
-                        await FileUploader.getInstance()
-                            .addFileToFirebaseStorage(file!);
-                    fileURL = await imageSnapshot.ref.getDownloadURL();
+                    if (file != null) {
+                      TaskSnapshot imageSnapshot =
+                          await FileUploader.getInstance()
+                              .addFileToFirebaseStorage(file!);
+                      fileURL = await imageSnapshot.ref.getDownloadURL();
+                    }
                     Map<String, dynamic> teamToAdd = {
                       'team number': _teamnumberTextController.text,
                       'team name': _teamnameTextController.text,
