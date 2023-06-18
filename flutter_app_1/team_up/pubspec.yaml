@@ -53,12 +53,12 @@ dependencies:
   url_launcher: ^6.0.12
   webview_flutter: ^2.3.0
 
-  flutter_launcher_icons: "^0.8.0"
+  # flutter_launcher_icons: "^0.8.0"
 
-flutter_icons:
-  android: true
-  ios: true
-  image_path: "assets/images/Icon.png"
+# flutter_icons:
+#   android: true
+#   ios: true
+#   image_path: "assets/images/Icon.png"
 
 
 dev_dependencies:
