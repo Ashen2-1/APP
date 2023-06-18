@@ -116,8 +116,10 @@ class _Enterteampasscode_pageState extends State<Enterteampasscode_page>
                     await DatabaseAccess.getInstance()
                         .getPotentialTeam(_teamnumberTextController.text);
 
-                if (team_data == null)
-                  displayErrorFromString("Team is invalid", context);
+                FlutterLogs.logInfo("Sign up team", "Enter team", "$team_data");
+
+                if (team_data == null || team_data.isEmpty)
+                  await displayError("Team is invalid", context);
                 else {
                   if (_passcodeTextController.text ==
                       team_data['team passcode']) {
@@ -126,19 +128,23 @@ class _Enterteampasscode_pageState extends State<Enterteampasscode_page>
                     Map<String, dynamic>? curStudentStats =
                         await DatabaseAccess.getInstance().getStudentStats();
 
+                    curStudentStats ??= {};
+
                     FlutterLogs.logInfo(
                         "Add team", "curStudentStats", "$curStudentStats");
 
-                    curStudentStats!['team number'] =
+                    curStudentStats['team number'] =
                         _teamnumberTextController.text;
 
                     DatabaseAccess.getInstance().addToDatabase("student tasks",
                         StudentData.studentEmail, curStudentStats);
+
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => HomeScreen()));
+                  } else {
+                    await displayError("Password is incorrect", context);
                   }
                 }
-
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => HomeScreen()));
 
                 /// here we can Navigator to Team Channel!
               },

@@ -61,78 +61,83 @@ class _Approve_pageState extends State<Approve_page>
   @override
   Widget buildMainContent(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xfff5fbff),
-      body: Column(
-        children: [
-          Text("Approving task: ${StudentData.approvalTask!['task']}",
-              style: defaultFont),
-          SizedBox(height: 20),
-          Text("Open up file:", style: defaultFont),
-          GestureDetector(
-              child: Text("${StudentData.approvalTask!['submit file url']}",
-                  style: StudentData.approvalTask!['submit file url'] != "None"
-                      ? const TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.blue,
-                          decoration: TextDecoration.underline)
-                      : defaultFont),
-              onDoubleTap: () {
-                ConfigUtils.goToScreen(
-                    OpenUrlInWebView(
-                        url: StudentData.approvalTask!['submit file url']),
-                    context);
-              }),
-          SizedBox(
-            height: 300,
-            width: 20,
+        backgroundColor: Color(0xfff5fbff),
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              Text("Approving task: ${StudentData.approvalTask!['task']}",
+                  style: defaultFont),
+              SizedBox(height: 20),
+              Text("Open up file:", style: defaultFont),
+              GestureDetector(
+                  child: Text("${StudentData.approvalTask!['submit file url']}",
+                      style:
+                          StudentData.approvalTask!['submit file url'] != "None"
+                              ? const TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.blue,
+                                  decoration: TextDecoration.underline)
+                              : defaultFont),
+                  onDoubleTap: () {
+                    ConfigUtils.goToScreen(
+                        OpenUrlInWebView(
+                            url: StudentData.approvalTask!['submit file url']),
+                        context);
+                  }),
+              SizedBox(
+                height: 300,
+                width: 20,
+              ),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 88),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    //SizedBox(height: 10,),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => Feedback_page()));
+                      },
+                      child: RoundButton(
+                        icon: Icons.close,
+                      ),
+                    ),
+
+                    GestureDetector(
+                      onTap: () async {
+                        Map<String, dynamic> existingTaskData =
+                            StudentData.getApprovalTask()!;
+
+                        existingTaskData['complete percentage'] = "100%";
+                        existingTaskData['feedback'] = "None";
+                        existingTaskData['approved'] = true;
+
+                        List<Map<String, dynamic>> tasks =
+                            Util.matchAndCombineExisting(
+                                existingTaskData,
+                                await DatabaseAccess.getInstance()
+                                    .getAllSignedUpTasks());
+                        DatabaseAccess.getInstance().addToDatabase(
+                            "student tasks", 'signed up', {"tasks": tasks});
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => HomeScreen()));
+                      },
+                      child: RoundButton(
+                        icon: Icons.check,
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            ],
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 88),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                //SizedBox(height: 10,),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => Feedback_page()));
-                  },
-                  child: RoundButton(
-                    icon: Icons.close,
-                  ),
-                ),
-
-                GestureDetector(
-                  onTap: () async {
-                    Map<String, dynamic> existingTaskData =
-                        StudentData.getApprovalTask()!;
-
-                    existingTaskData['complete percentage'] = "100%";
-                    existingTaskData['feedback'] = "None";
-                    existingTaskData['approved'] = true;
-
-                    List<Map<String, dynamic>> tasks =
-                        Util.matchAndCombineExisting(
-                            existingTaskData,
-                            await DatabaseAccess.getInstance()
-                                .getAllSignedUpTasks());
-                    DatabaseAccess.getInstance().addToDatabase(
-                        "student tasks", 'signed up', {"tasks": tasks});
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => HomeScreen()));
-                  },
-                  child: RoundButton(
-                    icon: Icons.check,
-                  ),
-                ),
-              ],
-            ),
-          )
-        ],
-      ),
-    );
+        ));
   }
 }

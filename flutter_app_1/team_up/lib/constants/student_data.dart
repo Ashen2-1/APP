@@ -7,7 +7,7 @@ class StudentData {
   static String studentEmail = FirebaseAccess.getInstance().getUserEmail();
   static String default_subteam = "Programming";
   static String querying_subteam = default_subteam;
-  static String? studentTeamNumber;
+  static String studentTeamNumber = "None";
 
   static Map<String, dynamic>? currentTask;
 
@@ -25,8 +25,11 @@ class StudentData {
   static String? descriptionIncomingPage;
 
   static Future<String> getStudentTeamNumber() async {
-    return (await DatabaseAccess.getInstance()
-        .getStudentStats())!['team number'];
+    Map<String, dynamic>? studentStats =
+        await DatabaseAccess.getInstance().getStudentStats();
+    return (studentStats == null || studentStats['team number'] == null
+        ? "None"
+        : studentStats['team number']);
   }
 
   static setDescriptionIncomingPage(String incomingPage) {

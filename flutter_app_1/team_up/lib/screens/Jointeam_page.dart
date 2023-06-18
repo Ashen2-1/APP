@@ -34,7 +34,12 @@ class _Jointeam_pageState extends State<Jointeam_page> {
   void searchTeams(String team_number) async {
     FlutterLogs.logInfo(
         "Join team", "searching team", "Searching for $team_number");
-    team = await DatabaseAccess.getInstance().getPotentialTeam(team_number);
+    try {
+      team = await DatabaseAccess.getInstance().getPotentialTeam(team_number);
+    } catch (e) {
+      displayError("Please enter a team", context);
+    }
+    if (team == null) displayAlert("$team_number does not exist", context);
     setState(() {});
   }
 

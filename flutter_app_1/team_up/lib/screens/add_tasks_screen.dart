@@ -218,6 +218,9 @@ class _AddTasksScreenState extends State<AddTasksScreen> {
               "skills needed": _skillsRequiredController.text,
               "image url": imageURL,
               'assigner': StudentData.studentEmail,
+              'feedback': "None",
+              'complete percentage': "None",
+              'team number': await StudentData.getStudentTeamNumber(),
             };
             List<Map<String, dynamic>> curTasks =
                 await Util.combineTaskIntoExisting(
