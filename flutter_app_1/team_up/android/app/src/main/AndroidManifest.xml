@@ -10,9 +10,9 @@
         <package android:name="com.android.chrome" />
     </queries>
    <application
-        android:label="team_up"
+        android:label="Team Up"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/team_up_icon"
         android:usesCleartextTraffic="true">
         <activity
             android:name=".MainActivity"

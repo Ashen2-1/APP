@@ -188,7 +188,7 @@ class _AddTasksScreenState extends State<AddTasksScreen> {
         reusableButton("Upload a image related to task", context, () async {
           File result = (await FileUploader.pickFile())!;
           setState(() {
-            String fileType = file!.path.split(".").last.toLowerCase();
+            String fileType = result.path.split(".").last.toLowerCase();
             if (fileType == "png" || fileType == 'jpg' || fileType == 'jpeg') {
               file = result;
               fileInitialized = true;
