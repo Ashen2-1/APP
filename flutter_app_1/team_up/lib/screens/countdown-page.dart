@@ -40,22 +40,17 @@ class _CountdownPageState extends State<CountdownPage>
 
   double progress = 1.0;
 
-  Future<void> submit() async {
-    Map<String, dynamic> taskToAdd = {
-      'submitter': StudentData.studentEmail,
-      'task': StudentData.currentTask,
-      'assigner': StudentData.currentTaskAssigner,
-      'file url': fileURL,
-      'feedback': "None",
-      'complete percentage': "None"
-    };
+  Future<void> submit(String fileURL) async {
+    Map<String, dynamic> taskToAdd = StudentData.currentTask!;
+    taskToAdd['completed'] = true;
+    taskToAdd['submit file url'] = fileURL;
+    taskToAdd['approved'] = false;
 
-    List<Map<String, dynamic>> curPendingTasks =
-        await Util.combineTaskIntoExisting(taskToAdd,
-            await DatabaseAccess.getInstance().getAllStudentSubmissions());
+    List<Map<String, dynamic>> curPendingTasks = Util.matchAndCombineExisting(
+        taskToAdd, await DatabaseAccess.getInstance().getAllSignedUpTasks());
 
     DatabaseAccess.getInstance().addToDatabase(
-        "submissions", 'student submissions', {'tasks': curPendingTasks});
+        "student tasks", 'signed up', {'tasks': curPendingTasks});
 
     FlutterLogs.logInfo("Student task", "Submission", "Successfully submitted");
 
@@ -65,7 +60,7 @@ class _CountdownPageState extends State<CountdownPage>
   void notify() async {
     if (countText == '0:00:00') {
       FlutterRingtonePlayer.stop();
-      submit();
+      submit(fileURL);
     }
     if (countText == "0:01:00") {
       FlutterRingtonePlayer.playNotification();
@@ -82,8 +77,8 @@ class _CountdownPageState extends State<CountdownPage>
   @override
   void initState() {
     super.initState();
-    int time =
-        Util.convertStringTimeToIntMinutes(StudentData.currentTaskTimeLimit!);
+    int time = Util.convertStringTimeToIntMinutes(
+        StudentData.currentTask!['estimated time']);
     controller = AnimationController(
       vsync: this,
       duration: Duration(minutes: time),
@@ -120,7 +115,7 @@ class _CountdownPageState extends State<CountdownPage>
       body: Column(
         children: [
           SizedBox(height: 80.0),
-          Text("Current Task: ${StudentData.currentTask!}",
+          Text("Current Task: ${StudentData.currentTask!['task']}",
               style: TextStyle(fontSize: 25, decorationThickness: 1.5)),
           Expanded(
             child: Stack(
@@ -194,7 +189,7 @@ class _CountdownPageState extends State<CountdownPage>
                 ConfigUtils.goToScreen(OpenUrlInWebView(url: fileURL), context);
               }),
           reusableButton("Submit for approval", context, () async {
-            await submit();
+            await submit(fileURL);
           }),
           SizedBox(height: 0),
           Padding(

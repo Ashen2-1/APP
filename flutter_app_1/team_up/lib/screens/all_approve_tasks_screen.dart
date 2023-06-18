@@ -35,7 +35,7 @@ class _AllApproveTasksScreenState extends State<AllApproveTasksScreen> {
     for (Map<String, dynamic> taskMap in studentTasksMap!) {
       if (!Util.contains(taskMap['task'], studentTasks)) {
         studentTasks.add(taskMap['task']);
-        imageURL.add(taskMap['file url']);
+        imageURL.add(taskMap['submit file url']);
         FlutterLogs.logInfo("My Tasks", "Add to ListView",
             "Displaying task: ${taskMap['task']}");
       }

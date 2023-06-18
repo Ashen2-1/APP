@@ -69,8 +69,8 @@ class _Approve_pageState extends State<Approve_page>
           SizedBox(height: 20),
           Text("Open up file:", style: defaultFont),
           GestureDetector(
-              child: Text("${StudentData.approvalTask!['file url']}",
-                  style: StudentData.approvalTask!['file url'] != "None"
+              child: Text("${StudentData.approvalTask!['submit file url']}",
+                  style: StudentData.approvalTask!['submit file url'] != "None"
                       ? const TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.bold,
@@ -80,7 +80,7 @@ class _Approve_pageState extends State<Approve_page>
               onDoubleTap: () {
                 ConfigUtils.goToScreen(
                     OpenUrlInWebView(
-                        url: StudentData.approvalTask!['file url']),
+                        url: StudentData.approvalTask!['submit file url']),
                     context);
               }),
           SizedBox(
@@ -111,14 +111,16 @@ class _Approve_pageState extends State<Approve_page>
                         StudentData.getApprovalTask()!;
 
                     existingTaskData['complete percentage'] = "100%";
+                    existingTaskData['feedback'] = "None";
+                    existingTaskData['approved'] = true;
 
                     List<Map<String, dynamic>> tasks =
                         Util.matchAndCombineExisting(
                             existingTaskData,
                             await DatabaseAccess.getInstance()
-                                .getAllStudentSubmissions());
+                                .getAllSignedUpTasks());
                     DatabaseAccess.getInstance().addToDatabase(
-                        "submissions", 'student submissions', {"tasks": tasks});
+                        "student tasks", 'signed up', {"tasks": tasks});
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) => HomeScreen()));
                   },

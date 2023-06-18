@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_logs/flutter_logs.dart';
+import 'package:team_up/constants/student_data.dart';
 import 'package:team_up/screens/page_navigation_screen.dart';
 import 'package:team_up/services/database_access.dart';
 import 'package:team_up/utils/configuration_util.dart';
@@ -7,6 +8,8 @@ import 'package:team_up/widgets/reusable_widgets/reusable_widget.dart';
 import 'package:team_up/widgets/widgets.dart';
 import '../constants/colors.dart';
 import '../utils/util.dart';
+import 'TaskDescription_page.dart';
+import 'countdown-page.dart';
 
 class StudentTasksScreen extends StatefulWidget {
   const StudentTasksScreen({Key? key}) : super(key: key);
@@ -18,35 +21,14 @@ class StudentTasksScreen extends StatefulWidget {
 class _StudentTasksScreenState extends State<StudentTasksScreen> {
   bool _isExpanded = false;
 
-  List<Map<String, dynamic>>? studentTasksMap;
+  List<Map<String, dynamic>>? studentTasksMap = [];
   //List<String> task = [];
-
-  List<String> studentTasks = [];
-  List<String> dueDates = [];
-  List<String> skillsNeeded = [];
-  List<String> imageUrlList = [];
-  List<String> description = [];
-  List<String> timeLimit = [];
-  List<String> taskAssigners = [];
 
   Future<void> configure() async {
     //studentTasksMap
     studentTasksMap = await DatabaseAccess.getInstance().getStudentTasks();
     FlutterLogs.logInfo(
         "My Tasks", "Add to ListView", "studentTasksMap: ${studentTasksMap}");
-    for (Map<String, dynamic> taskMap in studentTasksMap!) {
-      if (!Util.contains(taskMap['task'], studentTasks)) {
-        studentTasks.add(taskMap['task']);
-        FlutterLogs.logInfo("My Tasks", "Add to ListView",
-            "Displaying task: ${taskMap['task']}");
-        dueDates.add(taskMap['due date']);
-        skillsNeeded.add(taskMap['skills needed']);
-        timeLimit.add(taskMap['estimated time']);
-        imageUrlList.add(taskMap['image url']);
-        description.add(taskMap["description"]);
-        taskAssigners.add(taskMap['assigner']);
-      }
-    }
     // for (String imageUrl in imageUrlList) {
     //   resizedImageList.add(await Util.resizeImage(imageUrl, 1 / 8));
     // }
@@ -77,25 +59,15 @@ class _StudentTasksScreenState extends State<StudentTasksScreen> {
     return Column(
       children: [
         regularText("My Tasks", context, true),
-        Expanded(
-          child: ListView.builder(
-            itemCount: studentTasks.length,
-            itemBuilder: (context, index) {
-              return textFieldTaskInfo(
-                  studentTasks[index],
-                  dueDates[index],
-                  skillsNeeded[index],
-                  imageUrlList[index],
-                  description[index],
-                  timeLimit[index],
-                  taskAssigners[index],
-                  false,
-                  true,
-                  "my tasks",
-                  context);
-            },
+        if (studentTasksMap != null)
+          Expanded(
+            child: ListView.builder(
+              itemCount: studentTasksMap!.length,
+              itemBuilder: (context, index) {
+                return studentTaskInfoWidget(studentTasksMap!, index, context);
+              },
+            ),
           ),
-        ),
         reusableButton("Update my tasks", context, () async {
           configure();
         }),

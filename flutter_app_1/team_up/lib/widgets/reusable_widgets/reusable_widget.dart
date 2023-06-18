@@ -184,18 +184,8 @@ Future<void> displayErrorFromString(String error, BuildContext context) async {
   );
 }
 
-SizedBox textFieldTaskInfo(
-    String taskText,
-    String dueDateText,
-    String instructionsText,
-    String imageUrl,
-    String description,
-    String taskTime,
-    String taskAssigner,
-    bool isSignUp,
-    bool isAssignment,
-    String incomingPage,
-    BuildContext context) {
+SizedBox textFieldTaskInfo(List<Map<String, dynamic>> allTaskMap,
+    String subteam, int index, String incomingPage, BuildContext context) {
   return SizedBox(
       height: 200.0,
       width: MediaQuery.of(context).size.width,
@@ -215,23 +205,21 @@ SizedBox textFieldTaskInfo(
           child: ListView(children: [
             Row(mainAxisAlignment: MainAxisAlignment.start, children: [
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                regularText(taskText, context, true),
-                regularText("Due date: $dueDateText", context, false),
-                regularText("Skills needed: $instructionsText", context, false),
+                regularText(allTaskMap[index]['task'], context, true),
+                regularText("Due date: ${allTaskMap[index]['due date']}",
+                    context, false),
+                regularText(
+                    "Skills needed: ${allTaskMap[index]['skills needed']}",
+                    context,
+                    false),
                 const SizedBox(height: 5),
-                regularText("Task time: $taskTime", context, false),
+                regularText("Task time: ${allTaskMap[index]['estimated time']}",
+                    context, false),
                 ////////////////////////////////////////////////new
 
                 ElevatedButton(
                   onPressed: () {
-                    StudentData.setViewingTask({
-                      "task": taskText,
-                      "due date": dueDateText,
-                      "skills needed": instructionsText,
-                      "image url": imageUrl,
-                      "estimated time": taskTime,
-                      "description": description
-                    });
+                    StudentData.setViewingTask(allTaskMap[index]);
                     StudentData.descriptionIncomingPage = incomingPage;
                     Navigator.push(
                         context,
@@ -246,49 +234,115 @@ SizedBox textFieldTaskInfo(
                   ),
                 ),
                 //////////////////////////////////////// Task Descriptions
-                if (isSignUp /*&& Util.isTaskIn(taskText)*/)
-                  reusableSignUpTaskButton("Sign up for task", context, () {
-                    askConfirmation(context, taskText)
-                        .then((confirmation) async {
-                      if (confirmation != null && confirmation) {
-                        FlutterLogs.logInfo(
-                            "TASK FIELD", "Sign up button", "Adding $taskText");
-                        Map<String, dynamic> taskToAdd = {
-                          "task": taskText,
-                          "due date": dueDateText,
-                          "skills needed": instructionsText,
-                          "image url": imageUrl,
-                          "estimated time": taskTime,
-                          "description": description,
-                          'assigner': taskAssigner,
-                        };
-                        List<Map<String, dynamic>> curTasks =
-                            await Util.combineTaskIntoExisting(
-                                taskToAdd,
-                                await DatabaseAccess.getInstance()
-                                    .getStudentTasks());
-                        DatabaseAccess.getInstance().addToDatabase(
-                            "student tasks",
-                            StudentData.studentEmail,
-                            {"tasks": curTasks});
-                        // Update status of current tasks to reflect unavailable
-                        //DatabaseAccess.getInstance().updateField("", docId, data)
-                      }
-                    });
-                  })
-                else if (isAssignment)
-                  reusableSignUpTaskButton("START this task", context, () {
-                    StudentData.currentTask = taskText;
-                    StudentData.currentTaskTimeLimit = taskTime;
-                    StudentData.currentTaskAssigner = taskAssigner;
-                    ConfigUtils.goToScreen(CountdownPage(), context);
-                  })
+                reusableSignUpTaskButton("Sign up for task", context, () {
+                  askConfirmation(context, allTaskMap[index]['task'])
+                      .then((confirmation) async {
+                    if (confirmation != null && confirmation) {
+                      FlutterLogs.logInfo("TASK FIELD", "Sign up button",
+                          "Adding ${allTaskMap[index]['task']}");
+                      Map<String, dynamic> taskToAdd = allTaskMap[index];
+                      taskToAdd['completer'] = StudentData.studentEmail;
+                      taskToAdd['completed'] = false;
+                      taskToAdd['approved'] = false;
+                      taskToAdd['feedback'] = "None";
+                      taskToAdd['complete percentage'] = "None";
+                      List<Map<String, dynamic>> curTasks =
+                          await Util.combineTaskIntoExisting(
+                              taskToAdd,
+                              await DatabaseAccess.getInstance()
+                                  .getStudentTasks());
+                      DatabaseAccess.getInstance().addToDatabase(
+                          "student tasks", "signed up", {"tasks": curTasks});
+
+                      // Remove task from existing
+                      allTaskMap.removeAt(index);
+                      DatabaseAccess.getInstance().addToDatabase(
+                          "Tasks", subteam, {"tasks": allTaskMap});
+                    }
+                  });
+                })
               ]),
               const SizedBox(width: 10.0), // For spacing
-              if (imageUrl != "None") Flexible(child: Image.network(imageUrl)),
+              if (allTaskMap[index]['image url'] != "None")
+                Flexible(child: Image.network(allTaskMap[index]['image url'])),
             ]),
           ])));
   //////////////////////////////////////////////////////////////////////new
+}
+
+SizedBox studentTaskInfoWidget(List<Map<String, dynamic>> studentTasksMap,
+    int index, BuildContext context) {
+  Map<String, dynamic> curTask = studentTasksMap[index];
+  return SizedBox(
+      height: 200.0,
+      width: MediaQuery.of(context).size.width,
+      child: Container(
+          height: 120.0,
+          padding: const EdgeInsets.all(12.0),
+          margin: const EdgeInsets.all(10.0),
+          //width: 200.0, //MediaQuery.of(context).size.width,
+
+          decoration: BoxDecoration(
+              color: Color.fromARGB(255, 193, 184, 184).withOpacity(0.3),
+              borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(10),
+                  topRight: Radius.circular(10),
+                  bottomLeft: Radius.circular(10),
+                  bottomRight: Radius.circular(10))),
+          child: ListView(children: [
+            Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                regularText(curTask['task'], context, true),
+                regularText("Due date: ${curTask['due date']}", context, false),
+                regularText("Skills needed: ${curTask['skills needed']}",
+                    context, false),
+                const SizedBox(height: 5),
+                regularText(
+                    "Task time: ${curTask['estimated time']}", context, false),
+                if (curTask['approved'])
+                  if (curTask['feedback'] != "None")
+                    regularText(
+                        "Feedback: ${curTask['feedback']}", context, false),
+                if (curTask['complete percentage'] != "None")
+                  regularText(
+                      "Complete percentage: ${curTask['complete percentage']}",
+                      context,
+                      false),
+                ////////////////////////////////////////////////new
+                ElevatedButton(
+                  onPressed: () {
+                    StudentData.setViewingTask(curTask);
+                    StudentData.descriptionIncomingPage = "my tasks";
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => TaskDescription_page()));
+
+                    ///TaskDescription_page
+                  },
+                  child: Text("Description"),
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.blue,
+                  ),
+                ),
+                if (curTask['complete percentage'] == "100%")
+                  reusableSignUpTaskButton("Clear this task", context, () {
+                    studentTasksMap.removeAt(index);
+                    DatabaseAccess.getInstance().addToDatabase("student tasks",
+                        "signed up", {'tasks': studentTasksMap});
+                    ConfigUtils.goToScreen(const HomeScreen(), context);
+                  }),
+                if (!curTask['completed'])
+                  reusableSignUpTaskButton("START this task", context, () {
+                    StudentData.currentTask = curTask;
+                    ConfigUtils.goToScreen(CountdownPage(), context);
+                  }),
+              ]),
+              const SizedBox(width: 10.0), // For spacing
+              if (curTask['image url'] != "None")
+                Flexible(child: Image.network(curTask['image url'])),
+            ]),
+          ])));
 }
 
 SizedBox regularText(String text, BuildContext context, bool isTitle) {

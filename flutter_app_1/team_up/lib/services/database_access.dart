@@ -119,12 +119,21 @@ class DatabaseAccess {
   Future<List<Map<String, dynamic>>?> /* Future<List<String>>*/
       getStudentTasks() async {
     DocumentSnapshot<Map<String, dynamic>>? docSnapshot =
-        await getDocumentByID("student tasks", StudentData.studentEmail);
+        await getDocumentByID("student tasks", "signed up");
+    List<Map<String, dynamic>> fieldResults = [];
 
     if (docSnapshot != null) {
-      return parseStudentTaskData(docSnapshot, "");
+      Map<String, dynamic>? data = docSnapshot.data();
+      if (data!.isNotEmpty) {
+        List<dynamic> listData = data['tasks'];
+        for (Map<String, dynamic> mapData in listData) {
+          if (mapData['completer'] == StudentData.studentEmail) {
+            fieldResults.add(mapData);
+          }
+        }
+      }
     }
-    return null;
+    return fieldResults;
   }
 
   Future<List<Map<String, dynamic>>?> getAvailableTasks(
@@ -149,39 +158,9 @@ class DatabaseAccess {
     return null;
   }
 
-  Future<List<Map<String, dynamic>>?> getAllStudentSubmissions() async {
-    DocumentSnapshot<Map<String, dynamic>>? docSnapshot =
-        await getDocumentByID("submissions", 'student submissions');
-
-    if (docSnapshot != null) {
-      return parseStudentTaskData(docSnapshot, "");
-    }
-    return null;
-  }
-
-  Future<List<Map<String, dynamic>>?> getStudentSubmissions() async {
-    DocumentSnapshot<Map<String, dynamic>>? docSnapshot =
-        await getDocumentByID("submissions", 'student submissions');
-
-    List<Map<String, dynamic>> fieldResults = [];
-
-    if (docSnapshot != null) {
-      Map<String, dynamic>? data = docSnapshot.data();
-      if (data!.isNotEmpty) {
-        List<dynamic> listData = data['tasks'];
-        for (Map<String, dynamic> mapData in listData) {
-          if (mapData['submitter'] == StudentData.studentEmail) {
-            fieldResults.add(mapData);
-          }
-        }
-      }
-    }
-    return fieldResults;
-  }
-
   Future<List<Map<String, dynamic>>?> getMyAssignedStudentSubmissions() async {
     DocumentSnapshot<Map<String, dynamic>>? docSnapshot =
-        await getDocumentByID("submissions", 'student submissions');
+        await getDocumentByID("student tasks", 'signed up');
 
     List<Map<String, dynamic>> fieldResults = [];
 
@@ -190,7 +169,9 @@ class DatabaseAccess {
       if (data!.isNotEmpty) {
         List<dynamic> listData = data['tasks'];
         for (Map<String, dynamic> mapData in listData) {
-          if (mapData['assigner'] == StudentData.studentEmail) {
+          if (mapData['completed'] &&
+              !mapData['approved'] &&
+              mapData['assigner'] == StudentData.studentEmail) {
             fieldResults.add(mapData);
           }
         }
@@ -215,6 +196,16 @@ class DatabaseAccess {
 
     if (docSnapshot != null) {
       return docSnapshot.data();
+    }
+    return null;
+  }
+
+  Future<List<Map<String, dynamic>>?> getAllSignedUpTasks() async {
+    DocumentSnapshot<Map<String, dynamic>>? docSnapshot =
+        await getDocumentByID("student tasks", "signed up");
+
+    if (docSnapshot != null) {
+      return parseStudentTaskData(docSnapshot, "");
     }
     return null;
   }

@@ -76,12 +76,14 @@ class _Feedback_pageState extends State<Feedback_page> {
 
                 existingTaskData['feedback'] = _Textcontroller.text;
                 existingTaskData['complete percentage'] = percentage;
+                existingTaskData['completed'] = false;
+                existingTaskData['approved'] = true;
 
                 List<Map<String, dynamic>> tasks = Util.matchAndCombineExisting(
                     existingTaskData,
-                    await DatabaseAccess.getInstance().getStudentSubmissions());
+                    await DatabaseAccess.getInstance().getAllSignedUpTasks());
                 DatabaseAccess.getInstance().addToDatabase(
-                    "submissions", StudentData.studentEmail, {"tasks": tasks});
+                    "student tasks", "signed up", {"tasks": tasks});
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => HomeScreen()));
               },

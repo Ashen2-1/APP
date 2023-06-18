@@ -9,9 +9,7 @@ class StudentData {
   static String querying_subteam = default_subteam;
   static String? studentTeamNumber;
 
-  static String? currentTask;
-  static String? currentTaskTimeLimit;
-  static String? currentTaskAssigner;
+  static Map<String, dynamic>? currentTask;
 
   static Map<String, dynamic>? approvalTask;
 
@@ -35,7 +33,7 @@ class StudentData {
     descriptionIncomingPage = incomingPage;
   }
 
-  static void setCurrentTask(String newTask) {
+  static void setCurrentTask(Map<String, dynamic> newTask) {
     currentTask = newTask;
   }
 

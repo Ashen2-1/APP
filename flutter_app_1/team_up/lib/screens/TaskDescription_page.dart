@@ -71,6 +71,20 @@ class _TaskDescription_pageState extends State<TaskDescription_page> {
                 style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
               ),
             ),
+            if (StudentData.viewingTask!['feedback'] != "None")
+              Center(
+                child: Text(
+                  "Feedback: ${StudentData.viewingTask!['feedback']}",
+                  style: TextStyle(fontSize: 16),
+                ),
+              ),
+            if (StudentData.viewingTask!['complete percentage'] != "None")
+              Center(
+                child: Text(
+                  "Complete percentage: ${StudentData.viewingTask!['complete percentage']}",
+                  style: TextStyle(fontSize: 16),
+                ),
+              ),
             const SizedBox(height: 25),
             if (StudentData.viewingTask!['image url'] != "None")
               Expanded(
