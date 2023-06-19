@@ -6,6 +6,7 @@ import 'package:team_up/constants/student_data.dart';
 import 'package:team_up/screens/web_view_page.dart';
 import 'package:team_up/services/database_access.dart';
 import 'package:team_up/utils/configuration_util.dart';
+import 'package:team_up/utils/fonts.dart';
 import 'package:team_up/utils/util.dart';
 import 'package:team_up/widgets/reusable_widgets/reusable_widget.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -180,16 +181,16 @@ class _CountdownPageState extends State<CountdownPage>
             setState(() {});
           }),
           // if (fileURL != "None") WebView(initialUrl: fileURL),
-          GestureDetector(
-              child: Text("View the file:\n$fileURL",
-                  style: const TextStyle(
-                      color: Colors.blue,
-                      decoration: TextDecoration.underline)),
-              onDoubleTap: () async {
-                //WebViewPage.setURL(fileURL);
-                //ConfigUtils.goToScreen(WebViewPage(), context);
-                ConfigUtils.goToScreen(OpenUrlInWebView(url: fileURL), context);
-              }),
+          const Text("View the file", style: defaultFont),
+          SelectableText("$fileURL",
+              style: const TextStyle(
+                  color: Colors.blue, decoration: TextDecoration.underline)),
+          // onDoubleTap: () async {
+          //   //WebViewPage.setURL(fileURL);
+          //   //ConfigUtils.goToScreen(WebViewPage(), context);
+          //   ConfigUtils.goToScreen(OpenUrlInWebView(url: fileURL), context);
+          // }
+          // ),
           reusableButton("Submit for approval", context, () async {
             await submit(fileURL);
           }),

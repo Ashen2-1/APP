@@ -251,8 +251,7 @@ SizedBox textFieldTaskInfo(List<Map<String, dynamic>> allTaskMap,
                           await DatabaseAccess.getInstance()
                               .getAllTasks(StudentData.getQuerySubTeam());
                       if (inDatabaseTasks!.isNotEmpty &&
-                          inDatabaseTasks[index]['task'] ==
-                              allTaskMap[index]['task']) {
+                          inDatabaseTasks.length > index) {
                         List<Map<String, dynamic>> curTasks =
                             await Util.combineTaskIntoExisting(
                                 taskToAdd,

@@ -112,7 +112,7 @@ class _StudentProgressScreenState extends State<StudentProgressScreen> {
         // _tasks_controller.text = await DatabaseAccess.getInstance()
         //     .queryEqual("Programming (example)", "estimated time",
         //         "${_time.toString()} mins");
-        addDynamicTaskFields(context);
+        await addDynamicTaskFields(context);
       }),
       if (queryResults != null)
         Expanded(
