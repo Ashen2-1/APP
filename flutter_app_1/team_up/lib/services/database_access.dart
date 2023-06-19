@@ -179,8 +179,7 @@ class DatabaseAccess {
     return taskCounter;
   }
 
-  Future<List<Map<String, dynamic>>?> getAllTasks(
-      String time, String subteam) async {
+  Future<List<Map<String, dynamic>>?> getAllTasks(String subteam) async {
     DocumentSnapshot<Map<String, dynamic>>? docSnapshot =
         await getDocumentByID("Tasks", subteam);
 

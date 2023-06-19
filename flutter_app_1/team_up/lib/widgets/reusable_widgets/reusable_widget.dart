@@ -247,18 +247,21 @@ SizedBox textFieldTaskInfo(List<Map<String, dynamic>> allTaskMap,
                       taskToAdd['approved'] = false;
                       taskToAdd['feedback'] = "None";
                       taskToAdd['complete percentage'] = "None";
-                      List<Map<String, dynamic>> curTasks =
-                          await Util.combineTaskIntoExisting(
-                              taskToAdd,
-                              await DatabaseAccess.getInstance()
-                                  .getStudentTasks());
-                      DatabaseAccess.getInstance().addToDatabase(
-                          "student tasks", "signed up", {"tasks": curTasks});
+                      List<Map<String, dynamic>>? inDatabaseTasks =
+                          await DatabaseAccess.getInstance()
+                              .getAllTasks(StudentData.getQuerySubTeam());
+                      if (inDatabaseTasks![index]['completer'] == null) {
+                        List<Map<String, dynamic>> curTasks =
+                            await Util.combineTaskIntoExisting(
+                                taskToAdd, inDatabaseTasks);
+                        DatabaseAccess.getInstance().addToDatabase(
+                            "student tasks", "signed up", {"tasks": curTasks});
 
-                      // Remove task from existing
-                      allTaskMap.removeAt(index);
-                      DatabaseAccess.getInstance().addToDatabase(
-                          "Tasks", subteam, {"tasks": allTaskMap});
+                        // Remove task from existing
+                        allTaskMap.removeAt(index);
+                        DatabaseAccess.getInstance().addToDatabase(
+                            "Tasks", subteam, {"tasks": allTaskMap});
+                      }
                     }
                   });
                 })

@@ -224,10 +224,8 @@ class _AddTasksScreenState extends State<AddTasksScreen> {
               'team number': await StudentData.getStudentTeamNumber(),
             };
             List<Map<String, dynamic>> curTasks =
-                await Util.combineTaskIntoExisting(
-                    taskToAdd,
-                    await DatabaseAccess.getInstance()
-                        .getAllTasks(time, subteam));
+                await Util.combineTaskIntoExisting(taskToAdd,
+                    await DatabaseAccess.getInstance().getAllTasks(subteam));
 
             DatabaseAccess.getInstance()
                 .addToDatabase("Tasks", subteam, {"tasks": curTasks});
