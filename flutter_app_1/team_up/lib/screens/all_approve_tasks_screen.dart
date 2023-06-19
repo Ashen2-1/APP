@@ -97,8 +97,8 @@ class _AllApproveTasksScreenState extends State<AllApproveTasksScreen> {
                             }
                           })
                         ]),
-                        if (imageURL[index] != "None")
-                          Expanded(child: Image.network(imageURL[index]))
+                        // if (imageURL[index] != "None")
+                        //   Expanded(child: Image.network(imageURL[index]))
                       ]));
                 })),
         reusableButton("Update tasks to approve", context, () async {

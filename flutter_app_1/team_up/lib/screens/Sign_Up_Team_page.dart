@@ -33,6 +33,7 @@ class _Signupteam_pageState extends State<Signupteam_page>
 
   bool isPlaying = false;
   File? file;
+  String fileURL = "None";
 
   @override
   void menuToggleExpansion() {
@@ -117,22 +118,29 @@ class _Signupteam_pageState extends State<Signupteam_page>
                 reusableButton("Upload a logo for the team", context, () async {
                   File result = (await FileUploader.pickFile())!;
                   setState(() {
-                    file = result;
-                    isPlaying = true;
+                    String fileType = result.path.split(".").last.toLowerCase();
+                    if (fileType == "png" ||
+                        fileType == 'jpg' ||
+                        fileType == 'jpeg') {
+                      file = result;
+                      isPlaying = true;
+                    } else {
+                      displayError("Invalid file type", context);
+                    }
                   });
+                  if (file != null) {
+                    TaskSnapshot imageSnapshot =
+                        await FileUploader.getInstance()
+                            .addFileToFirebaseStorage(file!);
+                    fileURL = await imageSnapshot.ref.getDownloadURL();
+                  }
                 }),
+                if (fileURL != "None") Image.network(fileURL),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     primary: Colors.green,
                   ),
                   onPressed: () async {
-                    String fileURL = "None";
-                    if (file != null) {
-                      TaskSnapshot imageSnapshot =
-                          await FileUploader.getInstance()
-                              .addFileToFirebaseStorage(file!);
-                      fileURL = await imageSnapshot.ref.getDownloadURL();
-                    }
                     Map<String, dynamic> teamToAdd = {
                       'team number': _teamnumberTextController.text,
                       'team name': _teamnameTextController.text,

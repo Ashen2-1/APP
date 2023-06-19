@@ -174,29 +174,29 @@ class _Approve_pageState extends State<Approve_page>
         ));
   }
 
-  Future<void> openFile(String url, String name) async {
-    File? file = await downloadFile(url, name);
-    if (file != null) {
-      FlutterLogs.logInfo("Open file", "file download path", "${file.path}");
-      OpenFile.open("1360 Programming Attendance October-12-2022.pdf");
-    }
-  }
+  // Future<void> openFile(String url, String name) async {
+  //   File? file = await downloadFile(url, name);
+  //   if (file != null) {
+  //     FlutterLogs.logInfo("Open file", "file download path", "${file.path}");
+  //     OpenFile.open("1360 Programming Attendance October-12-2022.pdf");
+  //   }
+  // }
 
-  Future<File?> downloadFile(String fileURL, String s) async {
-    //final appStorage = await getApplicationDocumentsDirectory();
+  // Future<File?> downloadFile(String fileURL, String s) async {
+  //   //final appStorage = await getApplicationDocumentsDirectory();
 
-    final file = File('Download/$s');
+  //   final file = File('Download/$s');
 
-    final response = await Dio().get(fileURL,
-        options: Options(
-            responseType: ResponseType.bytes,
-            followRedirects: false,
-            receiveTimeout: 0));
+  //   final response = await Dio().get(fileURL,
+  //       options: Options(
+  //           responseType: ResponseType.bytes,
+  //           followRedirects: false,
+  //           receiveTimeout: 0));
 
-    final fileWriter = file.openSync(mode: FileMode.write);
-    fileWriter.writeFromSync(response.data);
-    await fileWriter.close();
+  //   final fileWriter = file.openSync(mode: FileMode.write);
+  //   fileWriter.writeFromSync(response.data);
+  //   await fileWriter.close();
 
-    return file;
-  }
+  //   return file;
+  // }
 }
