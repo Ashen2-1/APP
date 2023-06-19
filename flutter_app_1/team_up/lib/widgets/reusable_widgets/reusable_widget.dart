@@ -250,8 +250,8 @@ SizedBox textFieldTaskInfo(List<Map<String, dynamic>> allTaskMap,
                       List<Map<String, dynamic>>? inDatabaseTasks =
                           await DatabaseAccess.getInstance()
                               .getAllTasks(StudentData.getQuerySubTeam());
-                      if (inDatabaseTasks != null ||
-                          inDatabaseTasks![index]['task'] ==
+                      if (inDatabaseTasks!.isNotEmpty &&
+                          inDatabaseTasks[index]['task'] ==
                               allTaskMap[index]['task']) {
                         List<Map<String, dynamic>> curTasks =
                             await Util.combineTaskIntoExisting(
@@ -266,7 +266,7 @@ SizedBox textFieldTaskInfo(List<Map<String, dynamic>> allTaskMap,
                         DatabaseAccess.getInstance().addToDatabase(
                             "Tasks", subteam, {"tasks": allTaskMap});
                       } else {
-                        displayError(
+                        await displayError(
                             "This task has all ready been taken", context);
                       }
                     }
