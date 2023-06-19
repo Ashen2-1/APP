@@ -250,10 +250,14 @@ SizedBox textFieldTaskInfo(List<Map<String, dynamic>> allTaskMap,
                       List<Map<String, dynamic>>? inDatabaseTasks =
                           await DatabaseAccess.getInstance()
                               .getAllTasks(StudentData.getQuerySubTeam());
-                      if (inDatabaseTasks![index]['completer'] == null) {
+                      if (inDatabaseTasks != null ||
+                          inDatabaseTasks![index]['task'] ==
+                              allTaskMap[index]['task']) {
                         List<Map<String, dynamic>> curTasks =
                             await Util.combineTaskIntoExisting(
-                                taskToAdd, inDatabaseTasks);
+                                taskToAdd,
+                                await DatabaseAccess.getInstance()
+                                    .getAllSignedUpTasks());
                         DatabaseAccess.getInstance().addToDatabase(
                             "student tasks", "signed up", {"tasks": curTasks});
 
