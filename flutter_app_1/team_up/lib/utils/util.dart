@@ -83,6 +83,11 @@ class Util {
     return -1;
   }
 
+  static String getFileNameFromPathString(String path) {
+    List<String> partsOfPath = path.split(".");
+    return "${partsOfPath.elementAt(partsOfPath.length - 2)}.${partsOfPath.last}";
+  }
+
   static Future<Image> resizeImage(/*Image image*/ String url,
       /*double newWidth, double newHeight*/ double scaleFactor) async {
     // PictureRecorder recorder = PictureRecorder();

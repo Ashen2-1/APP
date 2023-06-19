@@ -50,7 +50,7 @@ class _TaskDescription_pageState extends State<TaskDescription_page> {
             ),
             Center(
               child: Text(
-                "Task: ${StudentData.viewingTask!['task']}", ////${StudentData.currentDescrption!}, ${addDynamicTaskFields(context)}
+                "Task: ${StudentData.allViewingTask![StudentData.viewingIndex!]['task']}", ////${StudentData.currentDescrption!}, ${addDynamicTaskFields(context)}
                 style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
               ),
             ),
@@ -59,7 +59,7 @@ class _TaskDescription_pageState extends State<TaskDescription_page> {
             ),
             Center(
               child: Text(
-                "Task Description: ${StudentData.viewingTask!['description']}",
+                "Task Description: ${StudentData.allViewingTask![StudentData.viewingIndex!]['description']}",
               ),
             ),
             const SizedBox(
@@ -67,28 +67,36 @@ class _TaskDescription_pageState extends State<TaskDescription_page> {
             ),
             Center(
               child: Text(
-                "Task time: ${StudentData.viewingTask!['estimated time']}",
+                "Task time: ${StudentData.allViewingTask![StudentData.viewingIndex!]['estimated time']}",
                 style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
               ),
             ),
-            if (StudentData.viewingTask!['feedback'] != "None")
+            if (StudentData.allViewingTask![StudentData.viewingIndex!]
+                    ['feedback'] !=
+                "None")
               Center(
                 child: Text(
-                  "Feedback: ${StudentData.viewingTask!['feedback']}",
+                  "Feedback: ${StudentData.allViewingTask![StudentData.viewingIndex!]['feedback']}",
                   style: TextStyle(fontSize: 16),
                 ),
               ),
-            if (StudentData.viewingTask!['complete percentage'] != "None")
+            if (StudentData.allViewingTask![StudentData.viewingIndex!]
+                    ['complete percentage'] !=
+                "None")
               Center(
                 child: Text(
-                  "Complete percentage: ${StudentData.viewingTask!['complete percentage']}",
+                  "Complete percentage: ${StudentData.allViewingTask![StudentData.viewingIndex!]['complete percentage']}",
                   style: TextStyle(fontSize: 16),
                 ),
               ),
             const SizedBox(height: 25),
-            if (StudentData.viewingTask!['image url'] != "None")
+            if (StudentData.allViewingTask![StudentData.viewingIndex!]
+                    ['image url'] !=
+                "None")
               Expanded(
-                  child: Image.network(StudentData.viewingTask!['image url'])),
+                  child: Image.network(
+                      StudentData.allViewingTask![StudentData.viewingIndex!]
+                          ['image url'])),
             const SizedBox(
               height: 40,
             ),
@@ -99,21 +107,37 @@ class _TaskDescription_pageState extends State<TaskDescription_page> {
                 ),
                 onPressed: () async {
                   ///// add the task to my task page
-                  askConfirmation(context, StudentData.viewingTask!['task'])
+                  askConfirmation(
+                          context,
+                          StudentData.allViewingTask![StudentData.viewingIndex!]
+                              ['task'])
                       .then((confirmation) async {
                     if (confirmation != null && confirmation) {
                       FlutterLogs.logInfo("TASK FIELD", "Sign up button",
-                          "Adding ${StudentData.viewingTask!['task']}");
-                      Map<String, dynamic> taskToAdd = StudentData.viewingTask!;
+                          "Adding ${StudentData.allViewingTask![StudentData.viewingIndex!]['task']}");
+                      Map<String, dynamic> taskToAdd = StudentData
+                          .allViewingTask![StudentData.viewingIndex!];
+                      taskToAdd['completer'] = StudentData.studentEmail;
+                      taskToAdd['completed'] = false;
+                      taskToAdd['approved'] = false;
+                      taskToAdd['feedback'] = "None";
+                      taskToAdd['complete percentage'] = "None";
                       List<Map<String, dynamic>> curTasks =
                           await Util.combineTaskIntoExisting(
                               taskToAdd,
                               await DatabaseAccess.getInstance()
                                   .getStudentTasks());
                       DatabaseAccess.getInstance().addToDatabase(
-                          "student tasks",
-                          StudentData.studentEmail,
-                          {"tasks": curTasks});
+                          "student tasks", "signed up", {"tasks": curTasks});
+
+                      List<Map<String, dynamic>> allTaskMap =
+                          StudentData.allViewingTask!;
+                      // Remove task from existing
+                      allTaskMap.removeAt(StudentData.viewingIndex!);
+                      DatabaseAccess.getInstance().addToDatabase("Tasks",
+                          StudentData.getQuerySubTeam(), {"tasks": allTaskMap});
+
+                      ConfigUtils.goToScreen(HomeScreen(), context);
                     }
                   });
                 },

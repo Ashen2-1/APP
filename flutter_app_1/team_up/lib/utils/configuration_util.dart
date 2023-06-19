@@ -59,12 +59,6 @@ class ConfigUtils {
               goToScreen(const AddTasksScreen(), context);
             },
           ),
-          // ListTile(
-          //   title: Text('Student Progress Page'),
-          //   onTap: () {
-          //     goToScreen(const StudentProgressScreen(), context);
-          //   },
-          // ),
           ListTile(
             title: Text('Home Page'),
             onTap: () {
@@ -101,12 +95,6 @@ class ConfigUtils {
               goToScreen(const Enterteampasscode_page(), context);
             },
           ),
-          // ListTile(
-          //   title: Text('Sign up your team Page!'),
-          //   onTap: () {
-          //     goToScreen(const Signupteam_page(), context);
-          //   },
-          // ),
         ],
       ),
     );

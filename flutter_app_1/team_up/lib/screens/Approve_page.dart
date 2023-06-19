@@ -1,5 +1,9 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_logs/flutter_logs.dart';
+import 'package:open_file/open_file.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:team_up/constants/student_data.dart';
 
 import 'package:team_up/screens/Feedback_page.dart';
@@ -39,7 +43,7 @@ class _Approve_pageState extends State<Approve_page>
   void menuToggleExpansion() {
     setState(() {
       ConfigUtils.goToScreen(PageNavigationScreen(), context);
-      PageNavigationScreen.setIncomingScreen(Approve_page());
+      PageNavigationScreen.setIncomingScreen(const Approve_page());
     });
   }
 
@@ -61,32 +65,61 @@ class _Approve_pageState extends State<Approve_page>
   @override
   Widget buildMainContent(BuildContext context) {
     return Scaffold(
-        backgroundColor: Color(0xfff5fbff),
+        backgroundColor: const Color(0xfff5fbff),
         body: SingleChildScrollView(
           child: Column(
             children: [
               Text("Approving task: ${StudentData.approvalTask!['task']}",
                   style: defaultFont),
-              SizedBox(height: 20),
-              Text("Open up file:", style: defaultFont),
-              GestureDetector(
-                  child: Text("${StudentData.approvalTask!['submit file url']}",
-                      style:
-                          StudentData.approvalTask!['submit file url'] != "None"
-                              ? const TextStyle(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.blue,
-                                  decoration: TextDecoration.underline)
-                              : defaultFont),
-                  onDoubleTap: () {
-                    ConfigUtils.goToScreen(
-                        OpenUrlInWebView(
-                            url: StudentData.approvalTask!['submit file url']),
-                        context);
-                  }),
-              SizedBox(
-                height: 300,
+              const SizedBox(height: 20),
+              Container(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Column(children: const [
+                    Text("Submitted file link:", style: defaultFont),
+                    Text("copy and paste into browser for viewing")
+                  ])),
+              Container(
+                padding: const EdgeInsets.all(10.0),
+                child: SelectableText(
+                    "${StudentData.approvalTask!['submit file url']}",
+                    style:
+                        StudentData.approvalTask!['submit file url'] != "None"
+                            ? const TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.blue,
+                                decoration: TextDecoration.underline)
+                            : defaultFont),
+              ),
+              // ElevatedButton(
+              //     child: Text("Download and open file", style: defaultFont),
+              // Text("${StudentData.approvalTask!['submit file url']}",
+              //     style:
+              //         StudentData.approvalTask!['submit file url'] != "None"
+              //             ? const TextStyle(
+              //                 fontSize: 13,
+              //                 fontWeight: FontWeight.bold,
+              //                 color: Colors.blue,
+              //                 decoration: TextDecoration.underline)
+              //             : defaultFont),
+              // onPressed: () async {
+              //   String fileURL =
+              //       StudentData.approvalTask!['submit file url'];
+              //   //if (fileURL != "None") {
+              //   FlutterLogs.logInfo(
+              //       "open file method", "open", "In open file method");
+              //   await openFile(
+              //       "https://cdn.discordapp.com/attachments/1102762971949695048/1120172904580124692/Advice.pdf",
+              //       //"https://firebasestorage.googleapis.com/v0/b/team-up1-a6ad3.appspot.com/o/student_files%2F1360%20Programming%20Attendance%20October-12-2022.pdf?alt=media&token=561b9da9-c5b4-4a47-9090-8b6424c821f7",
+              //       "Advice.pdf");
+              //   //}
+              // ConfigUtils.goToScreen(
+              //     OpenUrlInWebView(
+              //         url: StudentData.approvalTask!['submit file url']),
+              //     context);
+              // }),
+              const SizedBox(
+                height: 0,
                 width: 20,
               ),
               Padding(
@@ -103,7 +136,7 @@ class _Approve_pageState extends State<Approve_page>
                             MaterialPageRoute(
                                 builder: (context) => Feedback_page()));
                       },
-                      child: RoundButton(
+                      child: const RoundButton(
                         icon: Icons.close,
                       ),
                     ),
@@ -127,9 +160,9 @@ class _Approve_pageState extends State<Approve_page>
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => HomeScreen()));
+                                builder: (context) => const HomeScreen()));
                       },
-                      child: RoundButton(
+                      child: const RoundButton(
                         icon: Icons.check,
                       ),
                     ),
@@ -139,5 +172,31 @@ class _Approve_pageState extends State<Approve_page>
             ],
           ),
         ));
+  }
+
+  Future<void> openFile(String url, String name) async {
+    File? file = await downloadFile(url, name);
+    if (file != null) {
+      FlutterLogs.logInfo("Open file", "file download path", "${file.path}");
+      OpenFile.open("1360 Programming Attendance October-12-2022.pdf");
+    }
+  }
+
+  Future<File?> downloadFile(String fileURL, String s) async {
+    //final appStorage = await getApplicationDocumentsDirectory();
+
+    final file = File('Download/$s');
+
+    final response = await Dio().get(fileURL,
+        options: Options(
+            responseType: ResponseType.bytes,
+            followRedirects: false,
+            receiveTimeout: 0));
+
+    final fileWriter = file.openSync(mode: FileMode.write);
+    fileWriter.writeFromSync(response.data);
+    await fileWriter.close();
+
+    return file;
   }
 }

@@ -219,7 +219,8 @@ SizedBox textFieldTaskInfo(List<Map<String, dynamic>> allTaskMap,
 
                 ElevatedButton(
                   onPressed: () {
-                    StudentData.setViewingTask(allTaskMap[index]);
+                    StudentData.setViewingTask(allTaskMap);
+                    StudentData.viewingIndex = index;
                     StudentData.descriptionIncomingPage = incomingPage;
                     Navigator.push(
                         context,
@@ -311,7 +312,8 @@ SizedBox studentTaskInfoWidget(List<Map<String, dynamic>> studentTasksMap,
                 ////////////////////////////////////////////////new
                 ElevatedButton(
                   onPressed: () {
-                    StudentData.setViewingTask(curTask);
+                    StudentData.setViewingTask(studentTasksMap);
+                    StudentData.viewingIndex = index;
                     StudentData.descriptionIncomingPage = "my tasks";
                     Navigator.push(
                         context,

@@ -20,9 +20,10 @@ class StudentData {
   static bool isAdmin = true;
 
   //////////////////////////////new
-  static Map<String, dynamic>? viewingTask;
+  static List<Map<String, dynamic>>? allViewingTask;
   /////////////////////////// Descrption
   static String? descriptionIncomingPage;
+  static int? viewingIndex;
 
   static Future<String> getStudentTeamNumber() async {
     Map<String, dynamic>? studentStats =
@@ -40,8 +41,8 @@ class StudentData {
     currentTask = newTask;
   }
 
-  static void setViewingTask(Map<String, dynamic> newViewingTask) {
-    viewingTask = newViewingTask;
+  static void setViewingTask(List<Map<String, dynamic>> newViewingTask) {
+    allViewingTask = newViewingTask;
   }
 
   static void setQuerySubTeam(String newSubTeam) {
