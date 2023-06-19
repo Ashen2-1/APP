@@ -265,6 +265,9 @@ SizedBox textFieldTaskInfo(List<Map<String, dynamic>> allTaskMap,
                         allTaskMap.removeAt(index);
                         DatabaseAccess.getInstance().addToDatabase(
                             "Tasks", subteam, {"tasks": allTaskMap});
+                      } else {
+                        displayError(
+                            "This task has all ready been taken", context);
                       }
                     }
                   });
