@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_logs/flutter_logs.dart';
+import 'package:team_up/constants/student_data.dart';
+import 'package:team_up/screens/Enterteampasscode_page.dart';
 import 'package:team_up/screens/page_navigation_screen.dart';
 import 'package:team_up/services/database_access.dart';
 import 'package:team_up/utils/configuration_util.dart';
@@ -103,10 +105,10 @@ class _Jointeam_pageState extends State<Jointeam_page> {
         //),
         if (team != null)
           SizedBox(
-              height: 100.0,
+              height: 180.0,
               width: MediaQuery.of(context).size.width,
               child: Container(
-                height: 100.0,
+                height: 180.0,
                 padding: const EdgeInsets.all(10.0),
                 margin: const EdgeInsets.all(10.0),
                 //width: 200.0, //MediaQuery.of(context).size.width,
@@ -126,6 +128,13 @@ class _Jointeam_pageState extends State<Jointeam_page> {
                             context, true),
                         regularText(
                             "Team Name: ${team!['team name']}", context, false),
+                        reusableSignUpTaskButton(
+                            "Sign up for this team", context, () {
+                          StudentData.signingUpTeamNumber =
+                              team!['team number'];
+                          ConfigUtils.goToScreen(
+                              const Enterteampasscode_page(), context);
+                        }),
                       ]),
                   if (team!['team logo url'] != "None")
                     Expanded(child: Image.network(team!['team logo url'])),

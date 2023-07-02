@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_logs/flutter_logs.dart';
 import 'package:team_up/constants/borders.dart';
@@ -247,6 +248,9 @@ SizedBox textFieldTaskInfo(List<Map<String, dynamic>> allTaskMap,
                       taskToAdd['approved'] = false;
                       taskToAdd['feedback'] = "None";
                       taskToAdd['complete percentage'] = "None";
+                      taskToAdd['finish time'] = DateTime.now().add(Duration(
+                          minutes: Util.convertStringTimeToIntMinutes(
+                              taskToAdd['estimated time'])));
                       List<Map<String, dynamic>>? inDatabaseTasks =
                           await DatabaseAccess.getInstance()
                               .getAllTasks(StudentData.getQuerySubTeam());
@@ -343,8 +347,8 @@ SizedBox studentTaskInfoWidget(List<Map<String, dynamic>> studentTasksMap,
                         "signed up", {'tasks': studentTasksMap});
                     ConfigUtils.goToScreen(const HomeScreen(), context);
                   }),
-                if (!curTask['completed'])
-                  reusableSignUpTaskButton("START this task", context, () {
+                if (Timestamp.now().seconds < curTask['finish time'].seconds)
+                  reusableSignUpTaskButton("Work on this task", context, () {
                     StudentData.currentTask = curTask;
                     ConfigUtils.goToScreen(CountdownPage(), context);
                   }),

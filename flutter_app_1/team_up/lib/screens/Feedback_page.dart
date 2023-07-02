@@ -23,6 +23,7 @@ class _Feedback_pageState extends State<Feedback_page> {
     "100%"
   ];
   String percentage = "0%";
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,6 +51,26 @@ class _Feedback_pageState extends State<Feedback_page> {
               height: 30,
             ),
             Text("How much has this user completed?"),
+            GestureDetector(
+              child: DropdownButton<String>(
+                  value: percentage,
+                  //hint: const Text("%",
+                  //style: TextStyle(fontSize: 18), textAlign: TextAlign.left),
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      percentage = newValue!;
+                    });
+                  },
+                  items: percentageList
+                      .map<DropdownMenuItem<String>>((String newValue) {
+                    return DropdownMenuItem<String>(
+                        value: newValue, child: Text(newValue));
+                  }).toList()),
+            ),
+            SizedBox(
+              height: 50,
+            ),
+            Text("How much more time is needed?"),
             GestureDetector(
               child: DropdownButton<String>(
                   value: percentage,

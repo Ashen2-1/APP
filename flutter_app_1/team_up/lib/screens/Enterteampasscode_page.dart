@@ -83,18 +83,18 @@ class _Enterteampasscode_pageState extends State<Enterteampasscode_page>
               height: 30,
             ),
             Text(
-              "    Note: Team Channel Will have the same functions as the public channel but it only serve for the team mabers!",
+              "    Note: Team Channel Will have the same functions as the public channel but it only serve for the team members!",
               style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
             ),
             const SizedBox(
               height: 40,
             ),
-            reusableTextField("Enter Team Number", Icons.person_outline, false,
-                _teamnumberTextController),
+            Text("Signing up for team ${StudentData.signingUpTeamNumber}",
+                textAlign: TextAlign.left,
+                style: const TextStyle(fontSize: 25)),
             const SizedBox(
               height: 20,
             ),
-
             reusableTextField("Enter Pass Code", Icons.lock_clock_outlined,
                 true, _passcodeTextController),
 
@@ -114,36 +114,31 @@ class _Enterteampasscode_pageState extends State<Enterteampasscode_page>
               onPressed: () async {
                 Map<String, dynamic>? team_data =
                     await DatabaseAccess.getInstance()
-                        .getPotentialTeam(_teamnumberTextController.text);
+                        .getPotentialTeam(StudentData.signingUpTeamNumber);
 
                 FlutterLogs.logInfo("Sign up team", "Enter team", "$team_data");
+                if (_passcodeTextController.text ==
+                    team_data!['team passcode']) {
+                  StudentData.studentTeamNumber =
+                      _teamnumberTextController.text;
+                  Map<String, dynamic>? curStudentStats =
+                      await DatabaseAccess.getInstance().getStudentStats();
 
-                if (team_data == null || team_data.isEmpty)
-                  await displayError("Team is invalid", context);
-                else {
-                  if (_passcodeTextController.text ==
-                      team_data['team passcode']) {
-                    StudentData.studentTeamNumber =
-                        _teamnumberTextController.text;
-                    Map<String, dynamic>? curStudentStats =
-                        await DatabaseAccess.getInstance().getStudentStats();
+                  curStudentStats ??= {};
 
-                    curStudentStats ??= {};
+                  FlutterLogs.logInfo(
+                      "Add team", "curStudentStats", "$curStudentStats");
 
-                    FlutterLogs.logInfo(
-                        "Add team", "curStudentStats", "$curStudentStats");
+                  curStudentStats['team number'] =
+                      _teamnumberTextController.text;
 
-                    curStudentStats['team number'] =
-                        _teamnumberTextController.text;
+                  DatabaseAccess.getInstance().addToDatabase("student tasks",
+                      StudentData.studentEmail, curStudentStats);
 
-                    DatabaseAccess.getInstance().addToDatabase("student tasks",
-                        StudentData.studentEmail, curStudentStats);
-
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => HomeScreen()));
-                  } else {
-                    await displayError("Password is incorrect", context);
-                  }
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => HomeScreen()));
+                } else {
+                  await displayError("Password is incorrect", context);
                 }
 
                 /// here we can Navigator to Team Channel!

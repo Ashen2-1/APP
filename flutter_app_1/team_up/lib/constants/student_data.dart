@@ -7,6 +7,7 @@ class StudentData {
   static String studentEmail = FirebaseAccess.getInstance().getUserEmail();
   static String default_subteam = "Programming";
   static String querying_subteam = default_subteam;
+  static String signingUpTeamNumber = "";
   static String studentTeamNumber = "None";
 
   static Map<String, dynamic>? currentTask;

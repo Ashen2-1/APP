@@ -84,15 +84,9 @@ class ConfigUtils {
             },
           ),
           ListTile(
-            title: Text('Search for teams!'),
+            title: Text('Search and join a team!'),
             onTap: () {
               goToScreen(const Jointeam_page(), context);
-            },
-          ),
-          ListTile(
-            title: Text('Join a team!'),
-            onTap: () {
-              goToScreen(const Enterteampasscode_page(), context);
             },
           ),
         ],

@@ -1,8 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_logs/flutter_logs.dart';
 import 'package:team_up/constants/student_data.dart';
+import 'package:team_up/screens/page_navigation_screen.dart';
 import 'package:team_up/screens/web_view_page.dart';
 import 'package:team_up/services/database_access.dart';
 import 'package:team_up/utils/configuration_util.dart';
@@ -30,7 +32,7 @@ class _CountdownPageState extends State<CountdownPage>
     with TickerProviderStateMixin {
   late AnimationController controller;
 
-  bool isPlaying = false;
+  bool isPlaying = true;
   File? file;
 
   String fileURL = "None";
@@ -80,28 +82,24 @@ class _CountdownPageState extends State<CountdownPage>
   @override
   void initState() {
     super.initState();
-    int time = Util.convertStringTimeToIntMinutes(
-        StudentData.currentTask!['estimated time']);
-    controller = AnimationController(
-      vsync: this,
-      duration: Duration(minutes: time),
+    // int time = Util.convertStringTimeToIntMinutes(
+    //     StudentData.currentTask!['estimated time']);
+    DateTime finishTime = StudentData.currentTask!['finish time'].toDate();
+    Duration time = finishTime.difference(DateTime.now());
+    FlutterLogs.logInfo("Count Down", "Time stamp",
+        "Current time: ${StudentData.currentTask!['finish time']}");
 
-      /// change time here
-    );
+    // Duration time =
+    //     StudentData.currentTask!['finish time'].difference(DateTime.now());
+    controller = AnimationController(vsync: this, duration: time
+
+        /// change time here
+        );
 
     controller.addListener(() {
       notify();
-      if (controller.isAnimating) {
-        setState(() {
-          progress = controller.value;
-        });
-      } else {
-        setState(() {
-          progress = 1.0;
-          isPlaying = false;
-        });
-      }
     });
+    controller.reverse(from: controller.value == 0 ? 1.0 : controller.value);
   }
 
   @override
@@ -110,14 +108,21 @@ class _CountdownPageState extends State<CountdownPage>
     super.dispose();
   }
 
+  void menuToggleExpansion() {
+    setState(() {
+      ConfigUtils.goToScreen(PageNavigationScreen(), context);
+      PageNavigationScreen.setIncomingScreen(const CountdownPage());
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      //appBar: buildAppBar(),
+      appBar: buildAppBar(menuToggleExpansion),
       backgroundColor: Color(0xfff5fbff),
       body: Column(
         children: [
-          SizedBox(height: 80.0),
+          const SizedBox(height: 20.0),
           Text("Current Task: ${StudentData.currentTask!['task']}",
               style: TextStyle(fontSize: 25, decorationThickness: 1.5)),
           Expanded(
@@ -200,25 +205,6 @@ class _CountdownPageState extends State<CountdownPage>
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                GestureDetector(
-                  onTap: () {
-                    if (controller.isAnimating) {
-                      controller.stop();
-                      setState(() {
-                        isPlaying = false;
-                      });
-                    } else {
-                      controller.reverse(
-                          from: controller.value == 0 ? 1.0 : controller.value);
-                      setState(() {
-                        isPlaying = true;
-                      });
-                    }
-                  },
-                  child: RoundButton(
-                    icon: isPlaying == true ? Icons.pause : Icons.play_arrow,
-                  ),
-                ),
                 //SizedBox(height: 10,),
               ],
             ),

@@ -83,6 +83,17 @@ class Util {
     return -1;
   }
 
+  static String formatDateTime(DateTime dateTime) {
+    String s = "";
+    s += "${dateTime.year}-${dateTime.month}-${dateTime.day}, ";
+    if (dateTime.hour <= 12) {
+      s += "${dateTime.hour}:${dateTime.minute}:${dateTime.second} AM";
+    } else {
+      s += "${dateTime.hour - 12}:${dateTime.minute}:${dateTime.second} PM";
+    }
+    return s;
+  }
+
   static String getFileNameFromPathString(String path) {
     List<String> partsOfPath = path.split(".");
     return "${partsOfPath.elementAt(partsOfPath.length - 2)}.${partsOfPath.last}";

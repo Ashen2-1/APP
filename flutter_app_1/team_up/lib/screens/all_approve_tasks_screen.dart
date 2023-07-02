@@ -27,22 +27,10 @@ class _AllApproveTasksScreenState extends State<AllApproveTasksScreen> {
   List<String> imageURL = [];
 
   Future<void> configure() async {
-    //studentTasksMap
     studentTasksMap =
         await DatabaseAccess.getInstance().getMyAssignedStudentSubmissions();
     FlutterLogs.logInfo(
         "My Tasks", "Add to ListView", "studentTasksMap: ${studentTasksMap}");
-    for (Map<String, dynamic> taskMap in studentTasksMap!) {
-      if (!Util.contains(taskMap['task'], studentTasks)) {
-        studentTasks.add(taskMap['task']);
-        imageURL.add(taskMap['submit file url']);
-        FlutterLogs.logInfo("My Tasks", "Add to ListView",
-            "Displaying task: ${taskMap['task']}");
-      }
-    }
-    // for (String imageUrl in imageUrlList) {
-    //   resizedImageList.add(await Util.resizeImage(imageUrl, 1 / 8));
-    // }
     setState(() {});
   }
 
@@ -72,7 +60,7 @@ class _AllApproveTasksScreenState extends State<AllApproveTasksScreen> {
         regularText("Approving Tasks", context, true),
         Expanded(
             child: ListView.builder(
-                itemCount: studentTasks.length,
+                itemCount: studentTasksMap!.length,
                 itemBuilder: (context, index) {
                   return Container(
                       margin: const EdgeInsets.all(10.0),
@@ -87,7 +75,8 @@ class _AllApproveTasksScreenState extends State<AllApproveTasksScreen> {
                               bottomRight: Radius.circular(10))),
                       child: Row(children: [
                         Column(children: [
-                          regularText(studentTasks[index], context, true),
+                          regularText(
+                              studentTasksMap![index]['task'], context, true),
                           reusableSignUpTaskButton("APPROVE this task", context,
                               () {
                             StudentData.approvalTask = studentTasksMap![index];

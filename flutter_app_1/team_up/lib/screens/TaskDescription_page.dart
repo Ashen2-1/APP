@@ -72,6 +72,15 @@ class _TaskDescription_pageState extends State<TaskDescription_page> {
               ),
             ),
             if (StudentData.allViewingTask![StudentData.viewingIndex!]
+                    ['finish time'] !=
+                null)
+              Center(
+                child: Text(
+                  "Time Due: ${Util.formatDateTime(StudentData.allViewingTask![StudentData.viewingIndex!]['finish time'].toDate())}",
+                  style: TextStyle(fontSize: 16),
+                ),
+              ),
+            if (StudentData.allViewingTask![StudentData.viewingIndex!]
                     ['feedback'] !=
                 "None")
               Center(
