@@ -18,7 +18,10 @@ class StudentData {
     return approvalTask;
   }
 
-  static bool isAdmin = true;
+  static Future<bool> isAdmin() async {
+    return await DatabaseAccess.getInstance()
+        .getField("student tasks", studentEmail, "isAdmin");
+  }
 
   //////////////////////////////new
   static List<Map<String, dynamic>>? allViewingTask;

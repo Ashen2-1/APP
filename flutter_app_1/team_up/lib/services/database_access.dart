@@ -121,8 +121,11 @@ class DatabaseAccess {
     DocumentSnapshot<Map<String, dynamic>>? docSnapshot =
         await getDocumentByID(collectionId, docId);
 
-    Map<String, dynamic>? data = docSnapshot!.data();
-    return data![mapKey];
+    if (docSnapshot != null) {
+      Map<String, dynamic>? data = docSnapshot.data();
+      return data![mapKey];
+    }
+    return null;
   }
 
   Future<List<Map<String, dynamic>>?> /* Future<List<String>>*/

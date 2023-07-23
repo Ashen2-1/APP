@@ -80,10 +80,8 @@ class _AllApproveTasksScreenState extends State<AllApproveTasksScreen> {
                           reusableSignUpTaskButton("APPROVE this task", context,
                               () {
                             StudentData.approvalTask = studentTasksMap![index];
-                            if (StudentData.isAdmin) {
-                              ConfigUtils.goToScreen(
-                                  const Approve_page(), context);
-                            }
+                            ConfigUtils.goToScreen(
+                                const Approve_page(), context);
                           })
                         ]),
                         // if (imageURL[index] != "None")

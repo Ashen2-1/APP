@@ -3,6 +3,7 @@ import 'package:flutter_logs/flutter_logs.dart';
 import 'package:team_up/screens/Enterteampasscode_page.dart';
 import 'package:team_up/screens/Jointeam_page.dart';
 import 'package:team_up/screens/Sign_Up_Team_page.dart';
+import 'package:team_up/screens/add_mentor_page.dart';
 import 'package:team_up/screens/all_approve_tasks_screen.dart';
 import 'package:team_up/screens/page_navigation_screen.dart';
 import 'package:team_up/screens/student_tasks_screen.dart';
@@ -87,6 +88,12 @@ class ConfigUtils {
             title: Text('Search and join a team!'),
             onTap: () {
               goToScreen(const Jointeam_page(), context);
+            },
+          ),
+          ListTile(
+            title: Text('Add a mentor'),
+            onTap: () {
+              goToScreen(const AddMentorPage(), context);
             },
           ),
         ],
