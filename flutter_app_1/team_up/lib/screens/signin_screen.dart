@@ -6,6 +6,7 @@ import 'package:team_up/screens/add_tasks_screen.dart';
 import 'package:team_up/screens/home_screen.dart';
 import 'package:team_up/screens/signup_screen.dart';
 import 'package:team_up/utils/color_utils.dart';
+import 'package:team_up/widgets/google-sign-in-button.dart';
 
 import '../widgets/reusable_widgets/reusable_widget.dart';
 
@@ -35,30 +36,27 @@ class _SignInScreenState extends State<SignInScreen> {
         child: SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.fromLTRB(
-                15, MediaQuery.of(context).size.height * 0.2, 20, 0),
+                15, MediaQuery.of(context).size.height * 0.15, 20, 0),
             child: Column(
               children: <Widget>[
-                
-                
-                
                 logoWidget("assets/images/logo.png"),
 
                 ///加logo
-                SizedBox(
+                const SizedBox(
                   height: 30,
                 ),
                 reusableTextField("Enter UserName", Icons.person_outline, false,
                     _emailTextController),
 
                 ///username
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
                 reusableTextField("Enter Password", Icons.lock_outline, true,
                     _passwordTextController),
 
                 ///password
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
                 signInSignUpButton(context, true, () {
@@ -70,12 +68,19 @@ class _SignInScreenState extends State<SignInScreen> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => HomeScreen()));
+                            builder: (context) => const HomeScreen()));
                   }).onError((error, stackTrace) {
                     displayError(error!, context);
                     print("Error ${error.toString()}");
                   });
                 }),
+                Text("${"-" * 25} OR ${"-" * 25}",
+                    style: const TextStyle(
+                        color: Color.fromARGB(230, 254, 248, 248),
+                        fontSize: 20)),
+                const SizedBox(height: 10),
+                GoogleSignInButton.googleSignInButton(context),
+                const SizedBox(height: 30),
                 signUpOption()
               ],
             ),
@@ -93,8 +98,10 @@ class _SignInScreenState extends State<SignInScreen> {
             style: TextStyle(color: Colors.white70)),
         GestureDetector(
             onTap: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => SignUpScreen()));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const SignUpScreen()));
             },
             child: const Text(
               " Sign Up",

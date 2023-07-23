@@ -11,6 +11,10 @@ class FirebaseAccess {
     return _instance!;
   }
 
+  FirebaseAuth getFirebaseAuth() {
+    return _auth;
+  }
+
   FirebaseAccess._internal();
 
   String getUserEmail() {

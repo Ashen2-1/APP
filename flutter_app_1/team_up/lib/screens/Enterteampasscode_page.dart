@@ -25,7 +25,6 @@ class Enterteampasscode_page extends StatefulWidget {
 
 class _Enterteampasscode_pageState extends State<Enterteampasscode_page>
     with TickerProviderStateMixin {
-  TextEditingController _teamnumberTextController = TextEditingController();
   //TextEditingController _teamnameTextController = TextEditingController();
   TextEditingController _passcodeTextController = TextEditingController();
 
@@ -120,7 +119,7 @@ class _Enterteampasscode_pageState extends State<Enterteampasscode_page>
                 if (_passcodeTextController.text ==
                     team_data!['team passcode']) {
                   StudentData.studentTeamNumber =
-                      _teamnumberTextController.text;
+                      StudentData.signingUpTeamNumber;
                   Map<String, dynamic>? curStudentStats =
                       await DatabaseAccess.getInstance().getStudentStats();
 
@@ -130,7 +129,7 @@ class _Enterteampasscode_pageState extends State<Enterteampasscode_page>
                       "Add team", "curStudentStats", "$curStudentStats");
 
                   curStudentStats['team number'] =
-                      _teamnumberTextController.text;
+                      StudentData.signingUpTeamNumber;
 
                   DatabaseAccess.getInstance().addToDatabase("student tasks",
                       StudentData.studentEmail, curStudentStats);
