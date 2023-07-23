@@ -116,6 +116,15 @@ class DatabaseAccess {
     return fieldResults;
   }
 
+  Future<dynamic> getField(
+      String collectionId, String docId, String mapKey) async {
+    DocumentSnapshot<Map<String, dynamic>>? docSnapshot =
+        await getDocumentByID(collectionId, docId);
+
+    Map<String, dynamic>? data = docSnapshot!.data();
+    return data![mapKey];
+  }
+
   Future<List<Map<String, dynamic>>?> /* Future<List<String>>*/
       getStudentTasks() async {
     DocumentSnapshot<Map<String, dynamic>>? docSnapshot =

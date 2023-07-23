@@ -6,6 +6,7 @@ import 'package:team_up/screens/add_tasks_screen.dart';
 import 'package:team_up/screens/home_screen.dart';
 import 'package:team_up/screens/page_navigation_screen.dart';
 import 'package:team_up/services/database_access.dart';
+import 'package:team_up/services/firebase_access.dart';
 import 'package:team_up/utils/configuration_util.dart';
 
 import '../services/file_uploader.dart';
@@ -25,9 +26,12 @@ class Signupteam_page extends StatefulWidget {
 
 class _Signupteam_pageState extends State<Signupteam_page>
     with TickerProviderStateMixin {
-  TextEditingController _teamnumberTextController = TextEditingController();
-  TextEditingController _teamnameTextController = TextEditingController();
-  TextEditingController _passcodeTextController = TextEditingController();
+  final TextEditingController _teamnumberTextController =
+      TextEditingController();
+  final TextEditingController _teamnameTextController = TextEditingController();
+  final TextEditingController _passcodeTextController = TextEditingController();
+  final TextEditingController _createTeamPasscodeTextController =
+      TextEditingController();
 
   late AnimationController controller;
 
@@ -115,6 +119,8 @@ class _Signupteam_pageState extends State<Signupteam_page>
                 const SizedBox(
                   height: 20,
                 ),
+                reusableTextField("Enter Team Creation Pass Code", Icons.lock,
+                    true, _createTeamPasscodeTextController),
                 reusableButton("Upload a logo for the team", context, () async {
                   File result = (await FileUploader.pickFile())!;
                   setState(() {
@@ -141,20 +147,38 @@ class _Signupteam_pageState extends State<Signupteam_page>
                     primary: Colors.green,
                   ),
                   onPressed: () async {
-                    Map<String, dynamic> teamToAdd = {
-                      'team number': _teamnumberTextController.text,
-                      'team name': _teamnameTextController.text,
-                      'team passcode': _passcodeTextController.text,
-                      'team logo url': fileURL
-                    };
-                    DatabaseAccess.getInstance().addToDatabase(
-                        "Teams", _teamnumberTextController.text, teamToAdd);
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const HomeScreen()));
+                    if (await DatabaseAccess.getInstance().getDocumentByID(
+                            "Teams", _teamnumberTextController.text) !=
+                        null) {
+                      displayError("This team all ready exists", context);
+                    } else if (_createTeamPasscodeTextController.text !=
+                        await DatabaseAccess.getInstance()
+                            .getField("Teams", "general", "create_passcode")) {
+                      displayError(
+                          "The creation team passcode is incorrect", context);
+                    } else {
+                      // Team doesn't exist, passcode right, add to database
+                      Map<String, dynamic> teamToAdd = {
+                        'team number': _teamnumberTextController.text,
+                        'team name': _teamnameTextController.text,
+                        'team passcode': _passcodeTextController.text,
+                        'team logo url': fileURL
+                      };
+                      DatabaseAccess.getInstance().addToDatabase(
+                          "Teams", _teamnumberTextController.text, teamToAdd);
 
-                    /// here we can Navigator to Team Channel!
+                      // Make creator admin of workspace
+                      String userEmail =
+                          FirebaseAccess.getInstance().getUserEmail();
+                      DatabaseAccess.getInstance().updateField(
+                          "student tasks", userEmail, {"isAdmin": true});
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const HomeScreen()));
+
+                      /// here we can Navigator to Team Channel!
+                    }
                   },
                   child: const Text("Sign Up"),
                 ),
