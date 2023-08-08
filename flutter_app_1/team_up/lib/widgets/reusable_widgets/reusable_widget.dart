@@ -88,7 +88,8 @@ Future<bool?> askConfirmation(BuildContext context, String taskText) async {
     builder: (BuildContext context) {
       return AlertDialog(
         title: Text('Confirmation'),
-        content: Text('Are you sure you want to assign yourself $taskText?'),
+        content: Text(
+            'Are you sure you want to assign yourself $taskText? This means you are starting the task right away'),
         actions: [
           TextButton(
             child: Text('No'),
@@ -185,6 +186,14 @@ Future<void> displayErrorFromString(String error, BuildContext context) async {
   );
 }
 
+Future<bool> isMachineAvailable(machine) async {
+  String? machineNeeded = await DatabaseAccess.getInstance()
+      .getField("Machines", "Occupied", machine);
+  return (machineNeeded != null &&
+      machineNeeded != StudentData.studentEmail &&
+      machineNeeded != "");
+}
+
 SizedBox textFieldTaskInfo(List<Map<String, dynamic>> allTaskMap,
     String subteam, int index, String incomingPage, BuildContext context) {
   return SizedBox(
@@ -240,37 +249,57 @@ SizedBox textFieldTaskInfo(List<Map<String, dynamic>> allTaskMap,
                   askConfirmation(context, allTaskMap[index]['task'])
                       .then((confirmation) async {
                     if (confirmation != null && confirmation) {
-                      FlutterLogs.logInfo("TASK FIELD", "Sign up button",
-                          "Adding ${allTaskMap[index]['task']}");
-                      Map<String, dynamic> taskToAdd = allTaskMap[index];
-                      taskToAdd['completer'] = StudentData.studentEmail;
-                      taskToAdd['completed'] = false;
-                      taskToAdd['approved'] = false;
-                      taskToAdd['feedback'] = "None";
-                      taskToAdd['complete percentage'] = "None";
-                      taskToAdd['finish time'] = DateTime.now().add(Duration(
-                          minutes: Util.convertStringTimeToIntMinutes(
-                              taskToAdd['estimated time'])));
-                      List<Map<String, dynamic>>? inDatabaseTasks =
-                          await DatabaseAccess.getInstance()
-                              .getAllTasks(StudentData.getQuerySubTeam());
-                      if (inDatabaseTasks!.isNotEmpty &&
-                          inDatabaseTasks.length > index) {
-                        List<Map<String, dynamic>> curTasks =
-                            await Util.combineTaskIntoExisting(
-                                taskToAdd,
-                                await DatabaseAccess.getInstance()
-                                    .getAllSignedUpTasks());
-                        DatabaseAccess.getInstance().addToDatabase(
-                            "student tasks", "signed up", {"tasks": curTasks});
-
-                        // Remove task from existing
-                        allTaskMap.removeAt(index);
-                        DatabaseAccess.getInstance().addToDatabase(
-                            "Tasks", subteam, {"tasks": allTaskMap});
+                      if (await isMachineAvailable(
+                          allTaskMap[index]['machine needed'])) {
+                        displayError(
+                            "This machine is not available, can't sign up and work on it",
+                            context);
                       } else {
-                        await displayError(
-                            "This task has all ready been taken", context);
+                        FlutterLogs.logInfo("TASK FIELD", "Sign up button",
+                            "Adding ${allTaskMap[index]['task']}");
+                        Map<String, dynamic> taskToAdd = allTaskMap[index];
+                        taskToAdd['completer'] = StudentData.studentEmail;
+                        taskToAdd['completed'] = false;
+                        taskToAdd['approved'] = false;
+                        taskToAdd['feedback'] = "None";
+                        taskToAdd['complete percentage'] = "None";
+                        taskToAdd['finish time'] = Timestamp.fromDate(
+                            DateTime.now().add(Duration(
+                                minutes: Util.convertStringTimeToIntMinutes(
+                                    taskToAdd['estimated time']))));
+                        List<Map<String, dynamic>>? inDatabaseTasks =
+                            await DatabaseAccess.getInstance()
+                                .getAllTasks(StudentData.getQuerySubTeam());
+                        if (inDatabaseTasks!.isNotEmpty &&
+                            inDatabaseTasks.length > index) {
+                          List<Map<String, dynamic>> curTasks =
+                              await Util.combineTaskIntoExisting(
+                                  taskToAdd,
+                                  await DatabaseAccess.getInstance()
+                                      .getAllSignedUpTasks());
+                          DatabaseAccess.getInstance().addToDatabase(
+                              "student tasks",
+                              "signed up",
+                              {"tasks": curTasks});
+
+                          // Remove task from existing
+                          allTaskMap.removeAt(index);
+                          DatabaseAccess.getInstance().addToDatabase(
+                              "Tasks", subteam, {"tasks": allTaskMap});
+
+                          // Add machine to occupied database list
+                          String machineOccupied = taskToAdd['machine needed'];
+                          DatabaseAccess.getInstance().addToDatabase(
+                              "Machines",
+                              "Occupied",
+                              {machineOccupied: StudentData.studentEmail});
+
+                          StudentData.currentTask = taskToAdd;
+                          ConfigUtils.goToScreen(CountdownPage(), context);
+                        } else {
+                          await displayError(
+                              "This task has all ready been taken", context);
+                        }
                       }
                     }
                   });
@@ -348,9 +377,23 @@ SizedBox studentTaskInfoWidget(List<Map<String, dynamic>> studentTasksMap,
                     ConfigUtils.goToScreen(const HomeScreen(), context);
                   }),
                 if (Timestamp.now().seconds < curTask['finish time'].seconds)
-                  reusableSignUpTaskButton("Work on this task", context, () {
-                    StudentData.currentTask = curTask;
-                    ConfigUtils.goToScreen(CountdownPage(), context);
+                  reusableSignUpTaskButton("Work on this task", context,
+                      () async {
+                    // FlutterLogs.logInfo("Sign up task", "Machine available",
+                    //     curTask['machine needed']);
+                    // FlutterLogs.logInfo("Sign up task", "Machine available",
+                    //     "Status: ${!(await DatabaseAccess.getInstance().getField("Machines", "Occupied", curTask['machine needed']))}");
+                    if (await isMachineAvailable(curTask['machine needed'])) {
+                      displayError(
+                          "The machine is currently occupied", context);
+                    } else {
+                      StudentData.currentTask = curTask;
+                      DatabaseAccess.getInstance().updateField(
+                          "Machines", "Occupied", {
+                        curTask['machine needed']: StudentData.studentEmail
+                      });
+                      ConfigUtils.goToScreen(CountdownPage(), context);
+                    }
                   }),
               ]),
               const SizedBox(width: 10.0), // For spacing

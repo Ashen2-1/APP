@@ -62,8 +62,28 @@ class _AddTasksScreenState extends State<AddTasksScreen> {
     '2 hours'
   ];
 
+  final List<String> machineList = [
+    "What equipment is used?",
+    "Band Saw",
+    "Conventional Lathe",
+    "Drill Press",
+    "CNC router",
+    "vertical milling machine",
+    "grinder",
+    "arbour press",
+    "belt and disk sander",
+    "cut-off saw",
+    "Cordless pop riveter",
+    "cordless drill",
+    "cordless reciprocating saw",
+    "surface plate",
+    "3D printer",
+    "None"
+  ];
+
   String subteam = 'Select a subteam';
   String time = 'Select an amount of time for task completion';
+  String machineUsed = 'What equipment is used?';
 
   void menuToggleExpansion() {
     setState(() {
@@ -78,6 +98,7 @@ class _AddTasksScreenState extends State<AddTasksScreen> {
     }
     subteam = 'Select a subteam';
     time = 'Select an amount of time for task completion';
+    machineUsed = "What equipment is used?";
     setState(() {
       fileInitialized = false;
     });
@@ -161,6 +182,7 @@ class _AddTasksScreenState extends State<AddTasksScreen> {
             "Enter skills required for task", _skillsRequiredController, false),
         const SizedBox(height: 10),
         Container(
+            width: MediaQuery.of(context).size.width - 20,
             decoration: BoxDecoration(
                 color:
                     const Color.fromARGB(255, 199, 196, 196).withOpacity(0.3),
@@ -184,6 +206,24 @@ class _AddTasksScreenState extends State<AddTasksScreen> {
         reusableTextFieldRegular("Enter the description of the task",
             _taskdescriptionTextController, false),
         const SizedBox(height: 10),
+        Container(
+            width: MediaQuery.of(context).size.width - 20,
+            decoration: BoxDecoration(
+                color:
+                    const Color.fromARGB(255, 199, 196, 196).withOpacity(0.3),
+                borderRadius: Borders.imageBorderRadius),
+            child: DropdownButton<String>(
+                value: machineUsed,
+                onChanged: (String? newValue) {
+                  setState(() {
+                    machineUsed = newValue!;
+                  });
+                },
+                items: machineList
+                    .map<DropdownMenuItem<String>>((String newValue) {
+                  return DropdownMenuItem<String>(
+                      value: newValue, child: Text(newValue));
+                }).toList())),
         ///////////////////////////////////////////////////// Task description
         reusableButton("Upload a image related to task", context, () async {
           File result = (await FileUploader.pickFile())!;
@@ -208,7 +248,8 @@ class _AddTasksScreenState extends State<AddTasksScreen> {
                 "Add to Database", "Upload image", "Image URL: $imageURL");
           }
           if (subteam != 'Select a subteam' &&
-              time != 'Select an amount of time for task completion') {
+              time != 'Select an amount of time for task completion' &&
+              machineUsed != "What equipment is used?") {
             Map<String, dynamic> taskToAdd = {
               "task": _taskTextController.text,
               ///////////////////////////////////new
@@ -221,6 +262,7 @@ class _AddTasksScreenState extends State<AddTasksScreen> {
               'assigner': StudentData.studentEmail,
               'feedback': "None",
               'complete percentage': "None",
+              'machine needed': machineUsed,
               'team number': await StudentData.getStudentTeamNumber(),
             };
             List<Map<String, dynamic>> curTasks =
@@ -231,6 +273,8 @@ class _AddTasksScreenState extends State<AddTasksScreen> {
                 .addToDatabase("Tasks", subteam, {"tasks": curTasks});
             clearFields();
             _submissionController.text = "Submitted!";
+          } else {
+            displayError("A field was not filled out", context);
           }
         }),
         reusableTextFieldRegular("", _submissionController, true),

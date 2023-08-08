@@ -81,6 +81,15 @@ class _TaskDescription_pageState extends State<TaskDescription_page> {
                 ),
               ),
             if (StudentData.allViewingTask![StudentData.viewingIndex!]
+                    ['machine needed'] !=
+                null)
+              Center(
+                child: Text(
+                  "Machine Needed: ${StudentData.allViewingTask![StudentData.viewingIndex!]['machine needed']}",
+                  style: TextStyle(fontSize: 16),
+                ),
+              ),
+            if (StudentData.allViewingTask![StudentData.viewingIndex!]
                     ['feedback'] !=
                 "None")
               Center(

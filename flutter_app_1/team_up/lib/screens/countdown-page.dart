@@ -57,6 +57,9 @@ class _CountdownPageState extends State<CountdownPage>
     DatabaseAccess.getInstance().addToDatabase(
         "student tasks", 'signed up', {'tasks': curPendingTasks});
 
+    DatabaseAccess.getInstance()
+        .updateField("Machines", "Occupied", {taskToAdd['machine needed']: ""});
+
     FlutterLogs.logInfo("Student task", "Submission", "Successfully submitted");
 
     ConfigUtils.goToScreen(HomeScreen(), context);
@@ -82,8 +85,8 @@ class _CountdownPageState extends State<CountdownPage>
   @override
   void initState() {
     super.initState();
-    // int time = Util.convertStringTimeToIntMinutes(
-    //     StudentData.currentTask!['estimated time']);
+    FlutterLogs.logInfo("Count Down", "Finish time",
+        "${StudentData.currentTask!['finish time']}");
     DateTime finishTime = StudentData.currentTask!['finish time'].toDate();
     Duration time = finishTime.difference(DateTime.now());
     FlutterLogs.logInfo("Count Down", "Time stamp",
