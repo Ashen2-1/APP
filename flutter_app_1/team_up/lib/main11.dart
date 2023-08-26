@@ -24,6 +24,12 @@ class MyApp extends StatelessWidget{
     //);
   //}
 }
+
+
+
+
+
+////here is MyWidget just do make a stl and add this to "home:"
 class MyWidget extends StatefulWidget {
   const MyWidget({Key? key}) : super(key : key);
 
