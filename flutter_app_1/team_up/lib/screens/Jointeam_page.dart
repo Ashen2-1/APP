@@ -5,6 +5,7 @@ import 'package:team_up/screens/Enterteampasscode_page.dart';
 import 'package:team_up/screens/page_navigation_screen.dart';
 import 'package:team_up/services/database_access.dart';
 import 'package:team_up/utils/configuration_util.dart';
+import 'package:team_up/widgets/nav_bar.dart';
 import 'package:team_up/widgets/reusable_widgets/reusable_widget.dart';
 import 'package:team_up/widgets/widgets.dart';
 import '../constants/colors.dart';
@@ -47,12 +48,14 @@ class _Jointeam_pageState extends State<Jointeam_page> {
 
   @override
   Widget build(BuildContext context) {
-    return ConfigUtils.configForBackButtonBehaviour(mainLayout, context);
+    return ConfigUtils.configForBackButtonBehaviour(
+        () => mainLayout(context), context);
   }
 
-  Scaffold mainLayout() {
+  Scaffold mainLayout(BuildContext context) {
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 201, 141, 141),
+      bottomNavigationBar: buildNavBar(context, 2),
       appBar: AppBar(
         backgroundColor: Color.fromARGB(231, 178, 34, 230),
         title: Row(

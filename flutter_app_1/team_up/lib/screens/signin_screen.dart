@@ -98,8 +98,8 @@ class _SignInScreenState extends State<SignInScreen> {
         const Text("Don't have account?",
             style: TextStyle(color: Colors.white70)),
         GestureDetector(
-            onTap: () {
-              showStudentMentorPopUp(context);
+            onTap: () async {
+              await showStudentMentorPopUp(context, true);
             },
             child: const Text(
               " Sign Up",

@@ -1,8 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_logs/flutter_logs.dart';
 import 'package:team_up/screens/home_screen.dart';
 import 'package:team_up/utils/configuration_util.dart';
 import 'package:team_up/utils/google_sign_in_auth.dart';
+
+import '../constants/student_data.dart';
+import '../services/database_access.dart';
+import 'student-mentor_popup.dart';
 
 class GoogleSignInButton {
   static OutlinedButton googleSignInButton(BuildContext context) {
@@ -18,7 +23,15 @@ class GoogleSignInButton {
       onPressed: () async {
         User? user = await GoogleSignInAuth.signInWithGoogle(context: context);
 
-        if (user != null) {
+        if (user != null && user.email != null) {
+          FlutterLogs.logInfo("Google User Sign in", "User Email", user.email!);
+          if (await DatabaseAccess.getInstance()
+                  .getDocumentByID("student tasks", user.email!) ==
+              null) {
+            await showStudentMentorPopUp(context, false);
+            DatabaseAccess.getInstance().addToDatabase("student tasks",
+                user.email!, {"isAdmin": StudentData.tempSignUpAdmin});
+          }
           ConfigUtils.goToScreen(HomeScreen(), context);
         }
       },

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:team_up/screens/Approve_page.dart';
+import 'package:team_up/screens/all_approve_tasks_screen.dart';
 import 'package:team_up/screens/home_screen.dart';
 import 'package:team_up/screens/my_team_page.dart';
 import 'package:team_up/screens/settings_page.dart';
@@ -9,7 +10,7 @@ import 'package:team_up/utils/configuration_util.dart';
 Widget buildNavBar(BuildContext context, int currentIndex) {
   const possibleScreens = [
     HomeScreen(),
-    Approve_page(),
+    AllApproveTasksScreen(),
     MyTeamPage(),
     SettingsPage()
   ];

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_logs/flutter_logs.dart';
 import 'package:team_up/constants/student_data.dart';
+import 'package:team_up/screens/add_tasks_screen.dart';
+import 'package:team_up/screens/student_tasks_screen.dart';
 import 'package:team_up/widgets/nav_bar.dart';
 import 'package:team_up/screens/page_navigation_screen.dart';
 import 'package:team_up/screens/student_progress_screen.dart';
@@ -26,23 +28,31 @@ class _HomeScreenState extends State<HomeScreen> {
     "Media",
   ];
 
-  List<Color> subColors = [
+  List<Color> optionColors = [
     Color(0xFFFFCF2F),
     Color(0xFF6FE08D),
-    Color(0xFF61BDFD),
-    Color(0xFFFC7F7F),
-    Color(0xFFCB84FB),
-    Color(0xFF78E667),
+    //Color(0xFF61BDFD),
+    // Color(0xFFFC7F7F),
+    // Color(0xFFCB84FB),
+    // Color(0xFF78E667),
   ];
 
-  List<Icon> subIcons = [
-    Icon(Icons.category, color: Colors.white, size: 30),
-    Icon(Icons.video_library, color: Colors.white, size: 30),
-    Icon(Icons.assessment, color: Colors.white, size: 30),
-    Icon(Icons.store, color: Colors.white, size: 30),
-    Icon(Icons.play_circle_fill, color: Colors.white, size: 30),
-    Icon(Icons.emoji_events, color: Colors.white, size: 30),
+  List<Icon> optionIcons = [
+    Icon(Icons.add_box_outlined, color: Colors.white, size: 30),
+    //Icon(Icons.search, color: Colors.white, size: 30),
+    Icon(Icons.assignment_outlined, color: Colors.white, size: 30)
+    // Icon(Icons.assessment, color: Colors.white, size: 30),
+    // Icon(Icons.store, color: Colors.white, size: 30),
+    // Icon(Icons.play_circle_fill, color: Colors.white, size: 30),
+    // Icon(Icons.emoji_events, color: Colors.white, size: 30),
   ];
+
+  List textPageOptions = ['Add a task!', 'My Tasks'];
+  static const List<Widget> pageOptions = [
+    AddTasksScreen(),
+    StudentTasksScreen()
+  ];
+
   List subteamList = [
     "Programming",
     "Design",
@@ -176,7 +186,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Column(
                 children: [
                   GridView.builder(
-                    itemCount: subNames.length,
+                    itemCount: textPageOptions.length,
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -186,29 +196,34 @@ class _HomeScreenState extends State<HomeScreen> {
                     itemBuilder: (context, index) {
                       return Column(
                         children: [
-                          Container(
-                            height: 60,
-                            width: 60,
-                            decoration: BoxDecoration(
-                              color: subColors[index], //subcolors
-                              shape: BoxShape.circle,
-                            ),
-                            child: Center(
-                              child: subIcons[index],
-                            ),
-                          ),
-                          SizedBox(
+                          GestureDetector(
+                              child: Container(
+                                height: 60,
+                                width: 60,
+                                decoration: BoxDecoration(
+                                  color: optionColors[index], //subcolors
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Center(
+                                  child: optionIcons[index],
+                                ),
+                              ),
+                              onTap: () {
+                                ConfigUtils.goToScreen(
+                                    pageOptions[index], context);
+                              }),
+                          const SizedBox(
                             height: 10,
                           ),
                           Text(
                             //sub textsa colors
-                            subNames[index],
+                            textPageOptions[index],
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w500,
                               color: Colors.black.withOpacity(0.7),
                             ),
-                          ),
+                          )
                         ],
                       );
                     },
@@ -217,7 +232,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "Subteams",
+                        "Search for Tasks",
                         style: TextStyle(
                           fontSize: 23,
                           fontWeight: FontWeight.w600,

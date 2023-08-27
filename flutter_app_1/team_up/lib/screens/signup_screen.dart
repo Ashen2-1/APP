@@ -2,7 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:team_up/constants/student_data.dart';
 import 'package:team_up/screens/home_screen.dart';
+import 'package:team_up/services/database_access.dart';
 import 'package:team_up/widgets/reusable_widgets/reusable_widget.dart';
 import 'package:team_up/screens/add_tasks_screen.dart';
 import 'package:team_up/utils/color_utils.dart';
@@ -69,10 +71,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           password: _passwordTextController.text)
                       .then((value) {
                     print("Created New Account");
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => HomeScreen()));
+
+                    DatabaseAccess.getInstance().addToDatabase(
+                        "student tasks",
+                        _emailTextController.text,
+                        {"isAdmin": StudentData.tempSignUpAdmin});
+
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => HomeScreen()));
                   }).onError((error, stackTrace) {
                     displayError(error!, context);
                     print("Error ${error.toString()}");

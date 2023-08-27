@@ -1,9 +1,13 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:team_up/constants/student_data.dart';
 
 import '../screens/signup_screen.dart';
 
-void showStudentMentorPopUp(BuildContext context) {
+Future<void> showStudentMentorPopUp(
+    BuildContext context, bool fromSignUp) async {
+  Completer completer = Completer();
   showModalBottomSheet(
     context: context,
     builder: (BuildContext context) {
@@ -22,10 +26,13 @@ void showStudentMentorPopUp(BuildContext context) {
               iconSize: 160,
               onPressed: () {
                 StudentData.tempSignUpAdmin = false;
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const SignUpScreen()));
+                completer.complete();
+                if (fromSignUp) {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const SignUpScreen()));
+                }
               },
             ),
             const SizedBox(
@@ -37,10 +44,13 @@ void showStudentMentorPopUp(BuildContext context) {
               iconSize: 160,
               onPressed: () {
                 StudentData.tempSignUpAdmin = true;
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const SignUpScreen()));
+                completer.complete();
+                if (fromSignUp) {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const SignUpScreen()));
+                }
               },
             )
 
@@ -50,4 +60,5 @@ void showStudentMentorPopUp(BuildContext context) {
       );
     },
   );
+  return completer.future;
 }
