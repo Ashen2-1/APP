@@ -7,6 +7,7 @@ import 'package:team_up/screens/home_screen.dart';
 import 'package:team_up/screens/signup_screen.dart';
 import 'package:team_up/utils/color_utils.dart';
 import 'package:team_up/widgets/google-sign-in-button.dart';
+import 'package:team_up/widgets/student-mentor_popup.dart';
 
 import '../widgets/reusable_widgets/reusable_widget.dart';
 
@@ -45,7 +46,7 @@ class _SignInScreenState extends State<SignInScreen> {
                 const SizedBox(
                   height: 30,
                 ),
-                reusableTextField("Enter UserName", Icons.person_outline, false,
+                reusableTextField("Enter Username", Icons.person_outline, false,
                     _emailTextController),
 
                 ///username
@@ -98,10 +99,7 @@ class _SignInScreenState extends State<SignInScreen> {
             style: TextStyle(color: Colors.white70)),
         GestureDetector(
             onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const SignUpScreen()));
+              showStudentMentorPopUp(context);
             },
             child: const Text(
               " Sign Up",

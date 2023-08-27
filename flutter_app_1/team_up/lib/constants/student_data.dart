@@ -9,6 +9,7 @@ class StudentData {
   static String querying_subteam = default_subteam;
   static String signingUpTeamNumber = "";
   static String studentTeamNumber = "None";
+  static bool tempSignUpAdmin = false;
 
   static Map<String, dynamic>? currentTask;
 

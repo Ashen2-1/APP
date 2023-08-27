@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_logs/flutter_logs.dart';
 import 'package:team_up/constants/student_data.dart';
+import 'package:team_up/widgets/nav_bar.dart';
 import 'package:team_up/screens/page_navigation_screen.dart';
 import 'package:team_up/screens/student_progress_screen.dart';
 import 'package:team_up/utils/configuration_util.dart';
@@ -91,6 +92,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Scaffold mainLayout(BuildContext context) {
     return Scaffold(
         appBar: buildAppBar(menuToggleExpansion),
+        bottomNavigationBar: buildNavBar(context, 0),
         body: buildMainContent(context));
   }
 
