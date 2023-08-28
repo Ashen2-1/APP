@@ -5,6 +5,7 @@ import 'package:team_up/constants/student_data.dart';
 import 'package:team_up/screens/home_screen.dart';
 import 'package:team_up/screens/page_navigation_screen.dart';
 import 'package:team_up/services/database_access.dart';
+import 'package:team_up/widgets/nav_bar.dart';
 
 import '../constants/colors.dart';
 import '../services/file_uploader.dart';
@@ -44,6 +45,7 @@ class _Enterteampasscode_pageState extends State<Enterteampasscode_page>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomNavigationBar: buildNavBar(context, 2),
       appBar: AppBar(
         backgroundColor: Color.fromARGB(231, 178, 34, 230),
         title: Row(

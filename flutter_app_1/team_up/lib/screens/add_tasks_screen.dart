@@ -9,6 +9,7 @@ import 'package:team_up/screens/student_progress_screen.dart';
 import 'package:team_up/services/file_uploader.dart';
 import 'package:team_up/utils/configuration_util.dart';
 import 'package:team_up/utils/util.dart';
+import 'package:team_up/widgets/nav_bar.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'dart:io';
 
@@ -115,13 +116,15 @@ class _AddTasksScreenState extends State<AddTasksScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return ConfigUtils.configForBackButtonBehaviour(mainLayout, context);
+    return ConfigUtils.configForBackButtonBehaviour(
+        () => mainLayout(context), context);
   }
 
-  Scaffold mainLayout() {
+  Scaffold mainLayout(BuildContext context) {
     return Scaffold(
       backgroundColor: tdBGColor,
       appBar: buildAppBar(menuToggleExpansion),
+      bottomNavigationBar: buildNavBar(context, 1),
       body: buildMainContent(),
     );
   }

@@ -10,6 +10,7 @@ import 'package:team_up/services/database_access.dart';
 import 'package:team_up/utils/configuration_util.dart';
 import 'package:team_up/utils/fonts.dart';
 import 'package:team_up/utils/util.dart';
+import 'package:team_up/widgets/nav_bar.dart';
 import 'package:team_up/widgets/reusable_widgets/reusable_widget.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:team_up/screens/home_screen.dart';
@@ -122,6 +123,7 @@ class _CountdownPageState extends State<CountdownPage>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: buildAppBar(menuToggleExpansion),
+      bottomNavigationBar: buildNavBar(context, 1),
       backgroundColor: Color(0xfff5fbff),
       body: Column(
         children: [

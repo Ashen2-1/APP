@@ -24,7 +24,9 @@ class MyTeamPageState extends State<MyTeamPage> {
         future: studentTeamNumber,
         builder: (context, studentTeamNumber) {
           if (!studentTeamNumber.hasData) {
-            return Jointeam_page();
+            return Container();
+          } else if (studentTeamNumber.data == "") {
+            return const Jointeam_page();
           } else {
             return buildTeamList(context, studentTeamNumber.data);
           }

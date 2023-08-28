@@ -73,9 +73,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     print("Created New Account");
 
                     DatabaseAccess.getInstance().addToDatabase(
-                        "student tasks",
-                        _emailTextController.text,
-                        {"isAdmin": StudentData.tempSignUpAdmin});
+                        "student tasks", _emailTextController.text, {
+                      "isAdmin": StudentData.tempSignUpAdmin,
+                      "team number": ''
+                    });
 
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) => HomeScreen()));

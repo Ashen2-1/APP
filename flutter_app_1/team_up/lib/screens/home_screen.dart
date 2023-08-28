@@ -29,29 +29,25 @@ class _HomeScreenState extends State<HomeScreen> {
   ];
 
   List<Color> optionColors = [
-    Color(0xFFFFCF2F),
+    //Color(0xFFFFCF2F),
     Color(0xFF6FE08D),
     //Color(0xFF61BDFD),
-    // Color(0xFFFC7F7F),
     // Color(0xFFCB84FB),
     // Color(0xFF78E667),
   ];
 
   List<Icon> optionIcons = [
-    Icon(Icons.add_box_outlined, color: Colors.white, size: 30),
+    //Icon(Icons.add_box_outlined, color: Colors.white, size: 30),
     //Icon(Icons.search, color: Colors.white, size: 30),
-    Icon(Icons.assignment_outlined, color: Colors.white, size: 30)
+    const Icon(Icons.assignment_outlined, color: Colors.white, size: 30)
     // Icon(Icons.assessment, color: Colors.white, size: 30),
     // Icon(Icons.store, color: Colors.white, size: 30),
     // Icon(Icons.play_circle_fill, color: Colors.white, size: 30),
     // Icon(Icons.emoji_events, color: Colors.white, size: 30),
   ];
 
-  List textPageOptions = ['Add a task!', 'My Tasks'];
-  static const List<Widget> pageOptions = [
-    AddTasksScreen(),
-    StudentTasksScreen()
-  ];
+  List textPageOptions = ['My Tasks'];
+  static const List<Widget> pageOptions = [StudentTasksScreen()];
 
   List subteamList = [
     "Programming",

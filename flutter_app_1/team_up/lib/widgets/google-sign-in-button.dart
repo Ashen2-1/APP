@@ -29,8 +29,10 @@ class GoogleSignInButton {
                   .getDocumentByID("student tasks", user.email!) ==
               null) {
             await showStudentMentorPopUp(context, false);
-            DatabaseAccess.getInstance().addToDatabase("student tasks",
-                user.email!, {"isAdmin": StudentData.tempSignUpAdmin});
+            DatabaseAccess.getInstance().addToDatabase(
+                "student tasks",
+                user.email!,
+                {"isAdmin": StudentData.tempSignUpAdmin, "team number": ''});
           }
           ConfigUtils.goToScreen(HomeScreen(), context);
         }

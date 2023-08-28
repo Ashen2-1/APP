@@ -3,6 +3,7 @@ import 'package:team_up/constants/student_data.dart';
 import 'package:team_up/screens/home_screen.dart';
 import 'package:team_up/screens/page_navigation_screen.dart';
 import 'package:team_up/services/database_access.dart';
+import 'package:team_up/widgets/nav_bar.dart';
 import 'package:team_up/widgets/widgets.dart';
 
 import '../constants/colors.dart';
@@ -37,6 +38,7 @@ class AddMentorPageState extends State<AddMentorPage> {
     return Scaffold(
       backgroundColor: tdBGColor,
       appBar: buildAppBar(menuToggleExpansion),
+      bottomNavigationBar: buildNavBar(context, 4),
       body: buildMainContent(context),
     );
   }

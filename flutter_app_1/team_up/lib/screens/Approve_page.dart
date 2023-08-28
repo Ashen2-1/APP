@@ -10,6 +10,7 @@ import 'package:team_up/screens/Feedback_page.dart';
 import 'package:team_up/screens/home_screen.dart';
 import 'package:team_up/screens/page_navigation_screen.dart';
 import 'package:team_up/screens/web_view_page.dart';
+import 'package:team_up/widgets/nav_bar.dart';
 
 import '../constants/colors.dart';
 import '../services/database_access.dart';
@@ -59,6 +60,7 @@ class _Approve_pageState extends State<Approve_page>
       backgroundColor: tdBGColor,
       appBar: buildAppBar(menuToggleExpansion),
       body: buildMainContent(context),
+      bottomNavigationBar: buildNavBar(context, 1),
     );
   }
 

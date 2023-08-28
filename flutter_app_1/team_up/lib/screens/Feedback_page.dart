@@ -4,6 +4,7 @@ import 'package:team_up/constants/student_data.dart';
 import 'package:team_up/screens/home_screen.dart';
 import 'package:team_up/services/database_access.dart';
 import 'package:team_up/utils/util.dart';
+import 'package:team_up/widgets/nav_bar.dart';
 
 class Feedback_page extends StatefulWidget {
   @override
@@ -27,6 +28,7 @@ class _Feedback_pageState extends State<Feedback_page> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomNavigationBar: buildNavBar(context, 1),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
