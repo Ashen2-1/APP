@@ -6,6 +6,7 @@ import 'package:team_up/screens/add_tasks_screen.dart';
 import 'package:team_up/screens/page_navigation_screen.dart';
 import 'package:team_up/services/database_access.dart';
 import 'package:team_up/utils/configuration_util.dart';
+import 'package:team_up/widgets/nav_bar.dart';
 import 'package:team_up/widgets/reusable_widgets/reusable_widget.dart';
 import 'package:team_up/constants/colors.dart';
 import 'package:team_up/widgets/widgets.dart';
@@ -62,6 +63,7 @@ class _StudentProgressScreenState extends State<StudentProgressScreen> {
   Scaffold mainLayout() {
     return Scaffold(
         appBar: buildAppBar(menuToggleExpansion),
+        bottomNavigationBar: buildNavBar(context, 1),
         body: buildMainContent() //ConfigUtils.configForNavMenu(
         //buildMainContent, _isExpanded, context))
         );

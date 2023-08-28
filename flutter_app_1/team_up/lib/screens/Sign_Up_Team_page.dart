@@ -2,6 +2,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:team_up/constants/colors.dart';
+import 'package:team_up/constants/student_data.dart';
 import 'package:team_up/screens/add_tasks_screen.dart';
 import 'package:team_up/screens/home_screen.dart';
 import 'package:team_up/screens/page_navigation_screen.dart';
@@ -167,11 +168,6 @@ class _Signupteam_pageState extends State<Signupteam_page>
                       DatabaseAccess.getInstance().addToDatabase(
                           "Teams", _teamnumberTextController.text, teamToAdd);
 
-                      // Make creator admin of workspace
-                      String userEmail =
-                          FirebaseAccess.getInstance().getUserEmail();
-                      DatabaseAccess.getInstance().updateField(
-                          "student tasks", userEmail, {"isAdmin": true});
                       Navigator.push(
                           context,
                           MaterialPageRoute(

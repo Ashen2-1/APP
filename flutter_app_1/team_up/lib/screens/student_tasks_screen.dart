@@ -4,6 +4,7 @@ import 'package:team_up/constants/student_data.dart';
 import 'package:team_up/screens/page_navigation_screen.dart';
 import 'package:team_up/services/database_access.dart';
 import 'package:team_up/utils/configuration_util.dart';
+import 'package:team_up/widgets/nav_bar.dart';
 import 'package:team_up/widgets/reusable_widgets/reusable_widget.dart';
 import 'package:team_up/widgets/widgets.dart';
 import '../constants/colors.dart';
@@ -51,6 +52,7 @@ class _StudentTasksScreenState extends State<StudentTasksScreen> {
     return Scaffold(
       backgroundColor: tdBGColor,
       appBar: buildAppBar(menuToggleExpansion),
+      bottomNavigationBar: buildNavBar(context, 1),
       body: buildMainContent(),
     );
   }

@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_logs/flutter_logs.dart';
+import 'package:team_up/constants/student_data.dart';
 
 import '../services/database_access.dart';
 import 'package:image/image.dart' as IMG;
@@ -42,6 +43,22 @@ class Util {
     }
 
     return prevTasks;
+  }
+
+  static void logAttendance() async {
+    DateTime now = DateTime.now();
+    String dateString = "${now.year}-${now.month}-${now.day}";
+    FlutterLogs.logInfo("Date time", "Today's date", dateString);
+
+    if (await DatabaseAccess.getInstance()
+            .getDocumentByID("Attendance", dateString) ==
+        null) {
+      DatabaseAccess.getInstance().addToDatabase(
+          "Attendance", dateString, {StudentData.studentEmail: true});
+    } else {
+      DatabaseAccess.getInstance().updateField(
+          "Attendance", dateString, {StudentData.studentEmail: true});
+    }
   }
 
   static List<Map<String, dynamic>> matchAndCombineExisting(

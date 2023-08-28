@@ -114,6 +114,38 @@ Future<bool?> askConfirmation(BuildContext context, String taskText) async {
   return confirmation;
 }
 
+Widget createClickableIcon(
+    Icon icon, Color iconColor, void Function()? onTap, String text) {
+  return Column(children: [
+    GestureDetector(
+      onTap: onTap,
+      child: Container(
+        height: 60,
+        width: 60,
+        decoration: BoxDecoration(
+          color: iconColor,
+          shape: BoxShape.circle,
+        ),
+        child: Center(
+          child: icon,
+        ),
+      ),
+    ),
+    const SizedBox(
+      height: 10,
+    ),
+    Text(
+      //sub textsa colors
+      text,
+      style: TextStyle(
+        fontSize: 16,
+        fontWeight: FontWeight.w500,
+        color: Colors.black.withOpacity(0.7),
+      ),
+    )
+  ]);
+}
+
 String removeFireBaseBrackets(String error_string) {
   // Objective: remove firebase error type -- don't want user to see
   // \[ part means to find and remove occurence of [
@@ -196,6 +228,14 @@ Future<bool> isMachineAvailable(machine) async {
 
 SizedBox textFieldTaskInfo(List<Map<String, dynamic>> allTaskMap,
     String subteam, int index, String incomingPage, BuildContext context) {
+  Color color = Color.fromARGB(255, 193, 184, 184).withOpacity(0.3);
+  if (allTaskMap[index]['level'] == "Introductory") {
+    color = easyColor;
+  } else if (allTaskMap[index]['level'] == "Comfortable with skill") {
+    color = mediumColor;
+  } else if (allTaskMap[index]['level'] == "Experienced") {
+    color = hardColor;
+  }
   return SizedBox(
       height: 200.0,
       width: MediaQuery.of(context).size.width,
@@ -206,7 +246,8 @@ SizedBox textFieldTaskInfo(List<Map<String, dynamic>> allTaskMap,
           //width: 200.0, //MediaQuery.of(context).size.width,
 
           decoration: BoxDecoration(
-              color: Color.fromARGB(255, 193, 184, 184).withOpacity(0.3),
+              color:
+                  color, //Color.fromARGB(255, 193, 184, 184).withOpacity(0.3),
               borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(10),
                   topRight: Radius.circular(10),
@@ -239,10 +280,10 @@ SizedBox textFieldTaskInfo(List<Map<String, dynamic>> allTaskMap,
 
                     ///TaskDescription_page
                   },
-                  child: Text("Description"),
                   style: ElevatedButton.styleFrom(
                     primary: Colors.blue,
                   ),
+                  child: Text("Description"),
                 ),
                 //////////////////////////////////////// Task Descriptions
                 reusableSignUpTaskButton("Sign up for task", context, () {
@@ -255,6 +296,8 @@ SizedBox textFieldTaskInfo(List<Map<String, dynamic>> allTaskMap,
                             "This machine is not available, can't sign up and work on it",
                             context);
                       } else {
+                        Util.logAttendance();
+                        //DatabaseAccess.getInstance().addToDatabase("Attendance", , data)
                         FlutterLogs.logInfo("TASK FIELD", "Sign up button",
                             "Adding ${allTaskMap[index]['task']}");
                         Map<String, dynamic> taskToAdd = allTaskMap[index];
@@ -364,10 +407,10 @@ SizedBox studentTaskInfoWidget(List<Map<String, dynamic>> studentTasksMap,
 
                     ///TaskDescription_page
                   },
-                  child: Text("Description"),
                   style: ElevatedButton.styleFrom(
                     primary: Colors.blue,
                   ),
+                  child: Text("Description"),
                 ),
                 if (curTask['complete percentage'] == "100%")
                   reusableSignUpTaskButton("Clear this task", context, () {
@@ -387,6 +430,7 @@ SizedBox studentTaskInfoWidget(List<Map<String, dynamic>> studentTasksMap,
                       displayError(
                           "The machine is currently occupied", context);
                     } else {
+                      Util.logAttendance();
                       StudentData.currentTask = curTask;
                       DatabaseAccess.getInstance().updateField(
                           "Machines", "Occupied", {
@@ -428,11 +472,6 @@ Container signInSignUpButton(
       onPressed: () {
         onTap();
       },
-      child: Text(
-        isLogin ? "LOG IN" : "SIGN UP",
-        style: const TextStyle(
-            color: Colors.black87, fontWeight: FontWeight.bold, fontSize: 16),
-      ),
       style: ButtonStyle(
           backgroundColor: MaterialStateProperty.resolveWith((states) {
             if (states.contains(MaterialState.pressed)) {
@@ -442,6 +481,11 @@ Container signInSignUpButton(
           }),
           shape: MaterialStateProperty.all<RoundedRectangleBorder>(
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)))),
+      child: Text(
+        isLogin ? "LOG IN" : "SIGN UP",
+        style: const TextStyle(
+            color: Colors.black87, fontWeight: FontWeight.bold, fontSize: 16),
+      ),
     ),
   );
 }

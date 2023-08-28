@@ -5,12 +5,13 @@ import 'package:team_up/screens/all_approve_tasks_screen.dart';
 import 'package:team_up/screens/home_screen.dart';
 import 'package:team_up/screens/my_team_page.dart';
 import 'package:team_up/screens/settings_page.dart';
+import 'package:team_up/screens/tasks_page.dart';
 import 'package:team_up/utils/configuration_util.dart';
 
 Widget buildNavBar(BuildContext context, int currentIndex) {
   const possibleScreens = [
     HomeScreen(),
-    AllApproveTasksScreen(),
+    TasksPage(),
     MyTeamPage(),
     SettingsPage()
   ];
@@ -37,8 +38,8 @@ Widget buildNavBar(BuildContext context, int currentIndex) {
             text: "Home",
           ),
           GButton(
-            icon: Icons.check_circle_outline_sharp,
-            text: "Approve",
+            icon: Icons.assignment_outlined,
+            text: "Tasks",
           ),
           GButton(
             icon: Icons.people_alt_outlined,

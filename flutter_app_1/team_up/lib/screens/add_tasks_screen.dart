@@ -9,6 +9,7 @@ import 'package:team_up/screens/student_progress_screen.dart';
 import 'package:team_up/services/file_uploader.dart';
 import 'package:team_up/utils/configuration_util.dart';
 import 'package:team_up/utils/util.dart';
+import 'package:team_up/widgets/nav_bar.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'dart:io';
 
@@ -81,9 +82,17 @@ class _AddTasksScreenState extends State<AddTasksScreen> {
     "None"
   ];
 
+  final List<String> levelList = [
+    "Select a level",
+    "Introductory",
+    "Comfortable with skill",
+    "Experienced"
+  ];
+
   String subteam = 'Select a subteam';
   String time = 'Select an amount of time for task completion';
   String machineUsed = 'What equipment is used?';
+  String level = "Select a level";
 
   void menuToggleExpansion() {
     setState(() {
@@ -99,6 +108,7 @@ class _AddTasksScreenState extends State<AddTasksScreen> {
     subteam = 'Select a subteam';
     time = 'Select an amount of time for task completion';
     machineUsed = "What equipment is used?";
+    level = "Select a level";
     setState(() {
       fileInitialized = false;
     });
@@ -106,13 +116,15 @@ class _AddTasksScreenState extends State<AddTasksScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return ConfigUtils.configForBackButtonBehaviour(mainLayout, context);
+    return ConfigUtils.configForBackButtonBehaviour(
+        () => mainLayout(context), context);
   }
 
-  Scaffold mainLayout() {
+  Scaffold mainLayout(BuildContext context) {
     return Scaffold(
       backgroundColor: tdBGColor,
       appBar: buildAppBar(menuToggleExpansion),
+      bottomNavigationBar: buildNavBar(context, 1),
       body: buildMainContent(),
     );
   }
@@ -224,6 +236,25 @@ class _AddTasksScreenState extends State<AddTasksScreen> {
                   return DropdownMenuItem<String>(
                       value: newValue, child: Text(newValue));
                 }).toList())),
+        const SizedBox(height: 10),
+        Container(
+            width: MediaQuery.of(context).size.width - 20,
+            decoration: BoxDecoration(
+                color:
+                    const Color.fromARGB(255, 199, 196, 196).withOpacity(0.3),
+                borderRadius: Borders.imageBorderRadius),
+            child: DropdownButton<String>(
+                value: level,
+                onChanged: (String? newValue) {
+                  setState(() {
+                    level = newValue!;
+                  });
+                },
+                items:
+                    levelList.map<DropdownMenuItem<String>>((String newValue) {
+                  return DropdownMenuItem<String>(
+                      value: newValue, child: Text(newValue));
+                }).toList())),
         ///////////////////////////////////////////////////// Task description
         reusableButton("Upload a image related to task", context, () async {
           File result = (await FileUploader.pickFile())!;
@@ -249,7 +280,8 @@ class _AddTasksScreenState extends State<AddTasksScreen> {
           }
           if (subteam != 'Select a subteam' &&
               time != 'Select an amount of time for task completion' &&
-              machineUsed != "What equipment is used?") {
+              machineUsed != "What equipment is used?" &&
+              level != "Select a level") {
             Map<String, dynamic> taskToAdd = {
               "task": _taskTextController.text,
               ///////////////////////////////////new
@@ -263,6 +295,7 @@ class _AddTasksScreenState extends State<AddTasksScreen> {
               'feedback': "None",
               'complete percentage': "None",
               'machine needed': machineUsed,
+              'level': level,
               'team number': await StudentData.getStudentTeamNumber(),
             };
             List<Map<String, dynamic>> curTasks =

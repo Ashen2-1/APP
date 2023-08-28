@@ -7,6 +7,7 @@ import 'package:team_up/screens/web_view_page.dart';
 import 'package:team_up/services/database_access.dart';
 import 'package:team_up/utils/configuration_util.dart';
 import 'package:team_up/utils/util.dart';
+import 'package:team_up/widgets/nav_bar.dart';
 import '../constants/student_data.dart';
 import '../services/file_uploader.dart';
 import '../utils/fonts.dart';
@@ -41,6 +42,7 @@ class _TaskDescription_pageState extends State<TaskDescription_page> {
           style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
         ),
       ),
+      bottomNavigationBar: buildNavBar(context, 1),
       backgroundColor: Color.fromARGB(255, 201, 141, 141),
       body: Container(
         child: Column(
