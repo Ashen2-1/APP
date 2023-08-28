@@ -196,6 +196,14 @@ Future<bool> isMachineAvailable(machine) async {
 
 SizedBox textFieldTaskInfo(List<Map<String, dynamic>> allTaskMap,
     String subteam, int index, String incomingPage, BuildContext context) {
+  Color color = Color.fromARGB(255, 193, 184, 184).withOpacity(0.3);
+  if (allTaskMap[index]['level'] == "Introductory") {
+    color = easyColor;
+  } else if (allTaskMap[index]['level'] == "Comfortable with skill") {
+    color = mediumColor;
+  } else if (allTaskMap[index]['level'] == "Experienced") {
+    color = hardColor;
+  }
   return SizedBox(
       height: 200.0,
       width: MediaQuery.of(context).size.width,
@@ -206,7 +214,8 @@ SizedBox textFieldTaskInfo(List<Map<String, dynamic>> allTaskMap,
           //width: 200.0, //MediaQuery.of(context).size.width,
 
           decoration: BoxDecoration(
-              color: Color.fromARGB(255, 193, 184, 184).withOpacity(0.3),
+              color:
+                  color, //Color.fromARGB(255, 193, 184, 184).withOpacity(0.3),
               borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(10),
                   topRight: Radius.circular(10),
