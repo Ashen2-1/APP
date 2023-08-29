@@ -89,6 +89,10 @@ class _AddTasksScreenState extends State<AddTasksScreen> {
     "Experienced"
   ];
 
+  DateTime day = DateTime.now().add(const Duration(minutes: 30));
+
+  DateTime now = DateTime.now();
+
   String subteam = 'Select a subteam';
   String time = 'Select an amount of time for task completion';
   String machineUsed = 'What equipment is used?';
@@ -187,8 +191,30 @@ class _AddTasksScreenState extends State<AddTasksScreen> {
         reusableTextFieldRegular(
             "Enter Specific Task", _taskTextController, false),
         const SizedBox(height: 10),
-        reusableTextFieldRegular(
-            "Enter due date for task", _dueDateTextController, false),
+        Text("Selected Due Date: ${Util.formatDateTime(day)}"),
+        ElevatedButton(
+            onPressed: () async {
+              DateTime? dateTime = await showDatePicker(
+                  context: context,
+                  initialDate: day,
+                  firstDate: now,
+                  lastDate: DateTime.utc(9999, 08, 16));
+
+              final TimeOfDay? time = await showTimePicker(
+                  context: context, initialTime: TimeOfDay.now());
+
+              if (dateTime != null && time != null) {
+                dateTime = dateTime
+                    .add(Duration(hours: time.hour, minutes: time.minute));
+              }
+
+              if (dateTime != null) {
+                setState(() {
+                  day = dateTime!;
+                });
+              }
+            },
+            child: const Text("Select a due date")),
         const SizedBox(height: 10),
         reusableTextFieldRegular(
             "Enter skills required for task", _skillsRequiredController, false),

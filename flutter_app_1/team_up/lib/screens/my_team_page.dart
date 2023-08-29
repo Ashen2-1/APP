@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_logs/flutter_logs.dart';
+import 'package:team_up/calendar.dart';
 import 'package:team_up/constants/student_data.dart';
 import 'package:team_up/screens/Jointeam_page.dart';
 import 'package:team_up/services/database_access.dart';
 import 'package:team_up/utils/configuration_util.dart';
 import 'package:team_up/widgets/nav_bar.dart';
+import 'package:team_up/widgets/widgets.dart';
 
 import 'member_details_page.dart';
 
@@ -42,25 +44,31 @@ class MyTeamPageState extends State<MyTeamPage> {
         body: _buildListView(context, teamNumber));
   }
 
-  ListView _buildListView(BuildContext context, String teamNumber) {
-    return ListView.builder(
-      itemCount: 100,
-      itemBuilder: (_, index) {
-        return ListTile(
-          title: Text("The menber #$index $teamNumber"),
-          subtitle: Text("The subtitle"),
-          leading: Image.asset(
-            'assets/images/Students2.png',
-            height: 45,
-            width: 65,
-          ),
-          trailing: Icon(Icons.arrow_forward),
-          onTap: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => DetailPage(index)));
-          },
-        );
-      },
-    );
+  Widget _buildListView(BuildContext context, String teamNumber) {
+    return Column(children: [
+      reusableButton("Check attendance", context, () {
+        ConfigUtils.goToScreen(const AttendanceScreen(), context);
+      }),
+      Expanded(
+          child: ListView.builder(
+        itemCount: 100,
+        itemBuilder: (_, index) {
+          return ListTile(
+            title: Text("The menber #$index $teamNumber"),
+            subtitle: Text("The subtitle"),
+            leading: Image.asset(
+              'assets/images/Students2.png',
+              height: 45,
+              width: 65,
+            ),
+            trailing: Icon(Icons.arrow_forward),
+            onTap: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => DetailPage(index)));
+            },
+          );
+        },
+      ))
+    ]);
   }
 }

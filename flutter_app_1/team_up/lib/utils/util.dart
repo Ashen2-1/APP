@@ -47,7 +47,8 @@ class Util {
 
   static void logAttendance() async {
     DateTime now = DateTime.now();
-    String dateString = "${now.year}-${now.month}-${now.day}";
+    String dateString =
+        addZerotoDateString("${now.year}-${now.month}-${now.day}");
     FlutterLogs.logInfo("Date time", "Today's date", dateString);
 
     if (await DatabaseAccess.getInstance()
@@ -108,7 +109,44 @@ class Util {
     } else {
       s += "${dateTime.hour - 12}:${dateTime.minute}:${dateTime.second} PM";
     }
-    return s;
+    return addZerosToDateTimeStirng(s);
+  }
+
+  static String addZerotoDateString(String dateString) {
+    List<String> dateParts = dateString.split("-");
+    dateString = "";
+    for (String date in dateParts) {
+      if (date.length == 1) {
+        date = "0$date";
+      }
+      dateString += "$date-";
+    }
+    return dateString.substring(0, dateString.length - 1);
+  }
+
+  static String addZerostoTimeString(String timeString) {
+    List<String> timeParts = timeString.split(":");
+    timeString = "";
+    for (int i = 0; i < timeParts.length - 1; i++) {
+      if (timeParts[i].length == 1) {
+        timeParts[i] = "0${timeParts[i]}";
+      }
+      timeString += "${timeParts[i]}:";
+    }
+    if (timeParts[timeParts.length - 1].length == 4) {
+      timeParts[timeParts.length - 1] = "0${timeParts[timeParts.length - 1]}";
+    }
+    timeString += timeParts[timeParts.length - 1];
+    return timeString;
+  }
+
+  static String addZerosToDateTimeStirng(String dateTime) {
+    List<String> parts = dateTime.split(", ");
+    String res = "";
+    res += addZerotoDateString(parts[0]);
+    res += ", ";
+    res += addZerostoTimeString(parts[1]);
+    return res;
   }
 
   static String getFileNameFromPathString(String path) {
