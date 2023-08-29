@@ -60,17 +60,26 @@ class _StudentTasksScreenState extends State<StudentTasksScreen> {
   Widget buildMainContent() {
     return Column(
       children: [
-        SizedBox(height: 66,),
+        const SizedBox(
+          height: 66,
+        ),
         regularText("          My Tasks", context, true),
         if (studentTasksMap != null)
           Expanded(
-            child: ListView.builder(
-              itemCount: studentTasksMap!.length,
-              itemBuilder: (context, index) {
-                return studentTaskInfoWidget(studentTasksMap!, index, context);
-              },
-            ),
-          ),
+              child: ListView.builder(
+            itemCount: studentTasksMap!.length,
+            itemBuilder: (context, index) {
+              return FutureBuilder(
+                  future:
+                      studentTaskInfoWidget(studentTasksMap!, index, context),
+                  builder: (context, widget) {
+                    if (!widget.hasData) {
+                      return const SizedBox(height: 0);
+                    }
+                    return widget.data!;
+                  });
+            },
+          )),
         reusableButton("Update my tasks", context, () async {
           configure();
         }),

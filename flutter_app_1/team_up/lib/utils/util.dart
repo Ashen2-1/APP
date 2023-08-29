@@ -104,8 +104,10 @@ class Util {
   static String formatDateTime(DateTime dateTime) {
     String s = "";
     s += "${dateTime.year}-${dateTime.month}-${dateTime.day}, ";
-    if (dateTime.hour <= 12) {
+    if (dateTime.hour < 12) {
       s += "${dateTime.hour}:${dateTime.minute}:${dateTime.second} AM";
+    } else if (dateTime.hour == 12) {
+      s += "${12}:${dateTime.minute}:${dateTime.second} PM";
     } else {
       s += "${dateTime.hour - 12}:${dateTime.minute}:${dateTime.second} PM";
     }

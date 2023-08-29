@@ -30,7 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   List<Color> optionColors = [
     //Color(0xFFFFCF2F),
-    Color(0xFF6FE08D),
+    const Color(0xFF6FE08D),
     //Color(0xFF61BDFD),
     // Color(0xFFCB84FB),
     // Color(0xFF78E667),
@@ -72,7 +72,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void menuToggleExpansion() {
     setState(() {
-      PageNavigationScreen.setIncomingScreen(HomeScreen());
+      PageNavigationScreen.setIncomingScreen(const HomeScreen());
       ConfigUtils.goToScreen(PageNavigationScreen(), context);
     });
   }
@@ -108,9 +108,9 @@ class _HomeScreenState extends State<HomeScreen> {
         child: ListView(
           children: [
             Container(
-              padding:
-                  EdgeInsets.only(top: 15, left: 15, right: 15, bottom: 10),
-              decoration: BoxDecoration(
+              padding: const EdgeInsets.only(
+                  top: 15, left: 15, right: 15, bottom: 10),
+              decoration: const BoxDecoration(
                 color: Color.fromARGB(255, 57, 189, 216),
                 borderRadius: BorderRadius.only(
                   bottomLeft: Radius.circular(20),
@@ -120,23 +120,23 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Icon(
-                        Icons.dashboard,
-                        size: 30,
-                        color: Colors.white,
-                      ),
-                      Icon(
-                        Icons.notifications,
-                        size: 30,
-                        color: Colors.white,
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 20),
-                  Padding(
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //   children: [
+                  //     Icon(
+                  //       Icons.dashboard,
+                  //       size: 30,
+                  //       color: Colors.white,
+                  //     ),
+                  //     Icon(
+                  //       Icons.notifications,
+                  //       size: 30,
+                  //       color: Colors.white,
+                  //     ),
+                  //   ],
+                  // ),
+                  const SizedBox(height: 10),
+                  const Padding(
                     padding:
                         EdgeInsets.only(left: 3, bottom: 15), //top bar size
                     child: Text(
@@ -150,42 +150,43 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                   ),
-                  Container(
-                    margin: EdgeInsets.only(top: 5, bottom: 20),
-                    width: MediaQuery.of(context).size.width,
-                    height: 55,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: TextFormField(
-                      //search bar
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: "Search here...",
-                        hintStyle: TextStyle(
-                          color: Colors.black.withOpacity(0.5),
-                        ),
-                        prefixIcon: Icon(
-                          Icons.search,
-                          size: 25,
-                        ),
-                      ),
-                    ),
-                  ),
+                  FutureBuilder(
+                      future: StudentData.getStudentTeamNumber(),
+                      builder: (context, studentTeamNumber) {
+                        if (!studentTeamNumber.hasData) {
+                          return Container();
+                        }
+                        return Container(
+                            margin: const EdgeInsets.only(top: 5, bottom: 20),
+                            width: MediaQuery.of(context).size.width,
+                            height: 55,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child:
+                                Text("Team Number: ${studentTeamNumber.data}",
+                                    style: const TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w600,
+                                      letterSpacing: 0.8,
+                                      wordSpacing: 2,
+                                    )));
+                      })
                 ],
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(top: 20, left: 15, right: 15),
+              padding: const EdgeInsets.only(top: 20, left: 15, right: 15),
               child: Column(
                 children: [
                   GridView.builder(
                     itemCount: textPageOptions.length,
                     shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    physics: const NeverScrollableScrollPhysics(),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 3,
                       childAspectRatio: 1.1,
                     ),
@@ -227,14 +228,14 @@ class _HomeScreenState extends State<HomeScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
+                      const Text(
                         "Search for Tasks",
                         style: TextStyle(
                           fontSize: 23,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
-                      Text(
+                      const Text(
                         "See All",
                         style: TextStyle(
                           fontSize: 18,
@@ -244,13 +245,13 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ],
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
                   GridView.builder(
                     itemCount: subteamList.length,
                     shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
+                    physics: const NeverScrollableScrollPhysics(),
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
                       childAspectRatio:
@@ -264,26 +265,26 @@ class _HomeScreenState extends State<HomeScreen> {
                         onTap: () {
                           StudentData.setQuerySubTeam(subteamList[index]);
                           ConfigUtils.goToScreen(
-                              StudentProgressScreen(), context);
+                              const StudentProgressScreen(), context);
                         }, // Tap to each subteams
                         child: Container(
-                          padding: EdgeInsets.symmetric(
+                          padding: const EdgeInsets.symmetric(
                               vertical: 20, horizontal: 10),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(20),
-                            color: Color(0xFFF5F3FF),
+                            color: const Color(0xFFF5F3FF),
                           ),
                           child: Column(
                             children: [
                               Padding(
-                                padding: EdgeInsets.all(10),
+                                padding: const EdgeInsets.all(10),
                                 child: Image.asset(
                                   "assets/images/${subteamList[index]}.png",
                                   width: 100,
                                   height: 100,
                                 ),
                               ),
-                              SizedBox(height: 10),
+                              const SizedBox(height: 10),
                               Text(
                                 subteamList[index],
                                 style: TextStyle(
@@ -292,7 +293,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   color: Colors.black.withOpacity(0.6),
                                 ),
                               ),
-                              SizedBox(height: 10),
+                              const SizedBox(height: 10),
                               Text(
                                 "${numberTasks.isNotEmpty ? numberTasks[index] : 0} Tasks",
                                 style: TextStyle(

@@ -14,6 +14,7 @@ import 'package:webview_flutter/webview_flutter.dart';
 import 'dart:io';
 
 import '../constants/colors.dart';
+import '../constants/constants.dart';
 import '../widgets/reusable_widgets/reusable_widget.dart';
 import '../widgets/widgets.dart';
 import 'package:team_up/services/database_access.dart';
@@ -52,17 +53,6 @@ class _AddTasksScreenState extends State<AddTasksScreen> {
 
   List<TextEditingController>? controllerList;
 
-  final List<String> timeList = [
-    'Select an amount of time for task completion',
-    '10 minutes',
-    '20 minutes',
-    '30 minutes',
-    '40 minutes',
-    '1 hour',
-    '1 and 1/2 hour',
-    '2 hours'
-  ];
-
   final List<String> machineList = [
     "What equipment is used?",
     "Band Saw",
@@ -94,7 +84,7 @@ class _AddTasksScreenState extends State<AddTasksScreen> {
   DateTime now = DateTime.now();
 
   String subteam = 'Select a subteam';
-  String time = 'Select an amount of time for task completion';
+  String time = 'Select a time for task';
   String machineUsed = 'What equipment is used?';
   String level = "Select a level";
 
@@ -110,9 +100,10 @@ class _AddTasksScreenState extends State<AddTasksScreen> {
       controller.clear();
     }
     subteam = 'Select a subteam';
-    time = 'Select an amount of time for task completion';
+    time = 'Select a time for task';
     machineUsed = "What equipment is used?";
     level = "Select a level";
+    day = DateTime.now().add(const Duration(minutes: 30));
     setState(() {
       fileInitialized = false;
     });
@@ -128,7 +119,7 @@ class _AddTasksScreenState extends State<AddTasksScreen> {
     return Scaffold(
       backgroundColor: tdBGColor,
       //appBar: buildAppBar(menuToggleExpansion),
-      
+
       bottomNavigationBar: buildNavBar(context, 1),
       body: buildMainContent(),
     );
@@ -166,7 +157,9 @@ class _AddTasksScreenState extends State<AddTasksScreen> {
         //     ),
         //   ),
         // ),
-        SizedBox(height: 35,),
+        const SizedBox(
+          height: 60,
+        ),
         const Text("Add a task!",
             style: TextStyle(fontSize: 30, decorationThickness: 1.5)),
         const SizedBox(height: 10.0),
@@ -245,25 +238,28 @@ class _AddTasksScreenState extends State<AddTasksScreen> {
         ///////////////////////////////////////////////// new
         reusableTextFieldRegular("Enter the description of the task",
             _taskdescriptionTextController, false),
-        const SizedBox(height: 10),
-        Container(
-            width: MediaQuery.of(context).size.width - 20,
-            decoration: BoxDecoration(
-                color:
-                    const Color.fromARGB(255, 199, 196, 196).withOpacity(0.3),
-                borderRadius: Borders.imageBorderRadius),
-            child: DropdownButton<String>(
-                value: machineUsed,
-                onChanged: (String? newValue) {
-                  setState(() {
-                    machineUsed = newValue!;
-                  });
-                },
-                items: machineList
-                    .map<DropdownMenuItem<String>>((String newValue) {
-                  return DropdownMenuItem<String>(
-                      value: newValue, child: Text(newValue));
-                }).toList())),
+        if (subteam == "Build")
+          Column(children: [
+            const SizedBox(height: 10),
+            Container(
+                width: MediaQuery.of(context).size.width - 20,
+                decoration: BoxDecoration(
+                    color: const Color.fromARGB(255, 199, 196, 196)
+                        .withOpacity(0.3),
+                    borderRadius: Borders.imageBorderRadius),
+                child: DropdownButton<String>(
+                    value: machineUsed,
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        machineUsed = newValue!;
+                      });
+                    },
+                    items: machineList
+                        .map<DropdownMenuItem<String>>((String newValue) {
+                      return DropdownMenuItem<String>(
+                          value: newValue, child: Text(newValue));
+                    }).toList()))
+          ]),
         const SizedBox(height: 10),
         Container(
             width: MediaQuery.of(context).size.width - 20,
@@ -307,8 +303,9 @@ class _AddTasksScreenState extends State<AddTasksScreen> {
                 "Add to Database", "Upload image", "Image URL: $imageURL");
           }
           if (subteam != 'Select a subteam' &&
-              time != 'Select an amount of time for task completion' &&
-              machineUsed != "What equipment is used?" &&
+              time != 'Select a time for task' &&
+              (subteam != "Build" ||
+                  machineUsed != "What equipment is used?") &&
               level != "Select a level") {
             Map<String, dynamic> taskToAdd = {
               "task": _taskTextController.text,
@@ -316,16 +313,19 @@ class _AddTasksScreenState extends State<AddTasksScreen> {
               "description": _taskdescriptionTextController.text,
               //////////////////////////////////// task description
               "estimated time": time,
-              "due date": _dueDateTextController.text,
+              "due date": day,
               "skills needed": _skillsRequiredController.text,
               "image url": imageURL,
               'assigner': StudentData.studentEmail,
               'feedback': "None",
               'complete percentage': "None",
-              'machine needed': machineUsed,
               'level': level,
               'team number': await StudentData.getStudentTeamNumber(),
             };
+
+            if (machineUsed != "What equipment is used?") {
+              taskToAdd['machine needed'] = machineUsed;
+            }
             List<Map<String, dynamic>> curTasks =
                 await Util.combineTaskIntoExisting(taskToAdd,
                     await DatabaseAccess.getInstance().getAllTasks(subteam));
