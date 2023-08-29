@@ -82,8 +82,8 @@ class _Signupteam_pageState extends State<Signupteam_page>
                 ),
               ],
             ),
-            backgroundColor: const Color.fromARGB(231, 178, 34, 230)),
-        backgroundColor: const Color.fromARGB(255, 201, 141, 141),
+            backgroundColor: Color.fromARGB(231, 234, 200, 200)),///
+        backgroundColor: Color.fromARGB(255, 226, 192, 163),////
         body: SingleChildScrollView(
           child: Container(
             child: Column(

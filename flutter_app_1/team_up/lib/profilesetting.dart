@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:team_up/screens/Sign_Up_Team_page.dart';
 
 class Profilesettingpage extends StatefulWidget {
   const Profilesettingpage({super.key});
@@ -42,7 +43,7 @@ class _ProfilesettingpageState extends State<Profilesettingpage> {
 
 
 
-            
+
             Divider(height: 15, thickness: 2,),
             SizedBox(height: 18,),
 /////////////////////////////////////
@@ -116,26 +117,7 @@ class _ProfilesettingpageState extends State<Profilesettingpage> {
           GestureDetector(
 //////////////////////////////////////////// chang to sign up for your team page
               onTap: () {
-                showDialog(
-                  context: context, 
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      title: Text("Creat Team Work Space"),
-                      content: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          
-                      ],),
-                      actions: [
-                        FloatingActionButton(
-                          onPressed: (){
-                            Navigator.of(context).pop();
-                            },
-                            child: Text("Close"),
-                          )
-                      ],
-                    );
-                  });
+                Navigator.of(context)..push<void>(MaterialPageRoute<void>(builder: (BuildContext context) => const Signupteam_page(),),);
               },
 /////////////////////////////////////////////////////////
 
@@ -168,9 +150,16 @@ class _ProfilesettingpageState extends State<Profilesettingpage> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                         
-                        Text("TeamUp is a App"),
+                        Text("TeamUp: Streamline collaboration effortlessly with our user-friendly app. Simplify task assignment, track progress, and facilitate seamless communication. Enhance productivity through intuitive features like shared calendars, real-time file sharing, and performance analytics. From project inception to completion, TeamUp empowers you to coordinate tasks, allocate resources, and celebrate milestones together. Experience the future of team management – efficient, cohesive, and rewarding. Join us in shaping a new era of teamwork. "),
 
-                        
+                        SizedBox(height: 18,),
+                        Text(
+                          "Developers:",
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        )
                         
                         //Text("Public Channel"),
                       ],),
