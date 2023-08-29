@@ -127,7 +127,8 @@ class _AddTasksScreenState extends State<AddTasksScreen> {
   Scaffold mainLayout(BuildContext context) {
     return Scaffold(
       backgroundColor: tdBGColor,
-      appBar: buildAppBar(menuToggleExpansion),
+      //appBar: buildAppBar(menuToggleExpansion),
+      
       bottomNavigationBar: buildNavBar(context, 1),
       body: buildMainContent(),
     );
@@ -165,6 +166,7 @@ class _AddTasksScreenState extends State<AddTasksScreen> {
         //     ),
         //   ),
         // ),
+        SizedBox(height: 35,),
         const Text("Add a task!",
             style: TextStyle(fontSize: 30, decorationThickness: 1.5)),
         const SizedBox(height: 10.0),

@@ -50,7 +50,7 @@ class _AllApproveTasksScreenState extends State<AllApproveTasksScreen> {
   Scaffold mainLayout() {
     return Scaffold(
       backgroundColor: tdBGColor,
-      appBar: buildAppBar(menuToggleExpansion),
+      //appBar: buildAppBar(menuToggleExpansion),
       bottomNavigationBar: buildNavBar(context, 1),
       body: buildMainContent(),
     );
@@ -59,7 +59,9 @@ class _AllApproveTasksScreenState extends State<AllApproveTasksScreen> {
   Widget buildMainContent() {
     return Column(
       children: [
-        regularText("Approving Tasks", context, true),
+        SizedBox(height: 66,),
+        
+        regularText("    Approving Tasks", context, true),
         Expanded(
             child: ListView.builder(
                 itemCount: studentTasksMap!.length,
