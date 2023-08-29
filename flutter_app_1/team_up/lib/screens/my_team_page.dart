@@ -38,7 +38,7 @@ class MyTeamPageState extends State<MyTeamPage> {
   Scaffold buildTeamList(context, String teamNumber) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("My team"),
+          title: const Text("My team"),
         ),
         bottomNavigationBar: buildNavBar(context, 2),
         body: _buildListView(context, teamNumber));
@@ -50,25 +50,46 @@ class MyTeamPageState extends State<MyTeamPage> {
         ConfigUtils.goToScreen(const AttendanceScreen(), context);
       }),
       Expanded(
-          child: ListView.builder(
-        itemCount: 100,
-        itemBuilder: (_, index) {
-          return ListTile(
-            title: Text("The menber #$index $teamNumber"),
-            subtitle: Text("The subtitle"),
-            leading: Image.asset(
-              'assets/images/Students2.png',
-              height: 45,
-              width: 65,
-            ),
-            trailing: Icon(Icons.arrow_forward),
-            onTap: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => DetailPage(index)));
-            },
-          );
-        },
-      ))
+        child: FutureBuilder(
+            future: DatabaseAccess.getInstance()
+                .getAllStudentsPartOfTeam(teamNumber),
+            builder: (context, teamStudents) {
+              if (!teamStudents.hasData) {
+                return Container();
+              }
+              List<Map<String, dynamic>>? students = teamStudents.data;
+              FlutterLogs.logInfo("Team list", "students", students.toString());
+              return ListView.builder(
+                itemCount: students!.length,
+                itemBuilder: (_, index) {
+                  return ListTile(
+                    title: Text(students[index]['email']),
+                    subtitle: students[index]['isAdmin']
+                        ? const Text("Mentor")
+                        : const Text("Student"),
+                    leading: students[index]['isAdmin']
+                        ? Image.asset(
+                            'assets/images/Mentor2.png',
+                            height: 45,
+                            width: 65,
+                          )
+                        : Image.asset(
+                            'assets/images/Students2.png',
+                            height: 45,
+                            width: 65,
+                          ),
+                    trailing: const Icon(Icons.arrow_forward),
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => DetailPage(index)));
+                    },
+                  );
+                },
+              );
+            }),
+      ),
     ]);
   }
 }

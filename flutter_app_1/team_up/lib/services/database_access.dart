@@ -86,6 +86,13 @@ class DatabaseAccess {
     return null;
   }
 
+  Future<List<Map<String, dynamic>>> getAllDocuments(String collection) async {
+    QuerySnapshot<Map<String, dynamic>> snapshot =
+        await db.collection(collection).get();
+
+    return snapshot.docs.map((doc) => doc.data()).toList();
+  }
+
   /// Performs parsing so document snapshot can be transferred to List<Map<String, dynamic>>
   /// Also provides time query filters if needed, enter "" if not needed
   Future<List<Map<String, dynamic>>> parseStudentTaskData(
@@ -250,5 +257,17 @@ class DatabaseAccess {
       return parseStudentTaskData(docSnapshot, "");
     }
     return null;
+  }
+
+  Future<List<Map<String, dynamic>>> getAllStudentsPartOfTeam(
+      String teamNumber) async {
+    List<Map<String, dynamic>> res = [];
+    for (Map<String, dynamic> student
+        in await getAllDocuments("student tasks")) {
+      if (student['team number'] == teamNumber) {
+        res.add(student);
+      }
+    }
+    return res;
   }
 }

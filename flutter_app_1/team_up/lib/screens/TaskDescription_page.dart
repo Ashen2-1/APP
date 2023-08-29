@@ -83,11 +83,23 @@ class _TaskDescription_pageState extends State<TaskDescription_page> {
                 ),
               ),
             if (StudentData.allViewingTask![StudentData.viewingIndex!]
-                    ['machine needed'] !=
-                null)
+                        ['machine needed'] !=
+                    null &&
+                StudentData.allViewingTask![StudentData.viewingIndex!]
+                        ['machine needed'] !=
+                    "What equipment is used?")
               Center(
                 child: Text(
                   "Machine Needed: ${StudentData.allViewingTask![StudentData.viewingIndex!]['machine needed']}",
+                  style: TextStyle(fontSize: 16),
+                ),
+              ),
+            if (StudentData.allViewingTask![StudentData.viewingIndex!]
+                    ['assigner'] !=
+                null)
+              Center(
+                child: Text(
+                  "Assigner: ${StudentData.allViewingTask![StudentData.viewingIndex!]['assigner']}",
                   style: TextStyle(fontSize: 16),
                 ),
               ),

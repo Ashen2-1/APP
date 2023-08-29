@@ -6,6 +6,8 @@ import 'package:team_up/services/database_access.dart';
 import 'package:team_up/utils/util.dart';
 import 'package:team_up/widgets/nav_bar.dart';
 
+import '../constants/constants.dart';
+
 class Feedback_page extends StatefulWidget {
   @override
   _Feedback_pageState createState() => _Feedback_pageState();
@@ -25,6 +27,8 @@ class _Feedback_pageState extends State<Feedback_page> {
   ];
   String percentage = "0%";
 
+  String time = "Select a time for task";
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,7 +37,7 @@ class _Feedback_pageState extends State<Feedback_page> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text("Please Enter Feedback here (At less 50 words)"),
+            const Text("Please Enter Feedback here (At less 50 words)"),
             Padding(
               padding: const EdgeInsets.all(10.0),
               child: TextFormField(
@@ -41,7 +45,7 @@ class _Feedback_pageState extends State<Feedback_page> {
                 minLines: 2,
                 maxLines: 5,
                 keyboardType: TextInputType.multiline,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                     hintText: 'Enter A Feedback Here',
                     hintStyle: TextStyle(color: Colors.grey),
                     border: OutlineInputBorder(
@@ -49,10 +53,10 @@ class _Feedback_pageState extends State<Feedback_page> {
                     )),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 30,
             ),
-            Text("How much has this user completed?"),
+            const Text("How much has this user completed?"),
             GestureDetector(
               child: DropdownButton<String>(
                   value: percentage,
@@ -69,27 +73,27 @@ class _Feedback_pageState extends State<Feedback_page> {
                         value: newValue, child: Text(newValue));
                   }).toList()),
             ),
-            SizedBox(
+            const SizedBox(
               height: 50,
             ),
-            Text("How much more time is needed?"),
+            const Text("How much more time is needed?"),
             GestureDetector(
               child: DropdownButton<String>(
-                  value: percentage,
+                  value: time,
                   //hint: const Text("%",
                   //style: TextStyle(fontSize: 18), textAlign: TextAlign.left),
                   onChanged: (String? newValue) {
                     setState(() {
-                      percentage = newValue!;
+                      time = newValue!;
                     });
                   },
-                  items: percentageList
-                      .map<DropdownMenuItem<String>>((String newValue) {
+                  items:
+                      timeList.map<DropdownMenuItem<String>>((String newValue) {
                     return DropdownMenuItem<String>(
                         value: newValue, child: Text(newValue));
                   }).toList()),
             ),
-            SizedBox(
+            const SizedBox(
               height: 50,
             ),
             ElevatedButton(
@@ -101,16 +105,20 @@ class _Feedback_pageState extends State<Feedback_page> {
                 existingTaskData['complete percentage'] = percentage;
                 existingTaskData['completed'] = false;
                 existingTaskData['approved'] = true;
+                existingTaskData['estimated time'] = time;
+                existingTaskData['finish time'] = null;
 
                 List<Map<String, dynamic>> tasks = Util.matchAndCombineExisting(
                     existingTaskData,
                     await DatabaseAccess.getInstance().getAllSignedUpTasks());
                 DatabaseAccess.getInstance().addToDatabase(
                     "student tasks", "signed up", {"tasks": tasks});
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => HomeScreen()));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const HomeScreen()));
               },
-              child: Text("Send Message"),
+              child: const Text("Send Message"),
             ),
           ],
         ),

@@ -87,12 +87,12 @@ Future<bool?> askConfirmation(BuildContext context, String taskText) async {
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
-        title: Text('Confirmation'),
+        title: const Text('Confirmation'),
         content: Text(
             'Are you sure you want to assign yourself $taskText? This means you are starting the task right away'),
         actions: [
           TextButton(
-            child: Text('No'),
+            child: const Text('No'),
             onPressed: () {
               Navigator.of(context)
                   .pop(false); // Return false when "No" is pressed
@@ -100,7 +100,7 @@ Future<bool?> askConfirmation(BuildContext context, String taskText) async {
             },
           ),
           TextButton(
-            child: Text('Yes'),
+            child: const Text('Yes'),
             onPressed: () {
               Navigator.of(context)
                   .pop(true); // Return true when "Yes" is pressed
@@ -160,11 +160,11 @@ Future<void> displayError(Object error, BuildContext context) async {
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
-        title: Text('Error'),
+        title: const Text('Error'),
         content: Text(removeFireBaseBrackets(error.toString())),
         actions: [
           TextButton(
-            child: Text('Ok'),
+            child: const Text('Ok'),
             onPressed: () {
               Navigator.of(context)
                   .pop(true); // Return false when "No" is pressed
@@ -181,11 +181,11 @@ Future<void> displayAlert(Object error, BuildContext context) async {
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
-        title: Text('Alert'),
+        title: const Text('Alert'),
         content: Text(removeFireBaseBrackets(error.toString())),
         actions: [
           TextButton(
-            child: Text('Ok'),
+            child: const Text('Ok'),
             onPressed: () {
               Navigator.of(context)
                   .pop(true); // Return false when "No" is pressed
@@ -202,11 +202,11 @@ Future<void> displayErrorFromString(String error, BuildContext context) async {
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
-        title: Text('Error'),
+        title: const Text('Error'),
         content: Text(error),
         actions: [
           TextButton(
-            child: Text('Ok'),
+            child: const Text('Ok'),
             onPressed: () {
               Navigator.of(context)
                   .pop(true); // Return false when "No" is pressed
@@ -228,7 +228,7 @@ Future<bool> isMachineAvailable(machine) async {
 
 SizedBox textFieldTaskInfo(List<Map<String, dynamic>> allTaskMap,
     String subteam, int index, String incomingPage, BuildContext context) {
-  Color color = Color.fromARGB(255, 193, 184, 184).withOpacity(0.3);
+  Color color = const Color.fromARGB(255, 193, 184, 184).withOpacity(0.3);
   if (allTaskMap[index]['level'] == "Introductory") {
     color = easyColor;
   } else if (allTaskMap[index]['level'] == "Comfortable with skill") {
@@ -257,8 +257,10 @@ SizedBox textFieldTaskInfo(List<Map<String, dynamic>> allTaskMap,
             Row(mainAxisAlignment: MainAxisAlignment.start, children: [
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 regularText(allTaskMap[index]['task'], context, true),
-                regularText("Due date: ${allTaskMap[index]['due date']}",
-                    context, false),
+                regularText(
+                    "Due date:\n${Util.formatDateTime(allTaskMap[index]['due date'].toDate())}",
+                    context,
+                    false),
                 regularText(
                     "Skills needed: ${allTaskMap[index]['skills needed']}",
                     context,
@@ -276,22 +278,24 @@ SizedBox textFieldTaskInfo(List<Map<String, dynamic>> allTaskMap,
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => TaskDescription_page()));
+                            builder: (context) =>
+                                const TaskDescription_page()));
 
                     ///TaskDescription_page
                   },
                   style: ElevatedButton.styleFrom(
                     primary: Colors.blue,
                   ),
-                  child: Text("Description"),
+                  child: const Text("Description"),
                 ),
                 //////////////////////////////////////// Task Descriptions
                 reusableSignUpTaskButton("Sign up for task", context, () {
                   askConfirmation(context, allTaskMap[index]['task'])
                       .then((confirmation) async {
                     if (confirmation != null && confirmation) {
-                      if (await isMachineAvailable(
-                          allTaskMap[index]['machine needed'])) {
+                      if (allTaskMap[index]['machine needed'] != null &&
+                          await isMachineAvailable(
+                              allTaskMap[index]['machine needed'])) {
                         displayError(
                             "This machine is not available, can't sign up and work on it",
                             context);
@@ -331,14 +335,18 @@ SizedBox textFieldTaskInfo(List<Map<String, dynamic>> allTaskMap,
                               "Tasks", subteam, {"tasks": allTaskMap});
 
                           // Add machine to occupied database list
-                          String machineOccupied = taskToAdd['machine needed'];
-                          DatabaseAccess.getInstance().addToDatabase(
-                              "Machines",
-                              "Occupied",
-                              {machineOccupied: StudentData.studentEmail});
+                          if (taskToAdd['machine needed'] != null) {
+                            String machineOccupied =
+                                taskToAdd['machine needed'];
+                            DatabaseAccess.getInstance().addToDatabase(
+                                "Machines",
+                                "Occupied",
+                                {machineOccupied: StudentData.studentEmail});
+                          }
 
                           StudentData.currentTask = taskToAdd;
-                          ConfigUtils.goToScreen(CountdownPage(), context);
+                          ConfigUtils.goToScreen(
+                              const CountdownPage(), context);
                         } else {
                           await displayError(
                               "This task has all ready been taken", context);
@@ -356,9 +364,29 @@ SizedBox textFieldTaskInfo(List<Map<String, dynamic>> allTaskMap,
   //////////////////////////////////////////////////////////////////////new
 }
 
-SizedBox studentTaskInfoWidget(List<Map<String, dynamic>> studentTasksMap,
-    int index, BuildContext context) {
-  Map<String, dynamic> curTask = studentTasksMap[index];
+Future<SizedBox> studentTaskInfoWidget(
+    List<Map<String, dynamic>> studentTasksMap,
+    int index,
+    BuildContext context) async {
+  List<Map<String, dynamic>>? curTasksList =
+      await DatabaseAccess.getInstance().getAllSignedUpTasks();
+
+  Map<String, dynamic> curTask = curTasksList![index];
+  Color color = const Color.fromARGB(255, 193, 184, 184).withOpacity(0.3);
+  if (curTask['finish time'].seconds - Timestamp.now().seconds <= (30 * 60) &&
+          curTask['finish time'].seconds - Timestamp.now().seconds > 0 ||
+      curTask['due date'].seconds - Timestamp.now().seconds <=
+              (1 * 24 * 60 * 60) &&
+          curTask['due date'].seconds - Timestamp.now().seconds > 0) {
+    color = const Color.fromARGB(255, 249, 94, 94).withOpacity(0.3);
+  } else if (curTask['complete percentage'] == "100%") {
+    color = Color.fromARGB(255, 27, 239, 73).withOpacity(0.6);
+  } else if (curTask['approved'] &&
+      (curTask['finish time'] == null ||
+          curTask['finish time'].seconds > Timestamp.now().seconds)) {
+    color = Color.fromARGB(255, 238, 200, 33).withOpacity(0.5);
+  }
+
   return SizedBox(
       height: 200.0,
       width: MediaQuery.of(context).size.width,
@@ -369,7 +397,7 @@ SizedBox studentTaskInfoWidget(List<Map<String, dynamic>> studentTasksMap,
           //width: 200.0, //MediaQuery.of(context).size.width,
 
           decoration: BoxDecoration(
-              color: Color.fromARGB(255, 193, 184, 184).withOpacity(0.3),
+              color: color,
               borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(10),
                   topRight: Radius.circular(10),
@@ -379,7 +407,13 @@ SizedBox studentTaskInfoWidget(List<Map<String, dynamic>> studentTasksMap,
             Row(mainAxisAlignment: MainAxisAlignment.start, children: [
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 regularText(curTask['task'], context, true),
-                regularText("Due date: ${curTask['due date']}", context, false),
+                const SizedBox(height: 3),
+                regularText(
+                    "Due date:\n${Util.formatDateTime(curTask['due date'].toDate())}",
+                    context,
+                    false),
+
+                const SizedBox(height: 10),
                 regularText("Skills needed: ${curTask['skills needed']}",
                     context, false),
                 const SizedBox(height: 5),
@@ -403,14 +437,15 @@ SizedBox studentTaskInfoWidget(List<Map<String, dynamic>> studentTasksMap,
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => TaskDescription_page()));
+                            builder: (context) =>
+                                const TaskDescription_page()));
 
                     ///TaskDescription_page
                   },
                   style: ElevatedButton.styleFrom(
                     primary: Colors.blue,
                   ),
-                  child: Text("Description"),
+                  child: const Text("Description"),
                 ),
                 if (curTask['complete percentage'] == "100%")
                   reusableSignUpTaskButton("Clear this task", context, () {
@@ -419,24 +454,47 @@ SizedBox studentTaskInfoWidget(List<Map<String, dynamic>> studentTasksMap,
                         "signed up", {'tasks': studentTasksMap});
                     ConfigUtils.goToScreen(const HomeScreen(), context);
                   }),
-                if (Timestamp.now().seconds < curTask['finish time'].seconds)
+                if (curTask['complete percentage'] != "100%" &&
+                    curTask['approved'] &&
+                    (curTask['finish time'] == null ||
+                        Timestamp.now().seconds <
+                            curTask['finish time'].seconds))
                   reusableSignUpTaskButton("Work on this task", context,
                       () async {
                     // FlutterLogs.logInfo("Sign up task", "Machine available",
                     //     curTask['machine needed']);
                     // FlutterLogs.logInfo("Sign up task", "Machine available",
                     //     "Status: ${!(await DatabaseAccess.getInstance().getField("Machines", "Occupied", curTask['machine needed']))}");
-                    if (await isMachineAvailable(curTask['machine needed'])) {
+                    if (curTask['machine needed'] != null &&
+                        await isMachineAvailable(curTask['machine needed'])) {
                       displayError(
                           "The machine is currently occupied", context);
                     } else {
                       Util.logAttendance();
                       StudentData.currentTask = curTask;
-                      DatabaseAccess.getInstance().updateField(
-                          "Machines", "Occupied", {
-                        curTask['machine needed']: StudentData.studentEmail
+
+                      if (curTask['machine needed'] != null) {
+                        DatabaseAccess.getInstance().updateField(
+                            "Machines", "Occupied", {
+                          curTask['machine needed']: StudentData.studentEmail
+                        });
+                      }
+
+                      if (curTask['finish time'] == null) {
+                        StudentData.currentTask!['finish time'] =
+                            Timestamp.fromDate(DateTime.now().add(Duration(
+                                minutes: Util.convertStringTimeToIntMinutes(
+                                    curTask['estimated time']))));
+                      }
+
+                      DatabaseAccess.getInstance()
+                          .addToDatabase("student tasks", "signed up", {
+                        "tasks": Util.matchAndCombineExisting(
+                            StudentData.currentTask!,
+                            await DatabaseAccess.getInstance()
+                                .getAllSignedUpTasks())
                       });
-                      ConfigUtils.goToScreen(CountdownPage(), context);
+                      ConfigUtils.goToScreen(const CountdownPage(), context);
                     }
                   }),
               ]),
@@ -449,7 +507,7 @@ SizedBox studentTaskInfoWidget(List<Map<String, dynamic>> studentTasksMap,
 
 SizedBox regularText(String text, BuildContext context, bool isTitle) {
   return SizedBox(
-    height: 30.0,
+    height: 20.0,
     width: 200.0,
     //(MediaQuery.of(context).size.width / 100),
     child: Text(
@@ -500,7 +558,7 @@ AppBar buildAppBar(void Function()? toggleExtended,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             IconButton(
-                icon: Icon(Icons.menu, color: tdBlack, size: 30),
+                icon: const Icon(Icons.menu, color: tdBlack, size: 30),
                 onPressed: toggleExtended),
             Container(
               height: 50,

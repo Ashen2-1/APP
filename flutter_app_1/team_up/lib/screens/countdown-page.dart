@@ -58,8 +58,10 @@ class _CountdownPageState extends State<CountdownPage>
     DatabaseAccess.getInstance().addToDatabase(
         "student tasks", 'signed up', {'tasks': curPendingTasks});
 
-    DatabaseAccess.getInstance()
-        .updateField("Machines", "Occupied", {taskToAdd['machine needed']: ""});
+    if (taskToAdd['machine needed'] != null) {
+      DatabaseAccess.getInstance().updateField(
+          "Machines", "Occupied", {taskToAdd['machine needed']: ""});
+    }
 
     FlutterLogs.logInfo("Student task", "Submission", "Successfully submitted");
 
