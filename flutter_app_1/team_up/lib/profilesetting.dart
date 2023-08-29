@@ -117,7 +117,7 @@ class _ProfilesettingpageState extends State<Profilesettingpage> {
           GestureDetector(
 //////////////////////////////////////////// chang to sign up for your team page
               onTap: () {
-                Navigator.of(context)..push<void>(MaterialPageRoute<void>(builder: (BuildContext context) => const Signupteam_page(),),);
+                Navigator.of(context).push<void>(MaterialPageRoute<void>(builder: (BuildContext context) => const Signupteam_page(),),);
               },
 /////////////////////////////////////////////////////////
 
