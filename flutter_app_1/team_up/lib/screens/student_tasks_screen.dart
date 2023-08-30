@@ -51,7 +51,7 @@ class _StudentTasksScreenState extends State<StudentTasksScreen> {
   Scaffold mainLayout() {
     return Scaffold(
       backgroundColor: tdBGColor,
-      //appBar: buildAppBar(menuToggleExpansion),
+      appBar: AppBar(title: const Text("My Tasks")),
       bottomNavigationBar: buildNavBar(context, 1),
       body: buildMainContent(),
     );
@@ -60,10 +60,6 @@ class _StudentTasksScreenState extends State<StudentTasksScreen> {
   Widget buildMainContent() {
     return Column(
       children: [
-        const SizedBox(
-          height: 66,
-        ),
-        regularText("          My Tasks", context, true),
         if (studentTasksMap != null)
           Expanded(
               child: ListView.builder(

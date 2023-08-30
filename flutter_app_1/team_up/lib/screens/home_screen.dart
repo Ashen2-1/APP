@@ -97,7 +97,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Scaffold mainLayout(BuildContext context) {
     return Scaffold(
-        appBar: buildAppBar(menuToggleExpansion),
+        //appBar: buildAppBar(menuToggleExpansion),
         bottomNavigationBar: buildNavBar(context, 0),
         body: buildMainContent(context));
   }

@@ -412,11 +412,10 @@ Future<SizedBox> studentTaskInfoWidget(
                     "Due date:\n${Util.formatDateTime(curTask['due date'].toDate())}",
                     context,
                     false),
-
                 const SizedBox(height: 10),
                 regularText("Skills needed: ${curTask['skills needed']}",
                     context, false),
-                const SizedBox(height: 5),
+                //const SizedBox(height: 3),
                 regularText(
                     "Task time: ${curTask['estimated time']}", context, false),
                 if (curTask['approved'])
@@ -507,7 +506,7 @@ Future<SizedBox> studentTaskInfoWidget(
 
 SizedBox regularText(String text, BuildContext context, bool isTitle) {
   return SizedBox(
-    height: 20.0,
+    height: 30.0,
     width: 200.0,
     //(MediaQuery.of(context).size.width / 100),
     child: Text(
