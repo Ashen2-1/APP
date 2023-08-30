@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_logs/flutter_logs.dart';
 import 'package:team_up/constants/student_data.dart';
+import 'package:team_up/proflie.dart';
 import 'package:team_up/screens/add_tasks_screen.dart';
 import 'package:team_up/screens/student_tasks_screen.dart';
 import 'package:team_up/widgets/nav_bar.dart';
@@ -97,7 +98,34 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Scaffold mainLayout(BuildContext context) {
     return Scaffold(
-        appBar: buildAppBar(menuToggleExpansion),
+        appBar: AppBar(
+          elevation: 0,
+          backgroundColor: Color.fromARGB(255, 57, 189, 216),
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(""),
+              Container(
+                height: 50,
+                width: 50,
+                
+                  child: 
+                    IconButton(
+                      onPressed: (){
+                        Navigator.of(context).push<void>(MaterialPageRoute<void>(builder: (BuildContext context) => ProfilePage(),),);
+
+                      }, 
+                      icon: Icon(Icons.person),
+                      iconSize: 35
+                    )
+                  
+              )
+          
+          
+            ],
+          ),
+          
+        ),
         bottomNavigationBar: buildNavBar(context, 0),
         body: buildMainContent(context));
   }

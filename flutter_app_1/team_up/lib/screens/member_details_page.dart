@@ -24,7 +24,7 @@ class DetailPage extends StatelessWidget {
         child: ListView(
           children: [
             
-            Image.asset("assets/images/Students2.png",height: 188,width: 188,),
+            Image.asset("assets/images/Mentor2.png",height: 188,width: 188,),
             SizedBox(height: 28,),
             Row(
               children: [

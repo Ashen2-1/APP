@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:team_up/screens/Sign_Up_Team_page.dart';
+import 'package:team_up/widgets/nav_bar.dart';
 
 class Profilesettingpage extends StatefulWidget {
   const Profilesettingpage({super.key});
@@ -25,6 +26,9 @@ class _ProfilesettingpageState extends State<Profilesettingpage> {
           icon: Icon(Icons.arrow_back,color: Colors.black,),
         ),
       ),
+
+      bottomNavigationBar: buildNavBar(context, 3),
+
       body: Container(
         padding: EdgeInsets.only(left:16,top:25,right: 16),
         child: ListView(
