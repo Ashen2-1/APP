@@ -3,6 +3,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_logs/flutter_logs.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:team_up/constants/student_data.dart';
 import 'package:team_up/main.dart';
 import 'package:team_up/services/database_access.dart';
 
@@ -29,7 +30,13 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
     String attendance = "";
     for (String student in await getAttendanceForDay(day)) {
       FlutterLogs.logInfo("Attendance", "curent student", student);
-      attendance += "$student \n";
+      if (StudentData.viewingOwnAttendance) {
+        if (student == StudentData.studentEmail) {
+          attendance += "Present on this day";
+        }
+      } else {
+        attendance += "$student \n";
+      }
     }
     return attendance;
   }

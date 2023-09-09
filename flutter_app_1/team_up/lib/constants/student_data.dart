@@ -11,9 +11,13 @@ class StudentData {
   static String studentTeamNumber = "None";
   static bool tempSignUpAdmin = false;
 
+  static String viewingUserEmail = "";
+
   static Map<String, dynamic>? currentTask;
 
   static Map<String, dynamic>? approvalTask;
+
+  static bool viewingOwnAttendance = false;
 
   static Map<String, dynamic>? getApprovalTask() {
     return approvalTask;

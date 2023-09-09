@@ -46,9 +46,19 @@ class MyTeamPageState extends State<MyTeamPage> {
 
   Widget _buildListView(BuildContext context, String teamNumber) {
     return Column(children: [
-      reusableButton("Check attendance", context, () {
-        ConfigUtils.goToScreen(const AttendanceScreen(), context);
-      }),
+      FutureBuilder(
+          future: StudentData.isAdmin(),
+          builder: (context, isAdmin) {
+            if (!isAdmin.hasData) {
+              return Container();
+            } else if (isAdmin.data!) {
+              return reusableButton("Check Full Attendance", context, () {
+                StudentData.viewingOwnAttendance = false;
+                ConfigUtils.goToScreen(const AttendanceScreen(), context);
+              });
+            }
+            return Container();
+          }),
       Expanded(
         child: FutureBuilder(
             future: DatabaseAccess.getInstance()
@@ -63,10 +73,14 @@ class MyTeamPageState extends State<MyTeamPage> {
                 itemCount: students!.length,
                 itemBuilder: (_, index) {
                   return ListTile(
-                    title: Text(students[index]['email']),
-                    subtitle: students[index]['isAdmin']
-                        ? const Text("Mentor")
-                        : const Text("Student"),
+                    title: students[index]['username'] != null
+                        ? Text(students[index]['username'])
+                        : Text(students[index]['email']),
+                    subtitle: students[index]['description'] != null
+                        ? Text(students[index]['description'])
+                        : students[index]['isAdmin']
+                            ? const Text("Mentor")
+                            : const Text("Student"),
                     leading: students[index]['isAdmin']
                         ? Image.asset(
                             'assets/images/Mentor2.png',
@@ -80,6 +94,7 @@ class MyTeamPageState extends State<MyTeamPage> {
                           ),
                     trailing: const Icon(Icons.arrow_forward),
                     onTap: () {
+                      StudentData.viewingUserEmail = students[index]['email'];
                       Navigator.push(
                           context,
                           MaterialPageRoute(
