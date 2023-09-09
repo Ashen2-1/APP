@@ -5,6 +5,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:team_up/constants/student_data.dart';
 import 'package:team_up/profilesetting.dart';
+import 'package:team_up/widgets/nav_bar.dart';
 import 'package:team_up/widgets/reusable_widgets/reusable_widget.dart';
 
 void main() async {
@@ -19,6 +20,7 @@ class ProfilePage extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: "ProfilePage",
+      
       home: EditProfilePage(),
     );
   }
@@ -57,6 +59,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
           ),
         ],
       ),
+      
+      bottomNavigationBar: buildNavBar(context, 3),
       body: Container(
         padding: EdgeInsets.only(left:16, top:25,right:16),
         child: GestureDetector(

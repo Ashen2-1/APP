@@ -61,13 +61,12 @@ class _Signupteam_pageState extends State<Signupteam_page>
 
   Scaffold buildMainContent(BuildContext context) {
     return Scaffold(
-        appBar: buildAppBar(menuToggleExpansion,
+        appBar: AppBar(
+          
             title: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                IconButton(
-                    icon: const Icon(Icons.menu, color: tdBlack, size: 30),
-                    onPressed: menuToggleExpansion),
+                
                 const Text(
                   "Sign Up for Your Team!",
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
@@ -77,7 +76,7 @@ class _Signupteam_pageState extends State<Signupteam_page>
                   width: 50,
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(25),
-                    child: Image.asset("assets/images/avatar.jpeg"),
+                    //child: Image.asset("assets/images/avatar.jpeg"),
                   ),
                 ),
               ],
