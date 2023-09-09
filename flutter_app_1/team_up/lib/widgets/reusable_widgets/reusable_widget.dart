@@ -261,100 +261,42 @@ SizedBox textFieldTaskInfo(List<Map<String, dynamic>> allTaskMap,
                     "Due date:\n${Util.formatDateTime(allTaskMap[index]['due date'].toDate())}",
                     context,
                     false),
-                regularText(
-                    "Skills needed: ${allTaskMap[index]['skills needed']}",
-                    context,
-                    false),
-                const SizedBox(height: 5),
-                regularText("Task time: ${allTaskMap[index]['estimated time']}",
-                    context, false),
+
+                const SizedBox(height: 20),
+                // regularText(
+                //     "Skills needed: ${allTaskMap[index]['skills needed']}",
+                //     context,
+                //     false),
+                // const SizedBox(height: 5),
+                // regularText("Task time: ${allTaskMap[index]['estimated time']}",
+                //     context, false),
                 ////////////////////////////////////////////////new
 
-                ElevatedButton(
-                  onPressed: () {
-                    StudentData.setViewingTask(allTaskMap);
-                    StudentData.viewingIndex = index;
-                    StudentData.descriptionIncomingPage = incomingPage;
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                const TaskDescription_page()));
+                // ElevatedButton(
+                //   onPressed: () {
+                //     StudentData.setViewingTask(allTaskMap);
+                //     StudentData.viewingIndex = index;
+                //     StudentData.descriptionIncomingPage = incomingPage;
+                //     Navigator.push(
+                //         context,
+                //         MaterialPageRoute(
+                //             builder: (context) =>
+                //                 const TaskDescription_page()));
 
-                    ///TaskDescription_page
-                  },
-                  style: ElevatedButton.styleFrom(
-                    primary: Colors.blue,
-                  ),
-                  child: const Text("Description"),
-                ),
+                //     ///TaskDescription_page
+                //   },
+                //   style: ElevatedButton.styleFrom(
+                //     primary: Colors.blue,
+                //   ),
+                //   child: const Text("Description"),
+                // ),
                 //////////////////////////////////////// Task Descriptions
                 reusableSignUpTaskButton("Sign up for task", context, () {
-                  askConfirmation(context, allTaskMap[index]['task'])
-                      .then((confirmation) async {
-                    if (confirmation != null && confirmation) {
-                      if (allTaskMap[index]['machine needed'] != null &&
-                          await isMachineAvailable(
-                              allTaskMap[index]['machine needed'])) {
-                        displayError(
-                            "This machine is not available, can't sign up and work on it",
-                            context);
-                      } else {
-                        Util.logAttendance();
-                        //DatabaseAccess.getInstance().addToDatabase("Attendance", , data)
-                        FlutterLogs.logInfo("TASK FIELD", "Sign up button",
-                            "Adding ${allTaskMap[index]['task']}");
-                        Map<String, dynamic> taskToAdd = allTaskMap[index];
-                        taskToAdd['completer'] = StudentData.studentEmail;
-                        taskToAdd['completed'] = false;
-                        taskToAdd['approved'] = false;
-                        taskToAdd['feedback'] = "None";
-                        taskToAdd['complete percentage'] = "None";
-                        taskToAdd['finish time'] = Timestamp.fromDate(
-                            DateTime.now().add(Duration(
-                                minutes: Util.convertStringTimeToIntMinutes(
-                                    taskToAdd['estimated time']))));
-                        List<Map<String, dynamic>>? inDatabaseTasks =
-                            await DatabaseAccess.getInstance()
-                                .getAllTasks(StudentData.getQuerySubTeam());
-                        if (inDatabaseTasks!.isNotEmpty &&
-                            inDatabaseTasks.length > index) {
-                          List<Map<String, dynamic>> curTasks =
-                              await Util.combineTaskIntoExisting(
-                                  taskToAdd,
-                                  await DatabaseAccess.getInstance()
-                                      .getAllSignedUpTasks());
-                          DatabaseAccess.getInstance().addToDatabase(
-                              "student tasks",
-                              "signed up",
-                              {"tasks": curTasks});
-
-                          // Remove task from existing
-                          allTaskMap.removeAt(index);
-                          DatabaseAccess.getInstance().addToDatabase(
-                              "Tasks", subteam, {"tasks": allTaskMap});
-
-                          // Add machine to occupied database list
-                          if (taskToAdd['machine needed'] != null) {
-                            String machineOccupied =
-                                taskToAdd['machine needed'];
-                            DatabaseAccess.getInstance().addToDatabase(
-                                "Machines",
-                                "Occupied",
-                                {machineOccupied: StudentData.studentEmail});
-                          }
-
-                          StudentData.currentTask = taskToAdd;
-                          ConfigUtils.goToScreen(
-                              const CountdownPage(), context);
-                        } else {
-                          await displayError(
-                              "This task has all ready been taken", context);
-                        }
-                      }
-                    }
-                  });
-                })
+                  StudentData.setViewingTask(allTaskMap);
+                  StudentData.viewingIndex = index;
+                  StudentData.descriptionIncomingPage = incomingPage;
+                  ConfigUtils.goToScreen(const TaskDescription_page(), context);
+                }),
               ]),
               const SizedBox(width: 10.0), // For spacing
               if (allTaskMap[index]['image url'] != "None")
@@ -364,31 +306,35 @@ SizedBox textFieldTaskInfo(List<Map<String, dynamic>> allTaskMap,
   //////////////////////////////////////////////////////////////////////new
 }
 
-Future<SizedBox> studentTaskInfoWidget(
-    List<Map<String, dynamic>> studentTasksMap,
-    int index,
-    BuildContext context) async {
-  List<Map<String, dynamic>>? curTasksList =
-      await DatabaseAccess.getInstance().getAllSignedUpTasks();
+SizedBox studentTaskInfoWidget(List<Map<String, dynamic>> studentTasksMap,
+    int index, BuildContext context) {
+  // List<Map<String, dynamic>>? curTasksList =
+  //     await DatabaseAccess.getInstance().getAllSignedUpTasks();
 
-  Map<String, dynamic> curTask = curTasksList![index];
+  Map<String, dynamic> curTask = studentTasksMap[index];
+  FlutterLogs.logInfo("Error", "Test", curTask['task']);
   Color color = const Color.fromARGB(255, 193, 184, 184).withOpacity(0.3);
-  if (curTask['finish time'].seconds - Timestamp.now().seconds <= (30 * 60) &&
+  if (curTask['complete percentage'] == "100%") {
+    color = Color.fromARGB(255, 27, 239, 73).withOpacity(0.6);
+  } else if (curTask['finish time'] != null &&
+          curTask['finish time'].seconds - Timestamp.now().seconds <=
+              (30 * 60) &&
           curTask['finish time'].seconds - Timestamp.now().seconds > 0 ||
       curTask['due date'].seconds - Timestamp.now().seconds <=
               (1 * 24 * 60 * 60) &&
           curTask['due date'].seconds - Timestamp.now().seconds > 0) {
     color = const Color.fromARGB(255, 249, 94, 94).withOpacity(0.3);
-  } else if (curTask['complete percentage'] == "100%") {
-    color = Color.fromARGB(255, 27, 239, 73).withOpacity(0.6);
-  } else if (curTask['approved'] &&
-      (curTask['finish time'] == null ||
-          curTask['finish time'].seconds > Timestamp.now().seconds)) {
+  } else if (curTask['approved'] && curTask['finish time'] == null) {
     color = Color.fromARGB(255, 238, 200, 33).withOpacity(0.5);
   }
 
+  bool ableWorkTaskCondition = curTask['complete percentage'] != "100%" &&
+      (curTask['approved'] || !curTask['completed']) &&
+      (curTask['finish time'] == null ||
+          Timestamp.now().seconds < curTask['finish time'].seconds);
+
   return SizedBox(
-      height: 200.0,
+      height: ableWorkTaskCondition ? 225.0 : 175.0,
       width: MediaQuery.of(context).size.width,
       child: Container(
           height: 120.0,
@@ -408,16 +354,17 @@ Future<SizedBox> studentTaskInfoWidget(
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 regularText(curTask['task'], context, true),
                 const SizedBox(height: 3),
-                regularText(
-                    "Due date:\n${Util.formatDateTime(curTask['due date'].toDate())}",
-                    context,
-                    false),
+                if (curTask['finish time'] != null)
+                  regularText(
+                      "Due date:\n${Util.formatDateTime(curTask['finish time'].toDate())}",
+                      context,
+                      false),
                 const SizedBox(height: 10),
-                regularText("Skills needed: ${curTask['skills needed']}",
-                    context, false),
-                //const SizedBox(height: 3),
-                regularText(
-                    "Task time: ${curTask['estimated time']}", context, false),
+                // regularText("Skills needed: ${curTask['skills needed']}",
+                //     context, false),
+                // //const SizedBox(height: 3),
+                // regularText(
+                //     "Task time: ${curTask['estimated time']}", context, false),
                 if (curTask['approved'])
                   if (curTask['feedback'] != "None")
                     regularText(
@@ -453,11 +400,7 @@ Future<SizedBox> studentTaskInfoWidget(
                         "signed up", {'tasks': studentTasksMap});
                     ConfigUtils.goToScreen(const HomeScreen(), context);
                   }),
-                if (curTask['complete percentage'] != "100%" &&
-                    curTask['approved'] &&
-                    (curTask['finish time'] == null ||
-                        Timestamp.now().seconds <
-                            curTask['finish time'].seconds))
+                if (ableWorkTaskCondition)
                   reusableSignUpTaskButton("Work on this task", context,
                       () async {
                     // FlutterLogs.logInfo("Sign up task", "Machine available",

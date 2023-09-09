@@ -133,6 +133,9 @@ class _Enterteampasscode_pageState extends State<Enterteampasscode_page>
                   curStudentStats['team number'] =
                       StudentData.signingUpTeamNumber;
 
+                  curStudentStats['normal team'] =
+                      StudentData.signingUpTeamNumber;
+
                   DatabaseAccess.getInstance().addToDatabase("student tasks",
                       StudentData.studentEmail, curStudentStats);
 

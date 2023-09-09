@@ -152,6 +152,7 @@ class DatabaseAccess {
         }
       }
     }
+    FlutterLogs.logInfo("Hi", "ERROR", fieldResults.toString());
     return fieldResults;
   }
 
@@ -218,9 +219,11 @@ class DatabaseAccess {
         List<dynamic> listData = data['tasks'];
         for (Map<String, dynamic> mapData in listData) {
           if ((mapData['completed'] ||
-                  Timestamp.now().seconds > mapData['finish time'].seconds) &&
-              !mapData['approved'] &&
-              mapData['assigner'] == StudentData.studentEmail) {
+              (mapData['finish time'] != null &&
+                      Timestamp.now().seconds >
+                          mapData['finish time'].seconds) &&
+                  !mapData['approved'] &&
+                  mapData['assigner'] == StudentData.studentEmail)) {
             fieldResults.add(mapData);
           }
         }

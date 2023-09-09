@@ -27,11 +27,18 @@ class MyTeamPageState extends State<MyTeamPage> {
         builder: (context, studentTeamNumber) {
           if (!studentTeamNumber.hasData) {
             return Container();
-          } else if (studentTeamNumber.data == "") {
-            return const Jointeam_page();
-          } else {
-            return buildTeamList(context, studentTeamNumber.data);
           }
+          return FutureBuilder(
+              future: DatabaseAccess.getInstance().getField(
+                  "student tasks", StudentData.studentEmail, "normal team"),
+              builder: (context, normal_team) {
+                if (!normal_team.hasData) {
+                  return Container();
+                } else if (normal_team.data == "") {
+                  return const Jointeam_page();
+                }
+                return buildTeamList(context, studentTeamNumber.data);
+              });
         });
   }
 

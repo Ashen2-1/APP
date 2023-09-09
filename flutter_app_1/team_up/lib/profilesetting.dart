@@ -77,18 +77,39 @@ class _ProfilesettingpageState extends State<Profilesettingpage> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             //Text("Team#1360"),
+                            FutureBuilder(
+                              future: DatabaseAccess.getInstance().getField(
+                                  "student tasks",
+                                  StudentData.studentEmail,
+                                  "normal team"),
+                              builder: (context, snapshot) {
+                                if (snapshot.hasData && snapshot.data != "") {
+                                  return TextButton(
+                                      onPressed: () {
+                                        DatabaseAccess.getInstance()
+                                            .updateField(
+                                                "student tasks",
+                                                StudentData.studentEmail,
+                                                {"team number": snapshot.data});
+                                      },
+                                      child: Text(
+                                        "Team # ${snapshot.data}",
+                                        style: TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.w500),
+                                      ));
+                                }
+                                return Container();
+                              },
+                            ),
 
                             TextButton(
-                                onPressed: () {},
-                                child: Text(
-                                  "Team# 1360",
-                                  style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w500),
-                                )),
-
-                            TextButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  DatabaseAccess.getInstance().updateField(
+                                      "student tasks",
+                                      StudentData.studentEmail,
+                                      {"team number": "Public"});
+                                },
                                 child: Text(
                                   "Public Channel",
                                   style: TextStyle(
@@ -114,7 +135,7 @@ class _ProfilesettingpageState extends State<Profilesettingpage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "Current Team",
+                    "Change Current Team",
                     style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w500,

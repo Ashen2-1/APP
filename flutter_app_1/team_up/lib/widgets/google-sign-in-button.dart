@@ -29,10 +29,11 @@ class GoogleSignInButton {
                   .getDocumentByID("student tasks", user.email!) ==
               null) {
             await showStudentMentorPopUp(context, false);
-            DatabaseAccess.getInstance().addToDatabase(
-                "student tasks", user.email!, {
+            DatabaseAccess.getInstance()
+                .addToDatabase("student tasks", user.email!, {
               "isAdmin": StudentData.tempSignUpAdmin,
-              "team number": '',
+              "team number": 'Public',
+              "normal team": "",
               "email": user.email!
             });
           }
