@@ -23,4 +23,8 @@ class FirebaseAccess {
         "Firebase Data", "User Email", "Current Email is: ${user!.email}");
     return user.email!;
   }
+
+  void signOut() {
+    _auth.signOut();
+  }
 }

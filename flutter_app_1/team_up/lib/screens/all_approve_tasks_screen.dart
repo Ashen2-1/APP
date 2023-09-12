@@ -30,6 +30,7 @@ class _AllApproveTasksScreenState extends State<AllApproveTasksScreen> {
   Future<void> configure() async {
     studentTasksMap =
         await DatabaseAccess.getInstance().getMyAssignedStudentSubmissions();
+    ;
     FlutterLogs.logInfo(
         "My Tasks", "Add to ListView", "studentTasksMap: ${studentTasksMap}");
     setState(() {});
@@ -50,6 +51,7 @@ class _AllApproveTasksScreenState extends State<AllApproveTasksScreen> {
   Scaffold mainLayout() {
     return Scaffold(
       backgroundColor: tdBGColor,
+      appBar: AppBar(title: const Text("Approve tasks")),
       //appBar: buildAppBar(menuToggleExpansion),
       bottomNavigationBar: buildNavBar(context, 1),
       body: buildMainContent(),
@@ -57,45 +59,51 @@ class _AllApproveTasksScreenState extends State<AllApproveTasksScreen> {
   }
 
   Widget buildMainContent() {
-    return Column(
-      children: [
-        SizedBox(height: 66,),
-        
-        regularText("    Approving Tasks", context, true),
-        Expanded(
-            child: ListView.builder(
-                itemCount: studentTasksMap!.length,
-                itemBuilder: (context, index) {
-                  return Container(
-                      margin: const EdgeInsets.all(10.0),
-                      padding: const EdgeInsets.all(12.0),
-                      decoration: BoxDecoration(
-                          color: Color.fromARGB(255, 177, 167, 167)
-                              .withOpacity(0.3),
-                          borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(10),
-                              topRight: Radius.circular(10),
-                              bottomLeft: Radius.circular(10),
-                              bottomRight: Radius.circular(10))),
-                      child: Row(children: [
-                        Column(children: [
-                          regularText(
-                              studentTasksMap![index]['task'], context, true),
-                          reusableSignUpTaskButton("APPROVE this task", context,
-                              () {
-                            StudentData.approvalTask = studentTasksMap![index];
-                            ConfigUtils.goToScreen(
-                                const Approve_page(), context);
-                          })
-                        ]),
-                        // if (imageURL[index] != "None")
-                        //   Expanded(child: Image.network(imageURL[index]))
-                      ]));
-                })),
-        reusableButton("Update tasks to approve", context, () async {
-          configure();
-        }),
-      ],
-    );
+    return Column(children: [
+      FutureBuilder(
+          future:
+              DatabaseAccess.getInstance().getMyAssignedStudentSubmissions(),
+          builder: (context, submissions) {
+            if (!submissions.hasData) {
+              return Container();
+            }
+            studentTasksMap = submissions.data;
+            return Expanded(
+              child: ListView.builder(
+                  itemCount: studentTasksMap!.length,
+                  itemBuilder: (context, index) {
+                    return Container(
+                        margin: const EdgeInsets.all(10.0),
+                        padding: const EdgeInsets.all(12.0),
+                        decoration: BoxDecoration(
+                            color: Color.fromARGB(255, 177, 167, 167)
+                                .withOpacity(0.3),
+                            borderRadius: const BorderRadius.only(
+                                topLeft: Radius.circular(10),
+                                topRight: Radius.circular(10),
+                                bottomLeft: Radius.circular(10),
+                                bottomRight: Radius.circular(10))),
+                        child: Row(children: [
+                          Column(children: [
+                            regularText(
+                                studentTasksMap![index]['task'], context, true),
+                            reusableSignUpTaskButton(
+                                "APPROVE this task", context, () {
+                              StudentData.approvalTask =
+                                  studentTasksMap![index];
+                              ConfigUtils.goToScreen(
+                                  const Approve_page(), context);
+                            })
+                          ]),
+                          // if (imageURL[index] != "None")
+                          //   Expanded(child: Image.network(imageURL[index]))
+                        ]));
+                  }),
+            );
+          }),
+      reusableButton("Update tasks to approve", context, () async {
+        configure();
+      })
+    ]);
   }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:team_up/constants/student_data.dart';
 import 'package:team_up/screens/add_tasks_screen.dart';
 import 'package:team_up/screens/all_approve_tasks_screen.dart';
+import 'package:team_up/screens/unassigned_tasks_page.dart';
 
 import '../utils/configuration_util.dart';
 import '../widgets/nav_bar.dart';
@@ -43,23 +44,33 @@ class TasksPageState extends State<TasksPage> {
                           return Container();
                         } else {
                           if (isAdmin.data!) {
-                            return Row(children: [
-                              const SizedBox(width: 10),
+                            return Column(children: [
+                              Row(children: [
+                                const SizedBox(width: 10),
+                                createClickableIcon(
+                                    const Icon(Icons.add_box_outlined,
+                                        color: Colors.white, size: 30),
+                                    const Color(0xFFFFCF2F), () {
+                                  ConfigUtils.goToScreen(
+                                      const AddTasksScreen(), context);
+                                }, "Add a task!"),
+                                const SizedBox(width: 20),
+                                createClickableIcon(
+                                    const Icon(Icons.check,
+                                        color: Colors.white, size: 30),
+                                    const Color(0xFF61BDFD), () {
+                                  ConfigUtils.goToScreen(
+                                      const AllApproveTasksScreen(), context);
+                                }, "Approve tasks")
+                              ]),
+                              const SizedBox(height: 20),
                               createClickableIcon(
-                                  const Icon(Icons.add_box_outlined,
-                                      color: Colors.white, size: 30),
-                                  const Color(0xFFFFCF2F), () {
+                                  Icon(Icons.assignment_late_outlined),
+                                  Color.fromARGB(255, 245, 80, 39)
+                                      .withOpacity(0.3), () {
                                 ConfigUtils.goToScreen(
-                                    const AddTasksScreen(), context);
-                              }, "Add a task!"),
-                              const SizedBox(width: 20),
-                              createClickableIcon(
-                                  const Icon(Icons.check,
-                                      color: Colors.white, size: 30),
-                                  const Color(0xFF61BDFD), () {
-                                ConfigUtils.goToScreen(
-                                    const AllApproveTasksScreen(), context);
-                              }, "Approve tasks")
+                                    const UnassignedTasksPage(), context);
+                              }, "Unassigned Tasks")
                             ]);
                           } else {
                             return Container();

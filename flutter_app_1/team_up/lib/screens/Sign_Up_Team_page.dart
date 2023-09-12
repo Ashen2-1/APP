@@ -11,6 +11,7 @@ import 'package:team_up/services/firebase_access.dart';
 import 'package:team_up/utils/configuration_util.dart';
 
 import '../services/file_uploader.dart';
+import '../services/internet_connection.dart';
 import '../widgets/reusable_widgets/reusable_widget.dart';
 import '../widgets/round-button2.dart';
 import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
@@ -62,11 +63,9 @@ class _Signupteam_pageState extends State<Signupteam_page>
   Scaffold buildMainContent(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          
             title: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                
                 const Text(
                   "Sign Up for Your Team!",
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
@@ -81,8 +80,10 @@ class _Signupteam_pageState extends State<Signupteam_page>
                 ),
               ],
             ),
-            backgroundColor: Color.fromARGB(231, 197, 200, 198)),///
-        backgroundColor: Color.fromARGB(255, 91, 131, 171),////
+            backgroundColor: Color.fromARGB(231, 197, 200, 198)),
+
+        ///
+        backgroundColor: Color.fromARGB(255, 91, 131, 171), ////
         body: SingleChildScrollView(
           child: Container(
             child: Column(
@@ -156,6 +157,10 @@ class _Signupteam_pageState extends State<Signupteam_page>
                             .getField("Teams", "general", "create_passcode")) {
                       displayError(
                           "The creation team passcode is incorrect", context);
+                    } else if (!(await connectedToInternet())) {
+                      displayError(
+                          "Please connect to the internet and try again",
+                          context);
                     } else {
                       // Team doesn't exist, passcode right, add to database
                       Map<String, dynamic> teamToAdd = {

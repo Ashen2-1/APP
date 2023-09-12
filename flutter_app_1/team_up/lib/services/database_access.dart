@@ -3,6 +3,9 @@ import 'package:flutter_logs/flutter_logs.dart';
 import 'package:team_up/constants/student_data.dart';
 import 'package:team_up/utils/util.dart';
 
+import '../widgets/reusable_widgets/reusable_widget.dart';
+import 'internet_connection.dart';
+
 class DatabaseAccess {
   static DatabaseAccess? _instance;
   FirebaseFirestore db = FirebaseFirestore.instance;
@@ -169,11 +172,43 @@ class DatabaseAccess {
       for (Map<String, dynamic> mapData in results) {
         if (mapData['team number'] ==
             await StudentData.getStudentTeamNumber()) {
-          fieldResults.add(mapData);
+          if (mapData['due date'].seconds > Timestamp.now().seconds) {
+            fieldResults.add(mapData);
+          } else {
+            // Remove overdue tasks
+            List<Map<String, dynamic>> copy = [];
+            for (Map<String, dynamic> map in results) {
+              copy.add(map);
+            }
+            copy.removeWhere((element) => element == mapData);
+            DatabaseAccess.getInstance()
+                .addToDatabase("Tasks", subteam, {'tasks': copy});
+            List<dynamic> databaseGet = await DatabaseAccess.getInstance()
+                .getField("Tasks", "outstanding", "tasks");
+            mapData['subteam'] = subteam;
+            List<Map<String, dynamic>> res = Util.combineTaskIntoExisting(
+                mapData, databaseGet.cast<Map<String, dynamic>>());
+            DatabaseAccess.getInstance()
+                .addToDatabase("Tasks", "outstanding", {"tasks": res});
+          }
         }
       }
     }
     return fieldResults;
+  }
+
+  Future<List<Map<String, dynamic>>> getUnassignedTasks() async {
+    List<dynamic> unassigned = await DatabaseAccess.getInstance()
+        .getField("Tasks", "outstanding", "tasks");
+
+    List<Map<String, dynamic>> res = [];
+    for (Map<String, dynamic> map in unassigned.cast<Map<String, dynamic>>()) {
+      if (map['assigner'] == StudentData.studentEmail) {
+        res.add(map);
+      }
+    }
+
+    return res;
   }
 
   Future<int> getNumberOfSubteamTasks(String subteam) async {
@@ -188,7 +223,8 @@ class DatabaseAccess {
         List<dynamic> listData = data['tasks'];
         for (Map<String, dynamic> mapData in listData) {
           if (mapData['team number'] ==
-              await StudentData.getStudentTeamNumber()) {
+                  await StudentData.getStudentTeamNumber() &&
+              mapData['due date'].seconds > Timestamp.now().seconds) {
             taskCounter += 1;
           }
         }

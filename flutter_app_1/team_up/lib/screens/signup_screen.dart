@@ -9,6 +9,8 @@ import 'package:team_up/widgets/reusable_widgets/reusable_widget.dart';
 import 'package:team_up/screens/add_tasks_screen.dart';
 import 'package:team_up/utils/color_utils.dart';
 
+import '../services/internet_connection.dart';
+
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
 
@@ -54,7 +56,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 const SizedBox(
                   height: 20,
                 ),
-                reusableTextField("Enter Email Id", Icons.person_outline, false,
+                reusableTextField("Enter Email", Icons.person_outline, false,
                     _emailTextController),
                 const SizedBox(
                   height: 20,
@@ -64,28 +66,36 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 const SizedBox(
                   height: 20,
                 ),
-                signInSignUpButton(context, false, () {
-                  FirebaseAuth.instance
-                      .createUserWithEmailAndPassword(
-                          email: _emailTextController.text,
-                          password: _passwordTextController.text)
-                      .then((value) {
-                    print("Created New Account");
+                signInSignUpButton(context, false, () async {
+                  if (!(await connectedToInternet())) {
+                    displayError(
+                        "You are not connected to the Internet", context);
+                  } else {
+                    FirebaseAuth.instance
+                        .createUserWithEmailAndPassword(
+                            email: _emailTextController.text,
+                            password: _passwordTextController.text)
+                        .then((value) {
+                      print("Created New Account");
 
-                    DatabaseAccess.getInstance().addToDatabase(
-                        "student tasks", _emailTextController.text, {
-                      "isAdmin": StudentData.tempSignUpAdmin,
-                      "team number": 'Public',
-                      "normal team": "",
-                      'email': _emailTextController.text,
+                      DatabaseAccess.getInstance().addToDatabase(
+                          "student tasks", _emailTextController.text, {
+                        "isAdmin": StudentData.tempSignUpAdmin,
+                        "team number": 'Public',
+                        "normal team": "",
+                        'email': _emailTextController.text,
+                        'username': _userNameTextController.text,
+                      });
+
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => HomeScreen()));
+                    }).onError((error, stackTrace) {
+                      displayError(error!, context);
+                      print("Error ${error.toString()}");
                     });
-
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => HomeScreen()));
-                  }).onError((error, stackTrace) {
-                    displayError(error!, context);
-                    print("Error ${error.toString()}");
-                  });
+                  }
                 })
               ],
             ),

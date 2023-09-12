@@ -11,6 +11,7 @@ import 'package:team_up/utils/util.dart';
 import 'package:team_up/widgets/nav_bar.dart';
 import '../constants/student_data.dart';
 import '../services/file_uploader.dart';
+import '../services/internet_connection.dart';
 import '../utils/fonts.dart';
 import '../widgets/reusable_widgets/reusable_widget.dart';
 import '../widgets/round-button2.dart';
@@ -165,12 +166,15 @@ class _TaskDescription_pageState extends State<TaskDescription_page> {
                     if (StudentData.allViewingTask![StudentData.viewingIndex!]
                                 ['machine needed'] !=
                             null &&
-                        await isMachineAvailable(StudentData
+                        !(await isMachineAvailable(StudentData
                                 .allViewingTask![StudentData.viewingIndex!]
-                            ['machine needed'])) {
+                            ['machine needed']))) {
                       displayError(
                           "This machine is not available, can't sign up and work on it",
                           context);
+                    } else if (!(await connectedToInternet())) {
+                      displayError(
+                          "You are not connected to the Internet", context);
                     } else {
                       Util.logAttendance();
                       //DatabaseAccess.getInstance().addToDatabase("Attendance", , data)
@@ -187,6 +191,7 @@ class _TaskDescription_pageState extends State<TaskDescription_page> {
                           DateTime.now().add(Duration(
                               minutes: Util.convertStringTimeToIntMinutes(
                                   taskToAdd['estimated time']))));
+                      taskToAdd['due date'] = taskToAdd['finish time'];
                       List<Map<String, dynamic>>? inDatabaseTasks =
                           await DatabaseAccess.getInstance()
                               .getAllTasks(StudentData.getQuerySubTeam());
@@ -211,10 +216,13 @@ class _TaskDescription_pageState extends State<TaskDescription_page> {
                         // Add machine to occupied database list
                         if (taskToAdd['machine needed'] != null) {
                           String machineOccupied = taskToAdd['machine needed'];
-                          DatabaseAccess.getInstance().addToDatabase(
-                              "Machines",
-                              "Occupied",
-                              {machineOccupied: StudentData.studentEmail});
+                          DatabaseAccess.getInstance()
+                              .addToDatabase("Machines", "Occupied", {
+                            machineOccupied: [
+                              StudentData.studentEmail,
+                              taskToAdd['due date']
+                            ]
+                          });
                         }
 
                         StudentData.currentTask = taskToAdd;

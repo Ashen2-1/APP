@@ -105,7 +105,7 @@ class MyTeamPageState extends State<MyTeamPage> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => DetailPage(index)));
+                              builder: (context) => const DetailPage()));
                     },
                   );
                 },

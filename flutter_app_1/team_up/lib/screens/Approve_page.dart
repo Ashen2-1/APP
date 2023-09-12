@@ -7,6 +7,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:team_up/constants/student_data.dart';
 
 import 'package:team_up/screens/Feedback_page.dart';
+import 'package:team_up/screens/all_approve_tasks_screen.dart';
 import 'package:team_up/screens/home_screen.dart';
 import 'package:team_up/screens/page_navigation_screen.dart';
 import 'package:team_up/screens/web_view_page.dart';
@@ -14,6 +15,7 @@ import 'package:team_up/widgets/nav_bar.dart';
 
 import '../constants/colors.dart';
 import '../services/database_access.dart';
+import '../services/internet_connection.dart';
 import '../utils/configuration_util.dart';
 import '../utils/fonts.dart';
 import '../utils/util.dart';
@@ -58,7 +60,8 @@ class _Approve_pageState extends State<Approve_page>
   Scaffold mainLayout(BuildContext context) {
     return Scaffold(
       backgroundColor: tdBGColor,
-      appBar: buildAppBar(menuToggleExpansion),
+      appBar: AppBar(title: const Text("Approving task")),
+      //appBar: buildAppBar(menuToggleExpansion),
       body: buildMainContent(context),
       bottomNavigationBar: buildNavBar(context, 1),
     );
@@ -71,6 +74,7 @@ class _Approve_pageState extends State<Approve_page>
         body: SingleChildScrollView(
           child: Column(
             children: [
+              const SizedBox(height: 20),
               Text("Approving task: ${StudentData.approvalTask!['task']}",
                   style: defaultFont),
               const SizedBox(height: 20),
@@ -145,24 +149,30 @@ class _Approve_pageState extends State<Approve_page>
 
                     GestureDetector(
                       onTap: () async {
-                        Map<String, dynamic> existingTaskData =
-                            StudentData.getApprovalTask()!;
+                        if (!(await connectedToInternet())) {
+                          displayError(
+                              "You are not connected to the Internet", context);
+                        } else {
+                          Map<String, dynamic> existingTaskData =
+                              StudentData.getApprovalTask()!;
 
-                        existingTaskData['complete percentage'] = "100%";
-                        existingTaskData['feedback'] = "None";
-                        existingTaskData['approved'] = true;
+                          existingTaskData['complete percentage'] = "100%";
+                          existingTaskData['feedback'] = "None";
+                          existingTaskData['approved'] = true;
 
-                        List<Map<String, dynamic>> tasks =
-                            Util.matchAndCombineExisting(
-                                existingTaskData,
-                                await DatabaseAccess.getInstance()
-                                    .getAllSignedUpTasks());
-                        DatabaseAccess.getInstance().addToDatabase(
-                            "student tasks", 'signed up', {"tasks": tasks});
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const HomeScreen()));
+                          List<Map<String, dynamic>> tasks =
+                              Util.matchAndCombineExisting(
+                                  existingTaskData,
+                                  await DatabaseAccess.getInstance()
+                                      .getAllSignedUpTasks());
+                          DatabaseAccess.getInstance().addToDatabase(
+                              "student tasks", 'signed up', {"tasks": tasks});
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const AllApproveTasksScreen()));
+                        }
                       },
                       child: const RoundButton(
                         icon: Icons.check,

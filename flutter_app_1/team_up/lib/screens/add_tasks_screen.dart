@@ -7,6 +7,7 @@ import 'package:team_up/screens/home_screen.dart';
 import 'package:team_up/screens/page_navigation_screen.dart';
 import 'package:team_up/screens/student_progress_screen.dart';
 import 'package:team_up/services/file_uploader.dart';
+import 'package:team_up/services/internet_connection.dart';
 import 'package:team_up/utils/configuration_util.dart';
 import 'package:team_up/utils/util.dart';
 import 'package:team_up/widgets/nav_bar.dart';
@@ -33,8 +34,6 @@ class _AddTasksScreenState extends State<AddTasksScreen> {
       TextEditingController();
   final TextEditingController _taskdescriptionTextController =
       TextEditingController();
-
-  final TextEditingController _submissionController = TextEditingController();
 
   bool _isExpanded = false;
 
@@ -119,9 +118,8 @@ class _AddTasksScreenState extends State<AddTasksScreen> {
     return Scaffold(
       backgroundColor: tdBGColor,
       appBar: AppBar(
-          title: const Text("Add a task"),
-        ),
-
+        title: const Text("Add a task"),
+      ),
       bottomNavigationBar: buildNavBar(context, 1),
       body: buildMainContent(),
     );
@@ -159,8 +157,7 @@ class _AddTasksScreenState extends State<AddTasksScreen> {
         //     ),
         //   ),
         // ),
-        
-        
+
         const SizedBox(height: 28.0),
         Container(
           decoration: BoxDecoration(
@@ -293,51 +290,54 @@ class _AddTasksScreenState extends State<AddTasksScreen> {
         }),
         if (fileInitialized && file != null) Image.file(file!),
         reusableButton("ADD TO DATABASE", context, () async {
-          String imageURL = "None";
-          if (file != null) {
-            TaskSnapshot imageSnapshot = await FileUploader.getInstance()
-                .addFileToFirebaseStorage(file!);
-            imageURL = await imageSnapshot.ref.getDownloadURL();
-            FlutterLogs.logInfo(
-                "Add to Database", "Upload image", "Image URL: $imageURL");
-          }
-          if (subteam != 'Select a subteam' &&
-              time != 'Select a time for task' &&
-              (subteam != "Build" ||
-                  machineUsed != "What equipment is used?") &&
-              level != "Select a level") {
-            Map<String, dynamic> taskToAdd = {
-              "task": _taskTextController.text,
-              ///////////////////////////////////new
-              "description": _taskdescriptionTextController.text,
-              //////////////////////////////////// task description
-              "estimated time": time,
-              "due date": day,
-              "skills needed": _skillsRequiredController.text,
-              "image url": imageURL,
-              'assigner': StudentData.studentEmail,
-              'feedback': "None",
-              'complete percentage': "None",
-              'level': level,
-              'team number': await StudentData.getStudentTeamNumber(),
-            };
-
-            if (machineUsed != "What equipment is used?") {
-              taskToAdd['machine needed'] = machineUsed;
-            }
-            List<Map<String, dynamic>> curTasks =
-                await Util.combineTaskIntoExisting(taskToAdd,
-                    await DatabaseAccess.getInstance().getAllTasks(subteam));
-
-            DatabaseAccess.getInstance()
-                .addToDatabase("Tasks", subteam, {"tasks": curTasks});
-            clearFields();
-            _submissionController.text = "Submitted!";
+          if (!(await connectedToInternet())) {
+            displayError("You are not connected to the Internet", context);
           } else {
-            displayError("A field was not filled out", context);
+            String imageURL = "None";
+            if (file != null) {
+              TaskSnapshot imageSnapshot = await FileUploader.getInstance()
+                  .addFileToFirebaseStorage(file!);
+              imageURL = await imageSnapshot.ref.getDownloadURL();
+              FlutterLogs.logInfo(
+                  "Add to Database", "Upload image", "Image URL: $imageURL");
+            }
+            if (subteam != 'Select a subteam' &&
+                time != 'Select a time for task' &&
+                (subteam != "Build" ||
+                    machineUsed != "What equipment is used?") &&
+                level != "Select a level") {
+              Map<String, dynamic> taskToAdd = {
+                "task": _taskTextController.text,
+                ///////////////////////////////////new
+                "description": _taskdescriptionTextController.text,
+                //////////////////////////////////// task description
+                "estimated time": time,
+                "due date": day,
+                "skills needed": _skillsRequiredController.text,
+                "image url": imageURL,
+                'assigner': StudentData.studentEmail,
+                'feedback': "None",
+                'complete percentage': "None",
+                'level': level,
+                'team number': await StudentData.getStudentTeamNumber(),
+              };
+
+              if (machineUsed != "What equipment is used?") {
+                taskToAdd['machine needed'] = machineUsed;
+              }
+              List<Map<String, dynamic>> curTasks =
+                  await Util.combineTaskIntoExisting(taskToAdd,
+                      await DatabaseAccess.getInstance().getAllTasks(subteam));
+
+              DatabaseAccess.getInstance()
+                  .addToDatabase("Tasks", subteam, {"tasks": curTasks});
+              clearFields();
+              displayAlert("Successfully submitted!", context);
+            } else {
+              displayError("A field was not filled out", context);
+            }
           }
         }),
-        reusableTextFieldRegular("", _submissionController, true),
       ],
     ));
   }

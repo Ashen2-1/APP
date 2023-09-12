@@ -60,23 +60,22 @@ class _StudentTasksScreenState extends State<StudentTasksScreen> {
   Widget buildMainContent() {
     return Column(
       children: [
-        if (studentTasksMap != null)
-          Expanded(
-              child: ListView.builder(
-            itemCount: studentTasksMap!.length,
-            itemBuilder: (context, index) {
-              return studentTaskInfoWidget(studentTasksMap!, index, context);
-              // FutureBuilder(
-              //     future:
-              //studentTaskInfoWidget(studentTasksMap!, index, context),
-              // //builder: (context, widget) {
-              //   whiel (!widget.hasData) {
-              //     return Container();
-              //   }
-              //   return widget.data!;
-              // });
-            },
-          )),
+        FutureBuilder(
+            future: DatabaseAccess.getInstance().getStudentTasks(),
+            builder: (context, studentTasks) {
+              if (!studentTasks.hasData) {
+                return Container();
+              }
+              studentTasksMap = studentTasks.data;
+              return Expanded(
+                  child: ListView.builder(
+                itemCount: studentTasksMap!.length,
+                itemBuilder: (context, index) {
+                  return studentTaskInfoWidget(
+                      studentTasksMap!, index, context);
+                },
+              ));
+            }),
         reusableButton("Update my tasks", context, () async {
           configure();
         }),

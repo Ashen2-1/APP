@@ -4,7 +4,9 @@ import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:team_up/constants/student_data.dart';
 import 'package:team_up/screens/Sign_Up_Team_page.dart';
 import 'package:team_up/services/database_access.dart';
+import 'package:team_up/services/internet_connection.dart';
 import 'package:team_up/widgets/nav_bar.dart';
+import 'package:team_up/widgets/reusable_widgets/reusable_widget.dart';
 
 class Profilesettingpage extends StatefulWidget {
   const Profilesettingpage({super.key});
@@ -85,12 +87,18 @@ class _ProfilesettingpageState extends State<Profilesettingpage> {
                               builder: (context, snapshot) {
                                 if (snapshot.hasData && snapshot.data != "") {
                                   return TextButton(
-                                      onPressed: () {
-                                        DatabaseAccess.getInstance()
-                                            .updateField(
-                                                "student tasks",
-                                                StudentData.studentEmail,
-                                                {"team number": snapshot.data});
+                                      onPressed: () async {
+                                        if (!(await connectedToInternet())) {
+                                          displayError(
+                                              "Please connect to the internet and try again",
+                                              context);
+                                        } else {
+                                          DatabaseAccess.getInstance()
+                                              .updateField("student tasks",
+                                                  StudentData.studentEmail, {
+                                            "team number": snapshot.data
+                                          });
+                                        }
                                       },
                                       child: Text(
                                         "Team # ${snapshot.data}",
@@ -104,11 +112,17 @@ class _ProfilesettingpageState extends State<Profilesettingpage> {
                             ),
 
                             TextButton(
-                                onPressed: () {
-                                  DatabaseAccess.getInstance().updateField(
-                                      "student tasks",
-                                      StudentData.studentEmail,
-                                      {"team number": "Public"});
+                                onPressed: () async {
+                                  if (!(await connectedToInternet())) {
+                                    displayError(
+                                        "Please connect to the internet and try again",
+                                        context);
+                                  } else {
+                                    DatabaseAccess.getInstance().updateField(
+                                        "student tasks",
+                                        StudentData.studentEmail,
+                                        {"team number": "Public"});
+                                  }
                                 },
                                 child: Text(
                                   "Public Channel",
@@ -211,7 +225,7 @@ class _ProfilesettingpageState extends State<Profilesettingpage> {
                               ),
                             ),
                             SizedBox(height: 5),
-                            Text("Tom Li and Lawrence Zou",
+                            Text("Changxian Li and Lawrence Zou",
                                 style: TextStyle(
                                   fontSize: 15,
                                   fontWeight: FontWeight.w500,

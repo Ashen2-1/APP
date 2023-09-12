@@ -31,7 +31,7 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
     for (String student in await getAttendanceForDay(day)) {
       FlutterLogs.logInfo("Attendance", "curent student", student);
       if (StudentData.viewingOwnAttendance) {
-        if (student == StudentData.studentEmail) {
+        if (student == StudentData.viewingUserEmail) {
           attendance += "Present on this day";
         }
       } else {

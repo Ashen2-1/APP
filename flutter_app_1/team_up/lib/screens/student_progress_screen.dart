@@ -62,7 +62,8 @@ class _StudentProgressScreenState extends State<StudentProgressScreen> {
 
   Scaffold mainLayout() {
     return Scaffold(
-        appBar: buildAppBar(menuToggleExpansion),
+        //appBar: buildAppBar(menuToggleExpansion),
+        appBar: AppBar(title: const Text("Search for tasks")),
         bottomNavigationBar: buildNavBar(context, 1),
         body: buildMainContent() //ConfigUtils.configForNavMenu(
         //buildMainContent, _isExpanded, context))
@@ -73,6 +74,7 @@ class _StudentProgressScreenState extends State<StudentProgressScreen> {
     FlutterLogs.logInfo("Student Progress Screen", "Query Subteam",
         "Current: ${StudentData.getQuerySubTeam()}");
     return Column(children: [
+      const SizedBox(height: 20),
       const Text("Available time (inclusive): "),
       ListTile(
         title: const Text('20 minutes or less'),

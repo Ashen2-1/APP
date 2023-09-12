@@ -7,13 +7,10 @@ import 'package:team_up/constants/student_data.dart';
 import 'package:team_up/profilesetting.dart';
 import 'package:team_up/screens/home_screen.dart';
 import 'package:team_up/services/database_access.dart';
+import 'package:team_up/services/internet_connection.dart';
 import 'package:team_up/utils/configuration_util.dart';
 import 'package:team_up/widgets/nav_bar.dart';
 import 'package:team_up/widgets/reusable_widgets/reusable_widget.dart';
-
-void main() async {
-  runApp(ProfilePage());
-}
 
 class ProfilePage extends StatelessWidget {
   @override
@@ -168,13 +165,19 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: OutlinedButton(
                         ///////////////save the date to the firebase
-                        onPressed: () {
-                          DatabaseAccess.getInstance().updateField(
-                              "student tasks", StudentData.studentEmail, {
-                            "username": username_controller.text,
-                            "description": description_controller.text
-                          });
-                          ConfigUtils.goToScreen(const HomeScreen(), context);
+                        onPressed: () async {
+                          if (!(await connectedToInternet())) {
+                            displayError(
+                                "Please connect to the internet and try again",
+                                context);
+                          } else {
+                            DatabaseAccess.getInstance().updateField(
+                                "student tasks", StudentData.studentEmail, {
+                              "username": username_controller.text,
+                              "description": description_controller.text
+                            });
+                            ConfigUtils.goToScreen(const HomeScreen(), context);
+                          }
                         },
                         child: const Text(
                           "SAVE",

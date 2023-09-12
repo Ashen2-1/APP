@@ -15,6 +15,7 @@ import 'package:team_up/widgets/reusable_widgets/reusable_widget.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:team_up/screens/home_screen.dart';
 import '../services/file_uploader.dart';
+import '../services/internet_connection.dart';
 import '../widgets/round-button.dart';
 import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'dart:io';
@@ -47,25 +48,33 @@ class _CountdownPageState extends State<CountdownPage>
   double progress = 1.0;
 
   Future<void> submit(String fileURL) async {
-    Map<String, dynamic> taskToAdd = StudentData.currentTask!;
-    taskToAdd['completed'] = true;
-    taskToAdd['submit file url'] = fileURL;
-    taskToAdd['approved'] = false;
+    if (!(await connectedToInternet())) {
+      await displayError(
+          "You are not connected to the Internet, connect and press ok to try again",
+          context);
+      submit(fileURL);
+    } else {
+      Map<String, dynamic> taskToAdd = StudentData.currentTask!;
+      taskToAdd['completed'] = true;
+      taskToAdd['submit file url'] = fileURL;
+      taskToAdd['approved'] = false;
 
-    List<Map<String, dynamic>> curPendingTasks = Util.matchAndCombineExisting(
-        taskToAdd, await DatabaseAccess.getInstance().getAllSignedUpTasks());
+      List<Map<String, dynamic>> curPendingTasks = Util.matchAndCombineExisting(
+          taskToAdd, await DatabaseAccess.getInstance().getAllSignedUpTasks());
 
-    DatabaseAccess.getInstance().addToDatabase(
-        "student tasks", 'signed up', {'tasks': curPendingTasks});
+      DatabaseAccess.getInstance().addToDatabase(
+          "student tasks", 'signed up', {'tasks': curPendingTasks});
 
-    if (taskToAdd['machine needed'] != null) {
-      DatabaseAccess.getInstance().updateField(
-          "Machines", "Occupied", {taskToAdd['machine needed']: ""});
+      if (taskToAdd['machine needed'] != null) {
+        DatabaseAccess.getInstance().updateField(
+            "Machines", "Occupied", {taskToAdd['machine needed']: ""});
+      }
+
+      FlutterLogs.logInfo(
+          "Student task", "Submission", "Successfully submitted");
+
+      ConfigUtils.goToScreen(HomeScreen(), context);
     }
-
-    FlutterLogs.logInfo("Student task", "Submission", "Successfully submitted");
-
-    ConfigUtils.goToScreen(HomeScreen(), context);
   }
 
   void notify() async {
@@ -124,7 +133,8 @@ class _CountdownPageState extends State<CountdownPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: buildAppBar(menuToggleExpansion),
+      //appBar: buildAppBar(menuToggleExpansion),
+      appBar: AppBar(title: const Text("Work Countdown")),
       bottomNavigationBar: buildNavBar(context, 1),
       backgroundColor: Color(0xfff5fbff),
       body: Column(

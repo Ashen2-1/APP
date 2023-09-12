@@ -29,9 +29,8 @@ class Util {
     return false;
   }
 
-  static Future<List<Map<String, dynamic>>> combineTaskIntoExisting(
-      Map<String, dynamic> taskToAdd,
-      List<Map<String, dynamic>>? prevTasks) async {
+  static List<Map<String, dynamic>> combineTaskIntoExisting(
+      Map<String, dynamic> taskToAdd, List<Map<String, dynamic>>? prevTasks) {
     FlutterLogs.logInfo("print prev tasks", " ", "$prevTasks");
     if (prevTasks == null || prevTasks.isEmpty)
       prevTasks = [taskToAdd];

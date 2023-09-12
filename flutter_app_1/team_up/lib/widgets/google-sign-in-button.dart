@@ -7,6 +7,8 @@ import 'package:team_up/utils/google_sign_in_auth.dart';
 
 import '../constants/student_data.dart';
 import '../services/database_access.dart';
+import '../services/internet_connection.dart';
+import 'reusable_widgets/reusable_widget.dart';
 import 'student-mentor_popup.dart';
 
 class GoogleSignInButton {
@@ -25,7 +27,9 @@ class GoogleSignInButton {
 
         if (user != null && user.email != null) {
           FlutterLogs.logInfo("Google User Sign in", "User Email", user.email!);
-          if (await DatabaseAccess.getInstance()
+          if (!(await connectedToInternet())) {
+            displayError("You are not connected to the Internet", context);
+          } else if (await DatabaseAccess.getInstance()
                   .getDocumentByID("student tasks", user.email!) ==
               null) {
             await showStudentMentorPopUp(context, false);
@@ -37,6 +41,7 @@ class GoogleSignInButton {
               "email": user.email!
             });
           }
+          StudentData.studentEmail = user.email!;
           ConfigUtils.goToScreen(HomeScreen(), context);
         }
       },

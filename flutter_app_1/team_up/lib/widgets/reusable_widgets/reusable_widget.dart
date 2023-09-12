@@ -9,12 +9,14 @@ import 'package:team_up/screens/all_approve_tasks_screen.dart';
 import 'package:team_up/screens/countdown-page.dart';
 import 'package:team_up/screens/home_screen.dart';
 import 'package:team_up/screens/page_navigation_screen.dart';
+import 'package:team_up/screens/student_tasks_screen.dart';
 import 'package:team_up/services/database_access.dart';
 import 'package:team_up/utils/configuration_util.dart';
 import 'package:team_up/utils/util.dart';
 import 'package:team_up/widgets/widgets.dart';
 
 import '../../screens/TaskDescription_page.dart';
+import '../../services/internet_connection.dart';
 
 Image logoWidget(String imageName) {
   return Image.asset(
@@ -126,23 +128,25 @@ Widget createClickableIcon(
           color: iconColor,
           shape: BoxShape.circle,
         ),
-        child: Center(
-          child: icon,
-        ),
+        child: Center(child: icon),
+        //),
       ),
     ),
     const SizedBox(
       height: 10,
     ),
-    Text(
-      //sub textsa colors
-      text,
-      style: TextStyle(
-        fontSize: 16,
-        fontWeight: FontWeight.w500,
-        color: Colors.black.withOpacity(0.7),
-      ),
-    )
+    Align(
+        alignment: Alignment.topLeft, //Center(
+        //child:
+        child: Text(
+          //sub textsa colors
+          text,
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+            color: Colors.black.withOpacity(0.7),
+          ),
+        )),
   ]);
 }
 
@@ -219,11 +223,19 @@ Future<void> displayErrorFromString(String error, BuildContext context) async {
 }
 
 Future<bool> isMachineAvailable(machine) async {
-  String? machineNeeded = await DatabaseAccess.getInstance()
+  dynamic? machineNeeded = await DatabaseAccess.getInstance()
       .getField("Machines", "Occupied", machine);
-  return (machineNeeded != null &&
-      machineNeeded != StudentData.studentEmail &&
-      machineNeeded != "");
+  // FlutterLogs.logInfo(
+  //     "Machine availbility",
+  //     "boolean",
+  //     (machineNeeded == null ||
+  //             machineNeeded == "" ||
+  //             machineNeeded[0] == StudentData.studentEmail)
+  //         .toString());
+  return (machineNeeded == null ||
+      machineNeeded == "" ||
+      machineNeeded[0] == StudentData.studentEmail ||
+      machineNeeded[1].seconds > Timestamp.now().seconds);
 }
 
 SizedBox textFieldTaskInfo(List<Map<String, dynamic>> allTaskMap,
@@ -316,13 +328,13 @@ SizedBox studentTaskInfoWidget(List<Map<String, dynamic>> studentTasksMap,
   Color color = const Color.fromARGB(255, 193, 184, 184).withOpacity(0.3);
   if (curTask['complete percentage'] == "100%") {
     color = Color.fromARGB(255, 27, 239, 73).withOpacity(0.6);
-  } else if (curTask['finish time'] != null &&
-          curTask['finish time'].seconds - Timestamp.now().seconds <=
-              (30 * 60) &&
-          curTask['finish time'].seconds - Timestamp.now().seconds > 0 ||
-      curTask['due date'].seconds - Timestamp.now().seconds <=
-              (1 * 24 * 60 * 60) &&
-          curTask['due date'].seconds - Timestamp.now().seconds > 0) {
+  } else if (!curTask['completed'] &&
+      curTask['finish time'] != null &&
+      ((curTask['finish time'].seconds - Timestamp.now().seconds <= (30 * 60) &&
+              curTask['finish time'].seconds - Timestamp.now().seconds > 0) ||
+          (curTask['due date'].seconds - Timestamp.now().seconds <=
+                  (1 * 24 * 60 * 60) &&
+              curTask['due date'].seconds - Timestamp.now().seconds > 0))) {
     color = const Color.fromARGB(255, 249, 94, 94).withOpacity(0.3);
   } else if (curTask['approved'] && curTask['finish time'] == null) {
     color = Color.fromARGB(255, 238, 200, 33).withOpacity(0.5);
@@ -398,7 +410,7 @@ SizedBox studentTaskInfoWidget(List<Map<String, dynamic>> studentTasksMap,
                     studentTasksMap.removeAt(index);
                     DatabaseAccess.getInstance().addToDatabase("student tasks",
                         "signed up", {'tasks': studentTasksMap});
-                    ConfigUtils.goToScreen(const HomeScreen(), context);
+                    ConfigUtils.goToScreen(const StudentTasksScreen(), context);
                   }),
                 if (ableWorkTaskCondition)
                   reusableSignUpTaskButton("Work on this task", context,
@@ -408,25 +420,35 @@ SizedBox studentTaskInfoWidget(List<Map<String, dynamic>> studentTasksMap,
                     // FlutterLogs.logInfo("Sign up task", "Machine available",
                     //     "Status: ${!(await DatabaseAccess.getInstance().getField("Machines", "Occupied", curTask['machine needed']))}");
                     if (curTask['machine needed'] != null &&
-                        await isMachineAvailable(curTask['machine needed'])) {
+                        !(await isMachineAvailable(
+                            curTask['machine needed']))) {
                       displayError(
                           "The machine is currently occupied", context);
+                    } else if (!(await connectedToInternet())) {
+                      displayError(
+                          "You are not connected to the Internet", context);
                     } else {
                       Util.logAttendance();
                       StudentData.currentTask = curTask;
-
-                      if (curTask['machine needed'] != null) {
-                        DatabaseAccess.getInstance().updateField(
-                            "Machines", "Occupied", {
-                          curTask['machine needed']: StudentData.studentEmail
-                        });
-                      }
 
                       if (curTask['finish time'] == null) {
                         StudentData.currentTask!['finish time'] =
                             Timestamp.fromDate(DateTime.now().add(Duration(
                                 minutes: Util.convertStringTimeToIntMinutes(
                                     curTask['estimated time']))));
+
+                        StudentData.currentTask!['due date'] =
+                            StudentData.currentTask!['finish time'];
+                      }
+
+                      if (curTask['machine needed'] != null) {
+                        DatabaseAccess.getInstance()
+                            .updateField("Machines", "Occupied", {
+                          curTask['machine needed']: [
+                            StudentData.studentEmail,
+                            curTask['due date']
+                          ]
+                        });
                       }
 
                       DatabaseAccess.getInstance()

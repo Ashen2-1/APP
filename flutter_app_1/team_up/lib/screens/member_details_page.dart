@@ -9,12 +9,20 @@ import 'package:team_up/utils/configuration_util.dart';
 
 import '../calendar.dart';
 import '../constants/student_data.dart';
+import '../services/internet_connection.dart';
+import '../widgets/reusable_widgets/reusable_widget.dart';
 
-class DetailPage extends StatelessWidget {
-  final int index;
+class DetailPage extends StatefulWidget {
+  const DetailPage({Key? key}) : super(key: key);
+
+  @override
+  State<DetailPage> createState() => DetailPageState();
+}
+
+class DetailPageState extends State<DetailPage> {
   bool isSwitched = false;
-  DetailPage(this.index);
-  Future<bool> isAdmin = StudentData.isAdmin();
+  Future<dynamic> isAdmin = DatabaseAccess.getInstance()
+      .getField("student tasks", StudentData.viewingUserEmail, "isAdmin");
   final TextEditingController _mentorEmailController = TextEditingController();
 
   @override
@@ -28,11 +36,26 @@ class DetailPage extends StatelessWidget {
         padding: EdgeInsets.only(left: 16, top: 25, right: 16),
         child: ListView(
           children: [
-            Image.asset(
-              "assets/images/Mentor2.png",
-              height: 188,
-              width: 188,
-            ),
+            FutureBuilder(
+                future: DatabaseAccess.getInstance().getField(
+                    "student tasks", StudentData.viewingUserEmail, "isAdmin"),
+                builder: (context, isAdmin) {
+                  if (!isAdmin.hasData) {
+                    return Container();
+                  } else if (isAdmin.data!) {
+                    return Image.asset(
+                      "assets/images/Mentor2.png",
+                      height: 188,
+                      width: 188,
+                    );
+                  } else {
+                    return Image.asset(
+                      "assets/images/Students2.png",
+                      height: 188,
+                      width: 188,
+                    );
+                  }
+                }),
             SizedBox(
               height: 28,
             ),
@@ -114,7 +137,7 @@ class DetailPage extends StatelessWidget {
                             FutureBuilder(
                               future: DatabaseAccess.getInstance().getField(
                                   "student tasks",
-                                  StudentData.studentEmail,
+                                  StudentData.viewingUserEmail,
                                   "description"),
                               builder: (context, description) {
                                 if (!description.hasData) {
@@ -166,45 +189,70 @@ class DetailPage extends StatelessWidget {
                   } else if (!isAdmin.data!) {
                     return const SizedBox(height: 0);
                   }
-                  return Column(children: [
-                    SizedBox(
-                      height: 18,
-                    ),
-                    Divider(
-                      height: 15,
-                      thickness: 2,
-                    ),
-                    SizedBox(
-                      height: 18,
-                    ),
-                    Row(children: [
-                      Text(
-                        "Higher Access",
-                        style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.grey[600]),
-                      ),
-                      SizedBox(
-                        width: 150,
-                      ),
-                      LiteRollingSwitch(
-                        onTap: () {},
-                        onDoubleTap: () {},
-                        onSwipe: () {},
-                        width: 88,
-                        iconOff: Icons.close,
-                        colorOn: Colors.greenAccent,
-                        colorOff: Colors.redAccent,
-                        value: isAdmin.data ?? false,
-                        onChanged: (bool position) {
-                          print(position);
-                          //isAdmin == position;
-                          //print(isAdmin);
-                        },
-                      )
-                    ])
-                  ]);
+                  return FutureBuilder(
+                      future: DatabaseAccess.getInstance().getField(
+                          "student tasks",
+                          StudentData.viewingUserEmail,
+                          "isAdmin"),
+                      builder: (context, userIsAdmin) {
+                        if (!userIsAdmin.hasData) {
+                          return Container();
+                        } else {
+                          isSwitched = userIsAdmin.data;
+                          return Column(children: [
+                            SizedBox(
+                              height: 18,
+                            ),
+                            Divider(
+                              height: 15,
+                              thickness: 2,
+                            ),
+                            SizedBox(
+                              height: 18,
+                            ),
+                            Row(children: [
+                              Text(
+                                "Higher Access",
+                                style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.grey[600]),
+                              ),
+                              SizedBox(
+                                width: 150,
+                              ),
+                              LiteRollingSwitch(
+                                onTap: () {},
+                                onDoubleTap: () {},
+                                onSwipe: () {},
+                                width: 88,
+                                iconOff: Icons.close,
+                                colorOn: Colors.greenAccent,
+                                colorOff: Colors.redAccent,
+                                value: isSwitched,
+                                onChanged: (bool position) async {
+                                  print(position);
+                                  if (!await connectedToInternet()) {
+                                    setState(() {
+                                      isSwitched = position;
+                                    });
+                                    displayError(
+                                        "Please connect to the Internet. Your previous change hasn't taken effect.",
+                                        context);
+                                  } else {
+                                    DatabaseAccess.getInstance().updateField(
+                                        "student tasks",
+                                        StudentData.viewingUserEmail,
+                                        {'isAdmin': position});
+                                  }
+                                  //isAdmin == position;
+                                  //print(isAdmin);
+                                },
+                              )
+                            ])
+                          ]);
+                        }
+                      });
                 }),
 //////////////////////////////////////////////////////////////////////
             SizedBox(
@@ -266,12 +314,18 @@ class DetailPage extends StatelessWidget {
                 } else if (isAdmin.data!) {
                   return ElevatedButton(
                       //// on pressed remove this user from the team
-                      onPressed: () {
-                        DatabaseAccess.getInstance().updateField(
-                            "student tasks",
-                            StudentData.viewingUserEmail,
-                            {"team number": ""});
-                        ConfigUtils.goToScreen(const MyTeamPage(), context);
+                      onPressed: () async {
+                        if (!(await connectedToInternet())) {
+                          displayError(
+                              "Please connect to the internet and try again",
+                              context);
+                        } else {
+                          DatabaseAccess.getInstance().updateField(
+                              "student tasks",
+                              StudentData.viewingUserEmail,
+                              {"team number": ""});
+                          ConfigUtils.goToScreen(const MyTeamPage(), context);
+                        }
                       },
                       style: ElevatedButton.styleFrom(
                         primary: Colors.red,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:team_up/constants/student_data.dart';
+import 'package:team_up/screens/all_approve_tasks_screen.dart';
 
 import 'package:team_up/screens/home_screen.dart';
 import 'package:team_up/services/database_access.dart';
@@ -7,6 +8,8 @@ import 'package:team_up/utils/util.dart';
 import 'package:team_up/widgets/nav_bar.dart';
 
 import '../constants/constants.dart';
+import '../services/internet_connection.dart';
+import '../widgets/reusable_widgets/reusable_widget.dart';
 
 class Feedback_page extends StatefulWidget {
   @override
@@ -132,28 +135,34 @@ class _Feedback_pageState extends State<Feedback_page> {
                 ),
                 ElevatedButton(
                   onPressed: () async {
-                    Map<String, dynamic> existingTaskData =
-                        StudentData.getApprovalTask()!;
+                    if (!(await connectedToInternet())) {
+                      displayError(
+                          "You are not connected to the Internet", context);
+                    } else {
+                      Map<String, dynamic> existingTaskData =
+                          StudentData.getApprovalTask()!;
 
-                    existingTaskData['feedback'] = _Textcontroller.text;
-                    existingTaskData['complete percentage'] = percentage;
-                    existingTaskData['completed'] = false;
-                    existingTaskData['approved'] = true;
-                    existingTaskData['estimated time'] = time;
-                    existingTaskData['finish time'] = null;
-                    existingTaskData['due date'] = day;
+                      existingTaskData['feedback'] = _Textcontroller.text;
+                      existingTaskData['complete percentage'] = percentage;
+                      existingTaskData['completed'] = false;
+                      existingTaskData['approved'] = true;
+                      existingTaskData['estimated time'] = time;
+                      existingTaskData['finish time'] = null;
+                      existingTaskData['due date'] = day;
 
-                    List<Map<String, dynamic>> tasks =
-                        Util.matchAndCombineExisting(
-                            existingTaskData,
-                            await DatabaseAccess.getInstance()
-                                .getAllSignedUpTasks());
-                    DatabaseAccess.getInstance().addToDatabase(
-                        "student tasks", "signed up", {"tasks": tasks});
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const HomeScreen()));
+                      List<Map<String, dynamic>> tasks =
+                          Util.matchAndCombineExisting(
+                              existingTaskData,
+                              await DatabaseAccess.getInstance()
+                                  .getAllSignedUpTasks());
+                      DatabaseAccess.getInstance().addToDatabase(
+                          "student tasks", "signed up", {"tasks": tasks});
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  const AllApproveTasksScreen()));
+                    }
                   },
                   child: const Text("Send Message"),
                 ),

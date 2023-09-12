@@ -9,6 +9,7 @@ import 'package:team_up/widgets/nav_bar.dart';
 
 import '../constants/colors.dart';
 import '../services/file_uploader.dart';
+import '../services/internet_connection.dart';
 import '../utils/configuration_util.dart';
 import '../widgets/reusable_widgets/reusable_widget.dart';
 import '../widgets/round-button2.dart';
@@ -113,36 +114,42 @@ class _Enterteampasscode_pageState extends State<Enterteampasscode_page>
                 primary: Color.fromARGB(255, 19, 78, 218),
               ),
               onPressed: () async {
-                Map<String, dynamic>? team_data =
-                    await DatabaseAccess.getInstance()
-                        .getPotentialTeam(StudentData.signingUpTeamNumber);
-
-                FlutterLogs.logInfo("Sign up team", "Enter team", "$team_data");
-                if (_passcodeTextController.text ==
-                    team_data!['team passcode']) {
-                  StudentData.studentTeamNumber =
-                      StudentData.signingUpTeamNumber;
-                  Map<String, dynamic>? curStudentStats =
-                      await DatabaseAccess.getInstance().getStudentStats();
-
-                  curStudentStats ??= {};
+                if (!(await connectedToInternet())) {
+                  displayError(
+                      "You are not connected to the Internet", context);
+                } else {
+                  Map<String, dynamic>? team_data =
+                      await DatabaseAccess.getInstance()
+                          .getPotentialTeam(StudentData.signingUpTeamNumber);
 
                   FlutterLogs.logInfo(
-                      "Add team", "curStudentStats", "$curStudentStats");
+                      "Sign up team", "Enter team", "$team_data");
+                  if (_passcodeTextController.text ==
+                      team_data!['team passcode']) {
+                    StudentData.studentTeamNumber =
+                        StudentData.signingUpTeamNumber;
+                    Map<String, dynamic>? curStudentStats =
+                        await DatabaseAccess.getInstance().getStudentStats();
 
-                  curStudentStats['team number'] =
-                      StudentData.signingUpTeamNumber;
+                    curStudentStats ??= {};
 
-                  curStudentStats['normal team'] =
-                      StudentData.signingUpTeamNumber;
+                    FlutterLogs.logInfo(
+                        "Add team", "curStudentStats", "$curStudentStats");
 
-                  DatabaseAccess.getInstance().addToDatabase("student tasks",
-                      StudentData.studentEmail, curStudentStats);
+                    curStudentStats['team number'] =
+                        StudentData.signingUpTeamNumber;
 
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => HomeScreen()));
-                } else {
-                  await displayError("Password is incorrect", context);
+                    curStudentStats['normal team'] =
+                        StudentData.signingUpTeamNumber;
+
+                    DatabaseAccess.getInstance().addToDatabase("student tasks",
+                        StudentData.studentEmail, curStudentStats);
+
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => HomeScreen()));
+                  } else {
+                    await displayError("Password is incorrect", context);
+                  }
                 }
 
                 /// here we can Navigator to Team Channel!

@@ -1,9 +1,12 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_logs/flutter_logs.dart';
 import 'package:team_up/constants/student_data.dart';
 import 'package:team_up/proflie.dart';
 import 'package:team_up/screens/add_tasks_screen.dart';
+import 'package:team_up/screens/signin_screen.dart';
 import 'package:team_up/screens/student_tasks_screen.dart';
+import 'package:team_up/services/firebase_access.dart';
 import 'package:team_up/widgets/nav_bar.dart';
 import 'package:team_up/screens/page_navigation_screen.dart';
 import 'package:team_up/screens/student_progress_screen.dart';
@@ -100,7 +103,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
         appBar: AppBar(
           elevation: 0,
-          backgroundColor: Color.fromARGB(255, 57, 189, 216),
+          backgroundColor: const Color.fromARGB(255, 57, 189, 216),
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -108,16 +111,26 @@ class _HomeScreenState extends State<HomeScreen> {
               Container(
                   height: 50,
                   width: 50,
-                  child: IconButton(
-                      onPressed: () {
+                  child: PopupMenuButton(
+                      onSelected: (Widget value) {
+                        if (value.runtimeType != SignInScreen().runtimeType) {
+                          FirebaseAccess.getInstance().signOut();
+                        }
                         Navigator.of(context).push<void>(
                           MaterialPageRoute<void>(
-                            builder: (BuildContext context) => ProfilePage(),
+                            builder: (BuildContext context) => value,
                           ),
                         );
                       },
-                      icon: Icon(Icons.person),
-                      iconSize: 35))
+                      itemBuilder: (context) => [
+                            PopupMenuItem(
+                                value: EditProfilePage(),
+                                child: const Text("Edit Profile")),
+                            const PopupMenuItem(
+                                value: SignInScreen(), child: Text("Log out")),
+                          ],
+                      iconSize: 35,
+                      child: const Icon(Icons.person))),
             ],
           ),
         ),
