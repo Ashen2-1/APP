@@ -50,15 +50,15 @@ class Util {
         addZerotoDateString("${now.year}-${now.month}-${now.day}");
     FlutterLogs.logInfo("Date time", "Today's date", dateString);
 
-    if (await DatabaseAccess.getInstance()
-            .getDocumentByID("Attendance", dateString) ==
-        null) {
-      DatabaseAccess.getInstance().addToDatabase(
-          "Attendance", dateString, {StudentData.studentEmail: true});
-    } else {
-      DatabaseAccess.getInstance().updateField(
-          "Attendance", dateString, {StudentData.studentEmail: true});
+    List<String>? attendees = await DatabaseAccess.getInstance()
+        .getField("Attendance", dateString, "attendance");
+
+    if (!attendees!.contains(StudentData.studentEmail)) {
+      attendees.add(StudentData.studentEmail);
     }
+
+    DatabaseAccess.getInstance()
+        .addToDatabase("Attendance", dateString, {'attendance': attendees});
   }
 
   static List<Map<String, dynamic>> matchAndCombineExisting(

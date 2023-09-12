@@ -85,44 +85,58 @@ class _EditProfilePageState extends State<EditProfilePage> {
               Center(
                 child: Stack(
                   children: [
-                    Container(
-                      width: 130,
-                      height: 130,
-                      decoration: BoxDecoration(
-                          border: Border.all(
-                              width: 4,
-                              color: Theme.of(context).scaffoldBackgroundColor),
-                          boxShadow: [
-                            BoxShadow(
-                                spreadRadius: 2,
-                                blurRadius: 10,
-                                color: Colors.black.withOpacity(0.1),
-                                offset: const Offset(0, 10))
-                          ],
-                          shape: BoxShape.circle,
-                          image: const DecorationImage(
-                              fit: BoxFit.cover,
-                              image: NetworkImage(
-                                  "https://cdn-icons-png.flaticon.com/512/354/354637.png"))),
-                    ),
-                    Positioned(
-                        bottom: 0,
-                        right: 0,
-                        child: Container(
-                          height: 40,
-                          width: 40,
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              border: Border.all(
-                                  width: 4,
-                                  color: Theme.of(context)
-                                      .scaffoldBackgroundColor),
-                              color: Colors.black),
-                          child: const Icon(
-                            Icons.edit,
-                            color: Colors.white,
-                          ),
-                        ))
+                    FutureBuilder(
+                        future: StudentData.isAdmin(),
+                        builder: (context, isAdmin) {
+                          if (!isAdmin.hasData) {
+                            return Container();
+                          }
+                          return Container(
+                              width: 130,
+                              height: 130,
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                    width: 4,
+                                    color: Theme.of(context)
+                                        .scaffoldBackgroundColor),
+                                boxShadow: [
+                                  BoxShadow(
+                                      spreadRadius: 2,
+                                      blurRadius: 10,
+                                      color: Colors.black.withOpacity(0.1),
+                                      offset: const Offset(0, 10))
+                                ],
+                                shape: BoxShape.circle,
+                                image: DecorationImage(
+                                    fit: BoxFit.cover,
+                                    image: isAdmin.data!
+                                        ? Image.asset(
+                                                'assets/images/Mentor2.png')
+                                            .image
+                                        : Image.asset(
+                                                'assets/images/Students2.png')
+                                            .image),
+                              ));
+                        })
+                    // Edit icon
+                    // Positioned(
+                    //     bottom: 0,
+                    //     right: 0,
+                    //     child: Container(
+                    //       height: 40,
+                    //       width: 40,
+                    //       decoration: BoxDecoration(
+                    //           shape: BoxShape.circle,
+                    //           border: Border.all(
+                    //               width: 4,
+                    //               color: Theme.of(context)
+                    //                   .scaffoldBackgroundColor),
+                    //           color: Colors.black),
+                    //       child: const Icon(
+                    //         Icons.edit,
+                    //         color: Colors.white,
+                    //       ),
+                    //     ))
                   ],
                 ),
               ),

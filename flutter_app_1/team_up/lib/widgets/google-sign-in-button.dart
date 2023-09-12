@@ -58,7 +58,7 @@ class GoogleSignInButton {
             Padding(
               padding: const EdgeInsets.only(left: 10),
               child: Text(
-                'Sign in with Google',
+                'Continue with Google',
                 style: TextStyle(
                   fontSize: 20,
                   color: Colors.black54,

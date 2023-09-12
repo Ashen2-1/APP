@@ -43,9 +43,7 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
 
   Future<List<String>> getAttendanceForDay(String day) async {
     List<String>? res = await DatabaseAccess.getInstance()
-        .getDocumentByID("Attendance", day)
-        .then((response) => response?.data()?.keys.toList());
-
+        .getField("Attendance", day, "attendance");
     if (res == null) {
       return [];
     }

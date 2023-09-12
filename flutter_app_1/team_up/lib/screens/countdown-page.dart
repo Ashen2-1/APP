@@ -85,12 +85,12 @@ class _CountdownPageState extends State<CountdownPage>
     if (countText == "0:01:00") {
       FlutterRingtonePlayer.playNotification();
       FlutterRingtonePlayer.playAlarm(looping: false, asAlarm: false);
-      await displayAlert(
-          "1 minute left! Will auto submit at time 0 sec", context);
+      // await displayAlert(
+      //     "1 minute left! Will auto submit at time 0 sec", context);
     } else if (countText == '0:05:00') {
       FlutterRingtonePlayer.playNotification();
-      await displayAlert(
-          "5 minutes left! Will auto submit at time 0 sec", context);
+      // await displayAlert(
+      //     "5 minutes left! Will auto submit at time 0 sec", context);
     }
   }
 
@@ -142,6 +142,7 @@ class _CountdownPageState extends State<CountdownPage>
           const SizedBox(height: 20.0),
           Text("Current Task: ${StudentData.currentTask!['task']}",
               style: TextStyle(fontSize: 25, decorationThickness: 1.5)),
+          Text("Will auto submit at time 0:00:00!!"),
           Expanded(
             child: Stack(
               alignment: Alignment.center,
