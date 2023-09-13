@@ -55,9 +55,10 @@ class _TaskDescription_pageState extends State<TaskDescription_page> {
             ),
             Center(
               child: Text(
-                "Task: ${StudentData.allViewingTask![StudentData.viewingIndex!]['task']}", ////${StudentData.currentDescrption!}, ${addDynamicTaskFields(context)}
+                "Task:\n ${StudentData.allViewingTask![StudentData.viewingIndex!]['task']}", ////${StudentData.currentDescrption!}, ${addDynamicTaskFields(context)}
                 style:
                     const TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                textAlign: TextAlign.center,
               ),
             ),
             const SizedBox(
@@ -75,8 +76,9 @@ class _TaskDescription_pageState extends State<TaskDescription_page> {
             ),
             Center(
               child: Text(
-                "Task Description: ${StudentData.allViewingTask![StudentData.viewingIndex!]['description']}",
+                "Task Description:\n${StudentData.allViewingTask![StudentData.viewingIndex!]['description']}",
                 style: const TextStyle(fontSize: 16),
+                textAlign: TextAlign.center,
               ),
             ),
             const SizedBox(
@@ -127,9 +129,9 @@ class _TaskDescription_pageState extends State<TaskDescription_page> {
               Column(children: [
                 Center(
                   child: Text(
-                    "Feedback: ${StudentData.allViewingTask![StudentData.viewingIndex!]['feedback']}",
-                    style: const TextStyle(fontSize: 16),
-                  ),
+                      "Feedback: ${StudentData.allViewingTask![StudentData.viewingIndex!]['feedback']}",
+                      style: const TextStyle(fontSize: 16),
+                      textAlign: TextAlign.center),
                 ),
                 const SizedBox(height: 15),
               ]),

@@ -102,6 +102,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Scaffold mainLayout(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           elevation: 0,
           backgroundColor: const Color.fromARGB(255, 57, 189, 216),
           title: Row(

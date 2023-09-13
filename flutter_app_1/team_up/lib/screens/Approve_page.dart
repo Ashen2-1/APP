@@ -76,7 +76,7 @@ class _Approve_pageState extends State<Approve_page>
             children: [
               const SizedBox(height: 20),
               Text("Approving task: ${StudentData.approvalTask!['task']}",
-                  style: defaultFont),
+                  style: defaultFont, textAlign: TextAlign.center),
               const SizedBox(height: 20),
               Container(
                   padding: const EdgeInsets.all(10.0),

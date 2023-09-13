@@ -57,85 +57,104 @@ class _UnassignedTasksPageState extends State<UnassignedTasksPage> {
   }
 
   Widget buildMainContent() {
-    return Column(
-      children: [
-        Expanded(
-            child: ListView.builder(
-                itemCount: studentTasksMap!.length,
-                itemBuilder: (context, index) {
-                  return Container(
-                      margin: const EdgeInsets.all(10.0),
-                      padding: const EdgeInsets.all(12.0),
-                      decoration: BoxDecoration(
-                          color: Color.fromARGB(255, 177, 167, 167)
-                              .withOpacity(0.3),
-                          borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(10),
-                              topRight: Radius.circular(10),
-                              bottomLeft: Radius.circular(10),
-                              bottomRight: Radius.circular(10))),
-                      child: Row(children: [
-                        Column(children: [
-                          regularText(
-                              studentTasksMap![index]['task'], context, true),
-                          reusableSignUpTaskButton("Resend this task", context,
-                              () async {
-                            DateTime? dateTime = await showDatePicker(
-                                context: context,
-                                initialDate: DateTime.now(),
-                                firstDate: DateTime.now(),
-                                lastDate: DateTime.utc(9999, 08, 16));
+    return FutureBuilder(
+        future: DatabaseAccess.getInstance().getUnassignedTasks(),
+        builder: (context, unassigned) {
+          if (!unassigned.hasData) {
+            return Container();
+          }
+          studentTasksMap = unassigned.data;
+          return Column(
+            children: [
+              Expanded(
+                  child: ListView.builder(
+                      itemCount: studentTasksMap!.length,
+                      itemBuilder: (context, index) {
+                        return Container(
+                            margin: const EdgeInsets.all(10.0),
+                            padding: const EdgeInsets.all(12.0),
+                            decoration: BoxDecoration(
+                                color: Color.fromARGB(255, 177, 167, 167)
+                                    .withOpacity(0.3),
+                                borderRadius: const BorderRadius.only(
+                                    topLeft: Radius.circular(10),
+                                    topRight: Radius.circular(10),
+                                    bottomLeft: Radius.circular(10),
+                                    bottomRight: Radius.circular(10))),
+                            child: Row(children: [
+                              Column(children: [
+                                regularText(studentTasksMap![index]['task'],
+                                    context, true),
+                                reusableSignUpTaskButton(
+                                    "Resend this task", context, () async {
+                                  DateTime? dateTime = await showDatePicker(
+                                      context: context,
+                                      helpText: "SELECT A NEW DUE DATE",
+                                      initialDate: DateTime.now(),
+                                      firstDate: DateTime.now(),
+                                      lastDate: DateTime.utc(9999, 08, 16));
 
-                            final TimeOfDay? time = await showTimePicker(
-                                context: context, initialTime: TimeOfDay.now());
+                                  final TimeOfDay? time = await showTimePicker(
+                                      context: context,
+                                      initialTime: TimeOfDay.now());
 
-                            if (dateTime != null && time != null) {
-                              dateTime = dateTime.add(Duration(
-                                  hours: time.hour, minutes: time.minute));
-                            }
+                                  if (dateTime != null && time != null) {
+                                    dateTime = dateTime.add(Duration(
+                                        hours: time.hour,
+                                        minutes: time.minute));
+                                  }
 
-                            if (dateTime != null) {
-                              studentTasksMap![index]['due date'] = dateTime;
-                              List<dynamic> databaseGet =
-                                  await DatabaseAccess.getInstance().getField(
+                                  if (dateTime != null) {
+                                    studentTasksMap![index]['due date'] =
+                                        dateTime;
+                                    List<dynamic> databaseGet =
+                                        await DatabaseAccess.getInstance()
+                                            .getField(
+                                                "Tasks",
+                                                studentTasksMap![index]
+                                                    ['subteam'],
+                                                "tasks");
+                                    DatabaseAccess.getInstance().addToDatabase(
+                                        "Tasks",
+                                        studentTasksMap![index]['subteam'], {
+                                      "tasks": Util.combineTaskIntoExisting(
+                                          studentTasksMap![index],
+                                          databaseGet
+                                              .cast<Map<String, dynamic>>())
+                                    });
+                                    studentTasksMap!.removeWhere((element) =>
+                                        element == studentTasksMap![index]);
+                                    DatabaseAccess.getInstance().addToDatabase(
+                                        "Tasks",
+                                        "outstanding",
+                                        {"tasks": studentTasksMap});
+                                    ConfigUtils.goToScreen(
+                                        TasksPage(), context);
+                                  } else {
+                                    displayError(
+                                        "Did not resend, please press ok after selecting date/time",
+                                        context);
+                                  }
+                                }),
+                                reusableSignUpTaskButton(
+                                    "Remove tracking", context, () {
+                                  studentTasksMap!.removeWhere((element) =>
+                                      element == studentTasksMap![index]);
+                                  DatabaseAccess.getInstance().addToDatabase(
                                       "Tasks",
-                                      studentTasksMap![index]['subteam'],
-                                      "tasks");
-                              DatabaseAccess.getInstance().addToDatabase(
-                                  "Tasks", studentTasksMap![index]['subteam'], {
-                                "tasks": Util.combineTaskIntoExisting(
-                                    studentTasksMap![index],
-                                    databaseGet.cast<Map<String, dynamic>>())
-                              });
-                              studentTasksMap!.removeWhere((element) =>
-                                  element == studentTasksMap![index]);
-                              DatabaseAccess.getInstance().addToDatabase(
-                                  "Tasks",
-                                  "outstanding",
-                                  {"tasks": studentTasksMap});
-                              ConfigUtils.goToScreen(TasksPage(), context);
-                            } else {
-                              displayError(
-                                  "Did not resend, please press ok after selecting date/time",
-                                  context);
-                            }
-                          }),
-                          reusableSignUpTaskButton("Remove tracking", context,
-                              () {
-                            studentTasksMap!.removeWhere((element) =>
-                                element == studentTasksMap![index]);
-                            DatabaseAccess.getInstance().addToDatabase("Tasks",
-                                "outstanding", {"tasks": studentTasksMap});
-                          })
-                        ]),
-                        // if (imageURL[index] != "None")
-                        //   Expanded(child: Image.network(imageURL[index]))
-                      ]));
-                })),
-        reusableButton("Update unassigned tasks", context, () async {
-          configure();
-        }),
-      ],
-    );
+                                      "outstanding",
+                                      {"tasks": studentTasksMap});
+                                })
+                              ]),
+                              // if (imageURL[index] != "None")
+                              //   Expanded(child: Image.network(imageURL[index]))
+                            ]));
+                      })),
+              reusableButton("Update unassigned tasks", context, () async {
+                configure();
+              }),
+            ],
+          );
+        });
   }
 }

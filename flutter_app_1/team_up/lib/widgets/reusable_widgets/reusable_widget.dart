@@ -57,10 +57,12 @@ TextField reusableTextField(String text, IconData icon, bool isPasswordType,
   );
 }
 
-SizedBox reusableTextFieldRegular(
+Padding reusableTextFieldRegular(
     String text, TextEditingController controller, bool isStatusLabel) {
-  return SizedBox(
-    height: isStatusLabel ? 20.0 : 50.0,
+  return Padding(
+    padding: isStatusLabel
+        ? EdgeInsets.symmetric(horizontal: 10)
+        : EdgeInsets.symmetric(horizontal: 10),
     child: TextField(
       controller: controller,
       cursorColor: Colors.black87,
@@ -379,8 +381,13 @@ SizedBox studentTaskInfoWidget(List<Map<String, dynamic>> studentTasksMap,
                 //     "Task time: ${curTask['estimated time']}", context, false),
                 if (curTask['approved'])
                   if (curTask['feedback'] != "None")
-                    regularText(
-                        "Feedback: ${curTask['feedback']}", context, false),
+                    Column(children: [
+                      regularText(
+                          "Feedback: ${curTask['feedback'].length > 36 ? curTask['feedback'].substring(0, 36) + "..." : curTask['feedback']}",
+                          context,
+                          false),
+                      const SizedBox(height: 10),
+                    ]),
                 if (curTask['complete percentage'] != "None")
                   regularText(
                       "Complete percentage: ${curTask['complete percentage']}",

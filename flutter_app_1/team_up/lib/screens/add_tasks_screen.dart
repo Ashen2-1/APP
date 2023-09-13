@@ -179,8 +179,29 @@ class _AddTasksScreenState extends State<AddTasksScreen> {
               }).toList()),
         ),
         const SizedBox(height: 10.0),
-        reusableTextFieldRegular(
-            "Enter Specific Task", _taskTextController, false),
+        // reusableTextFieldRegular(
+        //     "Enter Specific Task", _taskTextController, false),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 10),
+          child: TextField(
+            maxLength: 15,
+            controller: _taskTextController,
+            cursorColor: Colors.black87,
+            style: TextStyle(color: Colors.black87.withOpacity(0.9)),
+            decoration: InputDecoration(
+              labelText: "Enter Specific Task",
+              labelStyle: TextStyle(color: Colors.black87.withOpacity(0.9)),
+              filled: true,
+              floatingLabelBehavior: FloatingLabelBehavior.never,
+              fillColor:
+                  const Color.fromARGB(255, 199, 196, 196).withOpacity(0.3),
+              border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(30.0),
+                  borderSide:
+                      const BorderSide(width: 0, style: BorderStyle.none)),
+            ),
+          ),
+        ),
         const SizedBox(height: 10),
         Text("Selected Due Date: ${Util.formatDateTime(day)}"),
         ElevatedButton(
@@ -211,7 +232,7 @@ class _AddTasksScreenState extends State<AddTasksScreen> {
             "Enter skills required for task", _skillsRequiredController, false),
         const SizedBox(height: 10),
         Container(
-            width: MediaQuery.of(context).size.width - 20,
+            width: MediaQuery.of(context).size.width - 25,
             decoration: BoxDecoration(
                 color:
                     const Color.fromARGB(255, 199, 196, 196).withOpacity(0.3),
@@ -238,7 +259,7 @@ class _AddTasksScreenState extends State<AddTasksScreen> {
           Column(children: [
             const SizedBox(height: 10),
             Container(
-                width: MediaQuery.of(context).size.width - 20,
+                width: MediaQuery.of(context).size.width - 25,
                 decoration: BoxDecoration(
                     color: const Color.fromARGB(255, 199, 196, 196)
                         .withOpacity(0.3),
@@ -258,7 +279,7 @@ class _AddTasksScreenState extends State<AddTasksScreen> {
           ]),
         const SizedBox(height: 10),
         Container(
-            width: MediaQuery.of(context).size.width - 20,
+            width: MediaQuery.of(context).size.width - 25,
             decoration: BoxDecoration(
                 color:
                     const Color.fromARGB(255, 199, 196, 196).withOpacity(0.3),

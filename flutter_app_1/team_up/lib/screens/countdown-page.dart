@@ -34,6 +34,8 @@ class _CountdownPageState extends State<CountdownPage>
     with TickerProviderStateMixin {
   late AnimationController controller;
 
+  bool image = false;
+
   bool isPlaying = true;
   File? file;
 
@@ -72,6 +74,8 @@ class _CountdownPageState extends State<CountdownPage>
 
       FlutterLogs.logInfo(
           "Student task", "Submission", "Successfully submitted");
+
+      image = false;
 
       ConfigUtils.goToScreen(HomeScreen(), context);
     }
@@ -142,7 +146,9 @@ class _CountdownPageState extends State<CountdownPage>
           const SizedBox(height: 20.0),
           Text("Current Task: ${StudentData.currentTask!['task']}",
               style: TextStyle(fontSize: 25, decorationThickness: 1.5)),
+          const SizedBox(height: 10),
           Text("Will auto submit at time 0:00:00!!"),
+          const SizedBox(height: 10),
           Expanded(
             child: Stack(
               alignment: Alignment.center,
@@ -197,17 +203,28 @@ class _CountdownPageState extends State<CountdownPage>
               isPlaying = true;
             });
             if (file != null) {
+              String fileType = file!.path.split(".").last.toLowerCase();
               TaskSnapshot imageSnapshot = await FileUploader.getInstance()
                   .addFileToFirebaseStorage(file!);
               fileURL = await imageSnapshot.ref.getDownloadURL();
+              if (fileType == "png" ||
+                  fileType == 'jpg' ||
+                  fileType == 'jpeg') {
+                image = true;
+              } else {
+                image = false;
+              }
             }
             setState(() {});
           }),
           // if (fileURL != "None") WebView(initialUrl: fileURL),
           const Text("View the file", style: defaultFont),
-          SelectableText("$fileURL",
-              style: const TextStyle(
-                  color: Colors.blue, decoration: TextDecoration.underline)),
+          image
+              ? Image.network(fileURL)
+              : SelectableText("$fileURL",
+                  style: const TextStyle(
+                      color: Colors.blue,
+                      decoration: TextDecoration.underline)),
           // onDoubleTap: () async {
           //   //WebViewPage.setURL(fileURL);
           //   //ConfigUtils.goToScreen(WebViewPage(), context);
@@ -217,7 +234,6 @@ class _CountdownPageState extends State<CountdownPage>
           reusableButton("Submit for approval", context, () async {
             await submit(fileURL);
           }),
-          SizedBox(height: 0),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 30),
             child: Row(

@@ -53,7 +53,9 @@ class Util {
     List<String>? attendees = await DatabaseAccess.getInstance()
         .getField("Attendance", dateString, "attendance");
 
-    if (!attendees!.contains(StudentData.studentEmail)) {
+    attendees ??= [];
+
+    if (!contains(StudentData.studentEmail, attendees)) {
       attendees.add(StudentData.studentEmail);
     }
 

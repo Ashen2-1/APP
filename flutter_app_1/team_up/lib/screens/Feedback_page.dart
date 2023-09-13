@@ -46,7 +46,7 @@ class _Feedback_pageState extends State<Feedback_page> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const SizedBox(height: 30),
-                const Text("Please Enter Feedback here (At less 50 words)"),
+                const Text("Please Enter Feedback here"),
                 Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: TextFormField(

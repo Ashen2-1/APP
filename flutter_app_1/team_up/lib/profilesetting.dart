@@ -19,19 +19,11 @@ class _ProfilesettingpageState extends State<Profilesettingpage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        elevation: 1,
-        leading: IconButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          icon: Icon(
-            Icons.arrow_back,
-            color: Colors.black,
-          ),
-        ),
-      ),
+      // appBar: AppBar(
+      //   backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      //   elevation: 1,
+      //   automaticallyImplyLeading: false,
+      // ),
       bottomNavigationBar: buildNavBar(context, 3),
       body: Container(
         padding: EdgeInsets.only(left: 16, top: 25, right: 16),

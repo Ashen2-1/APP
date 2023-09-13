@@ -42,11 +42,15 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
   }
 
   Future<List<String>> getAttendanceForDay(String day) async {
-    List<String>? res = await DatabaseAccess.getInstance()
+    List<dynamic>? databaseGet = await DatabaseAccess.getInstance()
         .getField("Attendance", day, "attendance");
-    if (res == null) {
+
+    if (databaseGet == null) {
       return [];
     }
+    List<String>? res = databaseGet.cast<String>();
+
+    FlutterLogs.logInfo("Attendance", "database get", res.toString());
     return res;
   }
 
@@ -61,45 +65,41 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
   }
 
   Widget content() {
-    Future<String> attendanceString =
-        getAttendaceStringForDay(today.toString().split(" ")[0]);
-
-    return Container(
-        child: FutureBuilder(
-            future: attendanceString,
-            builder: (context, attendanceString) {
-              if (!attendanceString.hasData) {
-                return Container();
-              }
-              return Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Column(
+    return FutureBuilder(
+        future: getAttendaceStringForDay(today.toString().split(" ")[0]),
+        builder: (context, attendanceString) {
+          if (!attendanceString.hasData) {
+            return Container();
+          }
+          return Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
-                  children: [
-                    Text("Selected Day: " + today.toString().split(" ")[0]),
-                    Container(
-                      child: TableCalendar(
-                        locale: "en_US",
-                        rowHeight: 43,
-                        headerStyle: HeaderStyle(
-                            formatButtonVisible: false, titleCentered: true),
-                        availableGestures: AvailableGestures.all,
-                        selectedDayPredicate: (day) => isSameDay(day, today),
-                        focusedDay: today,
-                        firstDay: DateTime.utc(2005, 08, 16),
-                        lastDay: DateTime.utc(9999, 08, 16),
-                        onDaySelected: _onDaySelected,
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    const Text("Attendance: ", style: TextStyle(fontSize: 21)),
-                    const SizedBox(height: 5),
-                    Text(attendanceString.data!,
-                        style: const TextStyle(fontSize: 16))
-                  ],
+              children: [
+                Text("Selected Day: " + today.toString().split(" ")[0]),
+                Container(
+                  child: TableCalendar(
+                    locale: "en_US",
+                    rowHeight: 43,
+                    headerStyle: HeaderStyle(
+                        formatButtonVisible: false, titleCentered: true),
+                    availableGestures: AvailableGestures.all,
+                    selectedDayPredicate: (day) => isSameDay(day, today),
+                    focusedDay: today,
+                    firstDay: DateTime.utc(2005, 08, 16),
+                    lastDay: DateTime.utc(9999, 08, 16),
+                    onDaySelected: _onDaySelected,
+                  ),
                 ),
-              );
-            }));
+                const SizedBox(height: 10),
+                const Text("Attendance: ", style: TextStyle(fontSize: 21)),
+                const SizedBox(height: 5),
+                Text(attendanceString.data!,
+                    style: const TextStyle(fontSize: 16))
+              ],
+            ),
+          );
+        });
   }
 }

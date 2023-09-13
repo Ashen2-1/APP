@@ -46,6 +46,7 @@ class MyTeamPageState extends State<MyTeamPage> {
     return Scaffold(
         appBar: AppBar(
           title: const Text("My team"),
+          automaticallyImplyLeading: false,
         ),
         bottomNavigationBar: buildNavBar(context, 2),
         body: _buildListView(context, teamNumber));

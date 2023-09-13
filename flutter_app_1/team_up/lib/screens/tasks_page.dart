@@ -22,7 +22,8 @@ class TasksPageState extends State<TasksPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text("Manage Tasks"),
+          title: const Text("Manage Tasks", textAlign: TextAlign.center),
+          automaticallyImplyLeading: false,
         ),
         bottomNavigationBar: buildNavBar(context, 1),
         body: Center(
