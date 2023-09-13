@@ -141,11 +141,16 @@ class _CountdownPageState extends State<CountdownPage>
       appBar: AppBar(title: const Text("Work Countdown")),
       bottomNavigationBar: buildNavBar(context, 1),
       backgroundColor: Color(0xfff5fbff),
-      body: Column(
+      body: //SingleChildScrollView(
+          //child:
+          Column(
         children: [
           const SizedBox(height: 20.0),
-          Text("Current Task: ${StudentData.currentTask!['task']}",
-              style: TextStyle(fontSize: 25, decorationThickness: 1.5)),
+          Text(
+            "Current Task: ${StudentData.currentTask!['task']}",
+            style: TextStyle(fontSize: 25, decorationThickness: 1.5),
+            textAlign: TextAlign.center,
+          ),
           const SizedBox(height: 10),
           Text("Will auto submit at time 0:00:00!!"),
           const SizedBox(height: 10),
@@ -245,6 +250,7 @@ class _CountdownPageState extends State<CountdownPage>
           )
         ],
       ),
+      //)
     );
   }
 }

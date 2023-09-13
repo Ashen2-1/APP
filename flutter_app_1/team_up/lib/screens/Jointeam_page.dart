@@ -109,7 +109,7 @@ class _Jointeam_pageState extends State<Jointeam_page> {
         if (team != null)
           SizedBox(
               height: 180.0,
-              width: MediaQuery.of(context).size.width,
+              width: MediaQuery.of(context).size.width - 10,
               child: Container(
                 height: 180.0,
                 padding: const EdgeInsets.all(10.0),
@@ -147,7 +147,7 @@ class _Jointeam_pageState extends State<Jointeam_page> {
         //   height: 300,
         // ),
 
-        reusableButton("Update/Search The Teams", context, () async {
+        reusableButton("Search For Team", context, () async {
           searchTeams(_teamnumberTextController.text);
         }),
       ],

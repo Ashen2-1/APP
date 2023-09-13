@@ -29,6 +29,11 @@ class Util {
     return false;
   }
 
+  static bool checkValidImage(dynamic url) {
+    return url != null &&
+        (url.contains(".png") || url.contains(".jpg") || url.contains(".jpeg"));
+  }
+
   static List<Map<String, dynamic>> combineTaskIntoExisting(
       Map<String, dynamic> taskToAdd, List<Map<String, dynamic>>? prevTasks) {
     FlutterLogs.logInfo("print prev tasks", " ", "$prevTasks");
@@ -48,14 +53,23 @@ class Util {
     DateTime now = DateTime.now();
     String dateString =
         addZerotoDateString("${now.year}-${now.month}-${now.day}");
-    FlutterLogs.logInfo("Date time", "Today's date", dateString);
 
-    List<String>? attendees = await DatabaseAccess.getInstance()
+    List<dynamic>? attendeesGet = await DatabaseAccess.getInstance()
         .getField("Attendance", dateString, "attendance");
 
-    attendees ??= [];
+    List<String> attendees;
+
+    if (attendeesGet == null) {
+      attendees = [];
+    }
+
+    attendees = attendeesGet!.cast<String>();
+
+    FlutterLogs.logInfo("Email", "attendees", attendees.toString());
 
     if (!contains(StudentData.studentEmail, attendees)) {
+      // FlutterLogs.logInfo(
+      //     "Attendance", "checking and checking", StudentData.studentEmail);
       attendees.add(StudentData.studentEmail);
     }
 

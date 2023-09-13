@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 Container reusableButton(
     String text, BuildContext context, Function onPressed) {
   return Container(
-    width: MediaQuery.of(context).size.width,
+    width: MediaQuery.of(context).size.width - 25,
     height: 50,
     margin: const EdgeInsets.fromLTRB(0, 10, 0, 20),
     decoration: BoxDecoration(borderRadius: BorderRadius.circular(90)),

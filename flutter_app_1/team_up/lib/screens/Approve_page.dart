@@ -86,10 +86,14 @@ class _Approve_pageState extends State<Approve_page>
                   ])),
               Container(
                 padding: const EdgeInsets.all(10.0),
-                child: SelectableText(
-                    "${StudentData.approvalTask!['submit file url']}",
-                    style:
-                        StudentData.approvalTask!['submit file url'] != "None"
+                child: Util.checkValidImage(
+                        StudentData.approvalTask!['submit file url'])
+                    ? Image.network(
+                        StudentData.approvalTask!['submit file url'])
+                    : SelectableText(
+                        "${StudentData.approvalTask!['submit file url']}",
+                        style: StudentData.approvalTask!['submit file url'] !=
+                                "None"
                             ? const TextStyle(
                                 fontSize: 13,
                                 fontWeight: FontWeight.bold,

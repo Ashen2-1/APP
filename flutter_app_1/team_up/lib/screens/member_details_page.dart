@@ -323,7 +323,7 @@ class DetailPageState extends State<DetailPage> {
                           DatabaseAccess.getInstance().updateField(
                               "student tasks",
                               StudentData.viewingUserEmail,
-                              {"team number": ""});
+                              {"team number": "", "normal team": ""});
                           ConfigUtils.goToScreen(const MyTeamPage(), context);
                         }
                       },

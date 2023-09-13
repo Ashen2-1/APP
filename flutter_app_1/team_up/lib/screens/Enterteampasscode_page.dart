@@ -84,10 +84,13 @@ class _Enterteampasscode_pageState extends State<Enterteampasscode_page>
             const SizedBox(
               height: 30,
             ),
-            Text(
-              "    Note: Team Channel Will have the same functions as the public channel but it only serve for the team members!",
-              style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-            ),
+            const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                child: Text(
+                  "Note: Team Channel Will have the same functions as the public channel but it only serve for the team members!",
+                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center,
+                )),
             const SizedBox(
               height: 40,
             ),
