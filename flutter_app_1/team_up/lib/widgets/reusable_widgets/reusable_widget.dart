@@ -338,13 +338,13 @@ SizedBox studentTaskInfoWidget(List<Map<String, dynamic>> studentTasksMap,
                   (1 * 24 * 60 * 60) &&
               curTask['due date'].seconds - Timestamp.now().seconds > 0))) {
     color = const Color.fromARGB(255, 249, 94, 94).withOpacity(0.3);
-  } else if (curTask['approved'] && curTask['finish time'] == null) {
+  } else if (curTask['approved'] && (curTask['finish time'] == null && curTask['due date'].seconds > Timestamp.now().seconds)) {
     color = Color.fromARGB(255, 238, 200, 33).withOpacity(0.5);
   }
 
   bool ableWorkTaskCondition = curTask['complete percentage'] != "100%" &&
       (curTask['approved'] || !curTask['completed']) &&
-      (curTask['finish time'] == null ||
+      (curTask['finish time'] == null && curTask['finish time'] != null &&
           Timestamp.now().seconds < curTask['finish time'].seconds);
 
   return SizedBox(

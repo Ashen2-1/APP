@@ -212,7 +212,7 @@ class DetailPageState extends State<DetailPage> {
                             ),
                             Row(children: [
                               Text(
-                                "Higher Access",
+                                "Mentor Access",
                                 style: TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.w500,
@@ -255,6 +255,87 @@ class DetailPageState extends State<DetailPage> {
                       });
                 }),
 //////////////////////////////////////////////////////////////////////
+///
+///
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+            ///
+            FutureBuilder(
+                future: DatabaseAccess.getInstance().getField(
+                  "student tasks", StudentData.studentEmail, "isOwner"),
+                builder: (context, isOwner) {
+                  if (!isOwner.hasData) {
+                    return Container();
+                  } else if (!isOwner.data!) {
+                    return const SizedBox(height: 0);
+                  }
+                  return FutureBuilder(
+                      future: DatabaseAccess.getInstance().getField(
+                          "student tasks",
+                          StudentData.viewingUserEmail,
+                          "isOwner"),
+                      builder: (context, userIsAdmin) {
+                        if (!userIsAdmin.hasData) {
+                          return Container();
+                        } else {
+                          isSwitched = userIsAdmin.data;
+                          return Column(children: [
+                            SizedBox(
+                              height: 18,
+                            ),
+                            Divider(
+                              height: 15,
+                              thickness: 2,
+                            ),
+                            SizedBox(
+                              height: 18,
+                            ),
+                            Row(children: [
+                              Text(
+                                "Owner Access",
+                                style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.grey[600]),
+                              ),
+                              SizedBox(
+                                width: 150,
+                              ),
+                              LiteRollingSwitch(
+                                onTap: () {},
+                                onDoubleTap: () {},
+                                onSwipe: () {},
+                                width: 88,
+                                iconOff: Icons.close,
+                                colorOn: Colors.greenAccent,
+                                colorOff: Colors.redAccent,
+                                value: isSwitched,
+                                onChanged: (bool position) async {
+                                  print(position);
+                                  if (!await connectedToInternet()) {
+                                    setState(() {
+                                      isSwitched = position;
+                                    });
+                                    displayError(
+                                        "Please connect to the Internet. Your previous change hasn't taken effect.",
+                                        context);
+                                  } else {
+                                    DatabaseAccess.getInstance().updateField(
+                                        "student tasks",
+                                        StudentData.viewingUserEmail,
+                                        {'isOwner': position});
+                                  }
+                                  //isAdmin == position;
+                                  //print(isAdmin);
+                                },
+                              )
+                            ])
+                          ]);
+                        }
+                      });
+                }),
+//////////////////////////////////////////////////////////////////////
+///
+///
             SizedBox(
               height: 18,
             ),
@@ -307,11 +388,11 @@ class DetailPageState extends State<DetailPage> {
 
             FutureBuilder(
               future: DatabaseAccess.getInstance().getField(
-                  "student tasks", StudentData.studentEmail, "isAdmin"),
-              builder: (context, isAdmin) {
-                if (!isAdmin.hasData) {
+                  "student tasks", StudentData.studentEmail, "isOwner"),
+              builder: (context, isOwner) {
+                if (!isOwner.hasData) {
                   return Container();
-                } else if (isAdmin.data!) {
+                } else if (isOwner.data!) {
                   return ElevatedButton(
                       //// on pressed remove this user from the team
                       onPressed: () async {

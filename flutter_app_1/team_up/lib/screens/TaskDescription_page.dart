@@ -49,7 +49,7 @@ class _TaskDescription_pageState extends State<TaskDescription_page> {
       backgroundColor: const Color.fromARGB(255, 201, 141, 141),
       body: Container(
         child: Column(
-          children: <Widget>[
+          children:  StudentData.allViewingTask!.length > 0 ? <Widget>[
             const SizedBox(
               height: 70,
             ),
@@ -280,7 +280,7 @@ class _TaskDescription_pageState extends State<TaskDescription_page> {
             //   child: Text("Sign Up for task"),
             // ),
             const SizedBox(height: 20),
-          ],
+          ] : [],
         ),
       ),
     );
