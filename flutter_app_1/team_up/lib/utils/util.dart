@@ -62,9 +62,9 @@ class Util {
     if (attendeesGet == null) {
       attendees = [];
     }
-
+  else {
     attendees = attendeesGet!.cast<String>();
-
+  }
     FlutterLogs.logInfo("Email", "attendees", attendees.toString());
 
     if (!contains(StudentData.studentEmail, attendees)) {
