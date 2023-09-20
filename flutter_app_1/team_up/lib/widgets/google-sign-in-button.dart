@@ -38,7 +38,8 @@ class GoogleSignInButton {
               "isAdmin": StudentData.tempSignUpAdmin,
               "team number": 'Public',
               "normal team": "",
-              "email": user.email!
+              "email": user.email!,
+              'username': ''
             });
           }
           StudentData.studentEmail = user.email!;

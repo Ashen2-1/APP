@@ -320,13 +320,7 @@ SizedBox textFieldTaskInfo(List<Map<String, dynamic>> allTaskMap,
   //////////////////////////////////////////////////////////////////////new
 }
 
-SizedBox studentTaskInfoWidget(List<Map<String, dynamic>> studentTasksMap,
-    int index, BuildContext context) {
-  // List<Map<String, dynamic>>? curTasksList =
-  //     await DatabaseAccess.getInstance().getAllSignedUpTasks();
-
-  Map<String, dynamic> curTask = studentTasksMap[index];
-  FlutterLogs.logInfo("Error", "Test", curTask['task']);
+Color determineColor(Map<String, dynamic> curTask) {
   Color color = const Color.fromARGB(255, 193, 184, 184).withOpacity(0.3);
   if (curTask['complete percentage'] == "100%") {
     color = Color.fromARGB(255, 27, 239, 73).withOpacity(0.6);
@@ -341,6 +335,17 @@ SizedBox studentTaskInfoWidget(List<Map<String, dynamic>> studentTasksMap,
   } else if (curTask['approved'] && curTask['finish time'] == null) {
     color = Color.fromARGB(255, 238, 200, 33).withOpacity(0.5);
   }
+  return color;
+}
+
+SizedBox studentTaskInfoWidget(List<Map<String, dynamic>> studentTasksMap,
+    int index, BuildContext context) {
+  // List<Map<String, dynamic>>? curTasksList =
+  //     await DatabaseAccess.getInstance().getAllSignedUpTasks();
+
+  Map<String, dynamic> curTask = studentTasksMap[index];
+  FlutterLogs.logInfo("Error", "Test", curTask['task']);
+  Color color = determineColor(curTask);
 
   bool ableWorkTaskCondition = curTask['complete percentage'] != "100%" &&
       (curTask['approved'] || !curTask['completed']) &&
@@ -414,7 +419,7 @@ SizedBox studentTaskInfoWidget(List<Map<String, dynamic>> studentTasksMap,
                 ),
                 if (curTask['complete percentage'] == "100%")
                   reusableSignUpTaskButton("Clear this task", context, () {
-                    studentTasksMap.removeAt(index);
+                    studentTasksMap[index]['studentViewable'] = false;
                     DatabaseAccess.getInstance().addToDatabase("student tasks",
                         "signed up", {'tasks': studentTasksMap});
                     ConfigUtils.goToScreen(const StudentTasksScreen(), context);
@@ -468,6 +473,89 @@ SizedBox studentTaskInfoWidget(List<Map<String, dynamic>> studentTasksMap,
                       ConfigUtils.goToScreen(const CountdownPage(), context);
                     }
                   }),
+              ]),
+              const SizedBox(width: 10.0), // For spacing
+              if (curTask['image url'] != "None")
+                Flexible(child: Image.network(curTask['image url'])),
+            ]),
+          ])));
+}
+
+SizedBox allViewTaskWidget(List<Map<String, dynamic>> studentTasksMap,
+    int index, BuildContext context) {
+  Map<String, dynamic> curTask = studentTasksMap[index];
+  FlutterLogs.logInfo("Error", "Test", curTask['task']);
+  Color color = determineColor(curTask);
+
+  return SizedBox(
+      height: 200.0,
+      width: MediaQuery.of(context).size.width,
+      child: Container(
+          height: 120.0,
+          padding: const EdgeInsets.all(12.0),
+          margin: const EdgeInsets.all(10.0),
+          //width: 200.0, //MediaQuery.of(context).size.width,
+
+          decoration: BoxDecoration(
+              color: color,
+              borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(10),
+                  topRight: Radius.circular(10),
+                  bottomLeft: Radius.circular(10),
+                  bottomRight: Radius.circular(10))),
+          child: ListView(children: [
+            Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                regularText(curTask['task'], context, true),
+                const SizedBox(height: 3),
+                if (curTask['finish time'] != null)
+                  regularText(
+                      "Due date:\n${Util.formatDateTime(curTask['finish time'].toDate())}",
+                      context,
+                      false),
+                if (curTask['finish time'] == null)
+                  regularText(
+                      "Due date:\n${Util.formatDateTime(curTask['due date'].toDate())}",
+                      context,
+                      false),
+                const SizedBox(height: 10),
+                if (curTask['assigner'] != null)
+                  regularText(
+                      "Creator: ${curTask['assigner']}", context, false),
+                if (curTask['completer'] != null)
+                  regularText(
+                      "Completer: ${curTask['completer']}", context, false),
+                // regularText("Skills needed: ${curTask['skills needed']}",
+                //     context, false),
+                // //const SizedBox(height: 3),
+                // regularText(
+                //     "Task time: ${curTask['estimated time']}", context, false)
+                ////////////////////////////////////////////////new
+                ElevatedButton(
+                  onPressed: () {
+                    StudentData.setViewingTask(studentTasksMap);
+                    StudentData.viewingIndex = index;
+                    StudentData.descriptionIncomingPage = "my tasks";
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                const TaskDescription_page()));
+
+                    ///TaskDescription_page
+                  },
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.blue,
+                  ),
+                  child: const Text("Description"),
+                ),
+                if (curTask['complete percentage'] == "100%")
+                  reusableSignUpTaskButton("Clear from database", context, () {
+                    studentTasksMap.removeAt(index);
+                    DatabaseAccess.getInstance().addToDatabase("student tasks",
+                        "signed up", {'tasks': studentTasksMap});
+                    ConfigUtils.goToScreen(const StudentTasksScreen(), context);
+                  })
               ]),
               const SizedBox(width: 10.0), // For spacing
               if (curTask['image url'] != "None")

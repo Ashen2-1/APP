@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:team_up/constants/student_data.dart';
 import 'package:team_up/screens/add_tasks_screen.dart';
 import 'package:team_up/screens/all_approve_tasks_screen.dart';
+import 'package:team_up/screens/all_tasks_view_page.dart';
 import 'package:team_up/screens/unassigned_tasks_page.dart';
+import 'package:team_up/screens/student_tasks_screen.dart';
 
 import '../utils/configuration_util.dart';
 import '../widgets/nav_bar.dart';
@@ -66,15 +68,34 @@ class TasksPageState extends State<TasksPage> {
                               ]),
                               const SizedBox(height: 20),
                               createClickableIcon(
-                                  Icon(Icons.assignment_late_outlined),
-                                  Color.fromARGB(255, 245, 80, 39)
+                                  const Icon(Icons.assignment_late_outlined),
+                                  const Color.fromARGB(255, 245, 80, 39)
                                       .withOpacity(0.3), () {
                                 ConfigUtils.goToScreen(
                                     const UnassignedTasksPage(), context);
-                              }, "Unassigned Tasks")
+                              }, "Unassigned Tasks"),
+                              createClickableIcon(
+                                  const Icon(
+                                      Icons.admin_panel_settings_outlined),
+                                  Color.fromARGB(255, 139, 245, 39)
+                                      .withOpacity(0.3), () {
+                                ConfigUtils.goToScreen(
+                                    const AllTasksViewPage(), context);
+                              }, "View All Tasks"),
                             ]);
                           } else {
-                            return Container();
+                            return Column(children: [
+                              Row(children: [
+                                const SizedBox(width: 10),
+                                createClickableIcon(
+                                    const Icon(Icons.add_box_outlined,
+                                        color: Colors.white, size: 30),
+                                    const Color(0xFFFFCF2F), () {
+                                  ConfigUtils.goToScreen(
+                                      const StudentTasksScreen(), context);
+                                }, "My Tasks")
+                              ])
+                            ]);
                           }
                         }
                       }))

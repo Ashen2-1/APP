@@ -173,20 +173,36 @@ class _HomeScreenState extends State<HomeScreen> {
                   //   ],
                   // ),
                   const SizedBox(height: 10),
-                  const Padding(
-                    padding:
-                        EdgeInsets.only(left: 3, bottom: 15), //top bar size
-                    child: Text(
-                      "Hi, Engineer", // title size
-                      style: TextStyle(
-                        fontSize: 25,
-                        fontWeight: FontWeight.w600,
-                        letterSpacing: 1,
-                        wordSpacing: 2,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
+                  FutureBuilder(
+                      future: DatabaseAccess.getInstance().getField(
+                          "student tasks",
+                          StudentData.studentEmail,
+                          "username"),
+                      builder: ((context, validUsername) {
+                        if (!validUsername.hasData) {
+                          return Container();
+                        }
+                        String text = "Hi, ";
+                        if (validUsername.data == "") {
+                          text += StudentData.studentEmail.split("@")[0];
+                        } else {
+                          text += validUsername.data;
+                        }
+                        return Padding(
+                          padding: EdgeInsets.only(
+                              left: 3, bottom: 15), //top bar size
+                          child: Text(
+                            text, // title size
+                            style: TextStyle(
+                              fontSize: 25,
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: 1,
+                              wordSpacing: 2,
+                              color: Colors.white,
+                            ),
+                          ),
+                        );
+                      })),
                   FutureBuilder(
                       future: StudentData.getStudentTeamNumber(),
                       builder: (context, studentTeamNumber) {

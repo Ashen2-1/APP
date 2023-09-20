@@ -75,7 +75,7 @@ class _StudentProgressScreenState extends State<StudentProgressScreen> {
         "Current: ${StudentData.getQuerySubTeam()}");
     return Column(children: [
       const SizedBox(height: 20),
-      const Text("Available time (inclusive): "),
+      const Text("How much time do you have?", style: TextStyle(fontSize: 15)),
       ListTile(
         title: const Text('20 minutes or less'),
         leading: Radio<String>(

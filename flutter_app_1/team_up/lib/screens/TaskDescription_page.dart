@@ -117,7 +117,19 @@ class _TaskDescription_pageState extends State<TaskDescription_page> {
               Column(children: [
                 Center(
                   child: Text(
-                    "Assigner: ${StudentData.allViewingTask![StudentData.viewingIndex!]['assigner']}",
+                    "Creator: ${StudentData.allViewingTask![StudentData.viewingIndex!]['assigner']}",
+                    style: const TextStyle(fontSize: 16),
+                  ),
+                ),
+                const SizedBox(height: 15),
+              ]),
+            if (StudentData.allViewingTask![StudentData.viewingIndex!]
+                    ['completer'] !=
+                null)
+              Column(children: [
+                Center(
+                  child: Text(
+                    "Completer: ${StudentData.allViewingTask![StudentData.viewingIndex!]['completer']}",
                     style: const TextStyle(fontSize: 16),
                   ),
                 ),
@@ -189,6 +201,7 @@ class _TaskDescription_pageState extends State<TaskDescription_page> {
                       taskToAdd['approved'] = false;
                       taskToAdd['feedback'] = "None";
                       taskToAdd['complete percentage'] = "None";
+                      taskToAdd['studentViewable'] = true;
                       taskToAdd['finish time'] = Timestamp.fromDate(
                           DateTime.now().add(Duration(
                               minutes: Util.convertStringTimeToIntMinutes(

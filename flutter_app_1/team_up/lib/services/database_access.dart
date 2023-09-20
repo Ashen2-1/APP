@@ -149,7 +149,8 @@ class DatabaseAccess {
       if (data!.isNotEmpty) {
         List<dynamic> listData = data['tasks'];
         for (Map<String, dynamic> mapData in listData) {
-          if (mapData['completer'] == StudentData.studentEmail) {
+          if (mapData['completer'] == StudentData.studentEmail &&
+              mapData['studentViewable']) {
             fieldResults.add(mapData);
           }
         }
