@@ -75,14 +75,14 @@ class _Approve_pageState extends State<Approve_page>
           child: Column(
             children: [
               const SizedBox(height: 20),
-              Text("Approving task: ${StudentData.approvalTask!['task']}",
+              Text("Approving task:\n${StudentData.approvalTask!['task']}",
                   style: defaultFont, textAlign: TextAlign.center),
               const SizedBox(height: 20),
               Container(
                   padding: const EdgeInsets.all(10.0),
                   child: Column(children: const [
-                    Text("Submitted file link:", style: defaultFont),
-                    Text("copy and paste into browser for viewing")
+                    Text("Submitted file:", style: defaultFont),
+                    Text("If link, copy and paste into browser for viewing")
                   ])),
               Container(
                 padding: const EdgeInsets.all(10.0),

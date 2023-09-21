@@ -31,7 +31,9 @@ class Util {
 
   static bool checkValidImage(dynamic url) {
     return url != null &&
-        (url.contains(".png") || url.contains(".jpg") || url.contains(".jpeg"));
+        (url.toLowerCase().contains(".png") ||
+            url.toLowerCase().contains(".jpg") ||
+            url.toLowerCase().contains(".jpeg"));
   }
 
   static List<Map<String, dynamic>> combineTaskIntoExisting(
@@ -61,10 +63,9 @@ class Util {
 
     if (attendeesGet == null) {
       attendees = [];
+    } else {
+      attendees = attendeesGet.cast<String>();
     }
-  else {
-    attendees = attendeesGet!.cast<String>();
-  }
     FlutterLogs.logInfo("Email", "attendees", attendees.toString());
 
     if (!contains(StudentData.studentEmail, attendees)) {

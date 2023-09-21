@@ -255,12 +255,12 @@ class DatabaseAccess {
       if (data!.isNotEmpty) {
         List<dynamic> listData = data['tasks'];
         for (Map<String, dynamic> mapData in listData) {
-          if ((mapData['completed'] ||
-              (mapData['finish time'] != null &&
+          if (((mapData['completed'] ||
+                  (mapData['finish time'] != null &&
                       Timestamp.now().seconds >
-                          mapData['finish time'].seconds) &&
-                  !mapData['approved'] &&
-                  mapData['assigner'] == StudentData.studentEmail)) {
+                          mapData['finish time'].seconds)) &&
+              !mapData['approved'] &&
+              mapData['assigner'] == StudentData.studentEmail)) {
             fieldResults.add(mapData);
           }
         }

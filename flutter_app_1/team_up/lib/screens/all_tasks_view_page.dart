@@ -35,7 +35,7 @@ class AllTasksViewPageState extends State<AllTasksViewPage> {
                   },
                 ));
               }),
-          reusableButton("Update my tasks", context, () async {
+          reusableButton("Update all tasks", context, () async {
             allTasksList =
                 (await DatabaseAccess.getInstance().getAllSignedUpTasks())!;
           }),

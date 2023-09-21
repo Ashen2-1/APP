@@ -6,6 +6,7 @@ import 'package:team_up/constants/colors.dart';
 import 'package:team_up/constants/student_data.dart';
 import 'package:team_up/screens/Approve_page.dart';
 import 'package:team_up/screens/all_approve_tasks_screen.dart';
+import 'package:team_up/screens/all_tasks_view_page.dart';
 import 'package:team_up/screens/countdown-page.dart';
 import 'package:team_up/screens/home_screen.dart';
 import 'package:team_up/screens/page_navigation_screen.dart';
@@ -93,7 +94,39 @@ Future<bool?> askConfirmation(BuildContext context, String taskText) async {
       return AlertDialog(
         title: const Text('Confirmation'),
         content: Text(
-            'Are you sure you want to assign yourself $taskText? This means you are starting the task right away'),
+            'Are you sure you want to assign yourself "$taskText"? This means you are starting the task right away'),
+        actions: [
+          TextButton(
+            child: const Text('No'),
+            onPressed: () {
+              Navigator.of(context)
+                  .pop(false); // Return false when "No" is pressed
+              confirmation = false;
+            },
+          ),
+          TextButton(
+            child: const Text('Yes'),
+            onPressed: () {
+              Navigator.of(context)
+                  .pop(true); // Return true when "Yes" is pressed
+              confirmation = true;
+            },
+          ),
+        ],
+      );
+    },
+  );
+  return confirmation;
+}
+
+Future<bool?> askConfirmationGeneral(BuildContext context, String text) async {
+  bool? confirmation;
+  await showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text('Confirmation'),
+        content: Text(text),
         actions: [
           TextButton(
             child: const Text('No'),
@@ -125,7 +158,7 @@ Widget createClickableIcon(
       onTap: onTap,
       child: Container(
         height: 60,
-        width: 60,
+        width: 80,
         decoration: BoxDecoration(
           color: iconColor,
           shape: BoxShape.circle,
@@ -148,6 +181,7 @@ Widget createClickableIcon(
             fontWeight: FontWeight.w500,
             color: Colors.black.withOpacity(0.7),
           ),
+          softWrap: true,
         )),
   ]);
 }
@@ -332,7 +366,9 @@ Color determineColor(Map<String, dynamic> curTask) {
                   (1 * 24 * 60 * 60) &&
               curTask['due date'].seconds - Timestamp.now().seconds > 0))) {
     color = const Color.fromARGB(255, 249, 94, 94).withOpacity(0.3);
-  } else if (curTask['approved'] && (curTask['finish time'] == null && curTask['due date'].seconds > Timestamp.now().seconds)) {
+  } else if (curTask['approved'] &&
+      (curTask['finish time'] == null &&
+          curTask['due date'].seconds > Timestamp.now().seconds)) {
     color = Color.fromARGB(255, 238, 200, 33).withOpacity(0.5);
   }
   return color;
@@ -349,8 +385,9 @@ SizedBox studentTaskInfoWidget(List<Map<String, dynamic>> studentTasksMap,
 
   bool ableWorkTaskCondition = curTask['complete percentage'] != "100%" &&
       (curTask['approved'] || !curTask['completed']) &&
-      (curTask['finish time'] == null && curTask['finish time'] != null &&
-          Timestamp.now().seconds < curTask['finish time'].seconds);
+      (curTask['finish time'] == null ||
+          (curTask['finish time'] != null &&
+              Timestamp.now().seconds < curTask['finish time'].seconds));
 
   return SizedBox(
       height: ableWorkTaskCondition ? 225.0 : 175.0,
@@ -549,13 +586,22 @@ SizedBox allViewTaskWidget(List<Map<String, dynamic>> studentTasksMap,
                   ),
                   child: const Text("Description"),
                 ),
-                if (curTask['complete percentage'] == "100%")
-                  reusableSignUpTaskButton("Clear from database", context, () {
-                    studentTasksMap.removeAt(index);
-                    DatabaseAccess.getInstance().addToDatabase("student tasks",
-                        "signed up", {'tasks': studentTasksMap});
-                    ConfigUtils.goToScreen(const StudentTasksScreen(), context);
-                  })
+                //if (curTask['complete percentage'] == "100%")
+                reusableSignUpTaskButton("Clear from database", context,
+                    () async {
+                  await askConfirmationGeneral(context,
+                          'Are you sure you want to remove task "${curTask['task']}"? Doing this means the task is permanently erased!')
+                      .then((confirmation) {
+                    if (confirmation != null && confirmation) {
+                      studentTasksMap.removeAt(index);
+                      DatabaseAccess.getInstance().addToDatabase(
+                          "student tasks",
+                          "signed up",
+                          {'tasks': studentTasksMap});
+                      ConfigUtils.goToScreen(const AllTasksViewPage(), context);
+                    }
+                  });
+                })
               ]),
               const SizedBox(width: 10.0), // For spacing
               if (curTask['image url'] != "None")

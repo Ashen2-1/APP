@@ -39,6 +39,7 @@ Widget buildNavBar(BuildContext context, int currentIndex) {
             icon: Icons.home,
             text: "Home",
           ),
+          //if (f)
           GButton(
             icon: Icons.assignment_outlined,
             text: "Tasks",

@@ -5,6 +5,7 @@ import 'package:team_up/screens/all_approve_tasks_screen.dart';
 import 'package:team_up/screens/all_tasks_view_page.dart';
 import 'package:team_up/screens/unassigned_tasks_page.dart';
 import 'package:team_up/screens/student_tasks_screen.dart';
+import 'package:team_up/services/database_access.dart';
 
 import '../utils/configuration_util.dart';
 import '../widgets/nav_bar.dart';
@@ -49,7 +50,7 @@ class TasksPageState extends State<TasksPage> {
                           if (isAdmin.data!) {
                             return Column(children: [
                               Row(children: [
-                                const SizedBox(width: 10),
+                                const SizedBox(width: 55),
                                 createClickableIcon(
                                     const Icon(Icons.add_box_outlined,
                                         color: Colors.white, size: 30),
@@ -57,7 +58,7 @@ class TasksPageState extends State<TasksPage> {
                                   ConfigUtils.goToScreen(
                                       const AddTasksScreen(), context);
                                 }, "Add a task!"),
-                                const SizedBox(width: 20),
+                                const SizedBox(width: 55),
                                 createClickableIcon(
                                     const Icon(Icons.check,
                                         color: Colors.white, size: 30),
@@ -67,21 +68,42 @@ class TasksPageState extends State<TasksPage> {
                                 }, "Approve tasks")
                               ]),
                               const SizedBox(height: 20),
-                              createClickableIcon(
-                                  const Icon(Icons.assignment_late_outlined),
-                                  const Color.fromARGB(255, 245, 80, 39)
-                                      .withOpacity(0.3), () {
-                                ConfigUtils.goToScreen(
-                                    const UnassignedTasksPage(), context);
-                              }, "Unassigned Tasks"),
-                              createClickableIcon(
-                                  const Icon(
-                                      Icons.admin_panel_settings_outlined),
-                                  Color.fromARGB(255, 139, 245, 39)
-                                      .withOpacity(0.3), () {
-                                ConfigUtils.goToScreen(
-                                    const AllTasksViewPage(), context);
-                              }, "View All Tasks"),
+                              Row(children: [
+                                const SizedBox(width: 30),
+                                createClickableIcon(
+                                    const Icon(Icons.assignment_late_outlined),
+                                    const Color.fromARGB(255, 245, 80, 39)
+                                        .withOpacity(0.3), () {
+                                  ConfigUtils.goToScreen(
+                                      const UnassignedTasksPage(), context);
+                                }, "Unassigned Tasks"),
+                                FutureBuilder(
+                                    future: DatabaseAccess.getInstance()
+                                        .getField(
+                                            "student tasks",
+                                            StudentData.studentEmail,
+                                            "isOwner"),
+                                    builder: (context, isOwner) {
+                                      if (!isOwner.hasData || !isOwner.data) {
+                                        return Container();
+                                      }
+                                      //else if (!isOwner.data) {
+                                      //   return Container();
+                                      // }
+                                      return Row(children: [
+                                        const SizedBox(width: 30),
+                                        createClickableIcon(
+                                            const Icon(Icons
+                                                .admin_panel_settings_outlined),
+                                            Color.fromARGB(255, 139, 245, 39)
+                                                .withOpacity(0.3), () {
+                                          ConfigUtils.goToScreen(
+                                              const AllTasksViewPage(),
+                                              context);
+                                        }, "View All Tasks")
+                                      ]);
+                                    })
+                              ])
                             ]);
                           } else {
                             return Column(children: [
