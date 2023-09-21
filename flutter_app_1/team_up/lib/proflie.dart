@@ -145,8 +145,17 @@ class _EditProfilePageState extends State<EditProfilePage> {
               const SizedBox(
                 height: 35,
               ),
-
-              buildTextFiels("User Name", "User", false, username_controller),
+              FutureBuilder(
+                  future: DatabaseAccess.getInstance().getField(
+                      "student tasks", StudentData.studentEmail, "username"),
+                  builder: (context, username) {
+                    if (!username.hasData) {
+                      return Container();
+                    }
+                    username_controller.text = username.data;
+                    return buildTextFiels(
+                        "User Name", "User", false, username_controller);
+                  }),
               // buildTextFiels("E-mail", "@gmail.com",
               //     false), //"${StudentData.studentEmail}"
               Padding(
@@ -154,8 +163,17 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   child: Text("Email: ${StudentData.studentEmail}",
                       style: const TextStyle(fontSize: 16))),
               //buildTextFiels("Password", "******", true, password_controller),
-              buildTextFiels("Description", "Tell us some thing", false,
-                  description_controller),
+              FutureBuilder(
+                  future: DatabaseAccess.getInstance().getField(
+                      "student tasks", StudentData.studentEmail, "description"),
+                  builder: (context, description) {
+                    if (!description.hasData) {
+                      return Container();
+                    }
+                    description_controller.text = description.data;
+                    return buildTextFiels("Description", "Tell us some thing",
+                        false, description_controller);
+                  }),
               const SizedBox(
                 height: 50,
               ),

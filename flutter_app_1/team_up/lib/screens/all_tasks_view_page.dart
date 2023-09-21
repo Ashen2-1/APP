@@ -14,6 +14,7 @@ class AllTasksViewPage extends StatefulWidget {
 
 class AllTasksViewPageState extends State<AllTasksViewPage> {
   List<Map<String, dynamic>> allTasksList = [];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,6 +39,7 @@ class AllTasksViewPageState extends State<AllTasksViewPage> {
           reusableButton("Update all tasks", context, () async {
             allTasksList =
                 (await DatabaseAccess.getInstance().getAllSignedUpTasks())!;
+            setState(() {});
           }),
         ]));
   }
