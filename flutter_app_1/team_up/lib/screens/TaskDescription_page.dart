@@ -221,7 +221,7 @@ class _TaskDescription_pageState extends State<TaskDescription_page> {
                                         .getAllTasks(
                                             StudentData.getQuerySubTeam());
                                 if (inDatabaseTasks!.isNotEmpty &&
-                                    inDatabaseTasks.length <
+                                    inDatabaseTasks.length >
                                         StudentData.viewingIndex! &&
                                     inDatabaseTasks[StudentData.viewingIndex!]
                                             ['task'] ==
@@ -257,6 +257,9 @@ class _TaskDescription_pageState extends State<TaskDescription_page> {
                                       ]
                                     });
                                   }
+
+                                  await Util.addToLog(
+                                      "${StudentData.studentEmail} signed up for task ${taskToAdd['task']}");
 
                                   StudentData.currentTask = taskToAdd;
                                   ConfigUtils.goToScreen(

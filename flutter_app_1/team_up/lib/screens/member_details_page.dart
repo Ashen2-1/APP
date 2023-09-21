@@ -6,6 +6,7 @@ import 'package:lite_rolling_switch/lite_rolling_switch.dart';
 import 'package:team_up/screens/my_team_page.dart';
 import 'package:team_up/services/database_access.dart';
 import 'package:team_up/utils/configuration_util.dart';
+import 'package:team_up/utils/util.dart';
 
 import '../calendar.dart';
 import '../constants/student_data.dart';
@@ -244,6 +245,13 @@ class DetailPageState extends State<DetailPage> {
                                         "student tasks",
                                         StudentData.viewingUserEmail,
                                         {'isAdmin': position});
+                                    if (position) {
+                                      await Util.addToLog(
+                                          "${StudentData.studentEmail} got mentor/lead privileges");
+                                    } else {
+                                      await Util.addToLog(
+                                          "${StudentData.studentEmail} got removed mentor/lead privileges");
+                                    }
                                   }
                                   //isAdmin == position;
                                   //print(isAdmin);
@@ -255,13 +263,13 @@ class DetailPageState extends State<DetailPage> {
                       });
                 }),
 //////////////////////////////////////////////////////////////////////
-///
-///
+            ///
+            ///
 /////////////////////////////////////////////////////////////////////////////////////////////////////
             ///
             FutureBuilder(
                 future: DatabaseAccess.getInstance().getField(
-                  "student tasks", StudentData.studentEmail, "isOwner"),
+                    "student tasks", StudentData.studentEmail, "isOwner"),
                 builder: (context, isOwner) {
                   if (!isOwner.hasData) {
                     return Container();
@@ -323,6 +331,13 @@ class DetailPageState extends State<DetailPage> {
                                         "student tasks",
                                         StudentData.viewingUserEmail,
                                         {'isOwner': position});
+                                    if (position) {
+                                      await Util.addToLog(
+                                          "${StudentData.studentEmail} got owner privileges");
+                                    } else {
+                                      await Util.addToLog(
+                                          "${StudentData.studentEmail} got removed owner privileges");
+                                    }
                                   }
                                   //isAdmin == position;
                                   //print(isAdmin);
@@ -334,8 +349,8 @@ class DetailPageState extends State<DetailPage> {
                       });
                 }),
 //////////////////////////////////////////////////////////////////////
-///
-///
+            ///
+            ///
             SizedBox(
               height: 18,
             ),

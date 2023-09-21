@@ -51,10 +51,15 @@ class Util {
     return prevTasks;
   }
 
-  static void logAttendance() async {
+  static String getDateString() {
     DateTime now = DateTime.now();
     String dateString =
         addZerotoDateString("${now.year}-${now.month}-${now.day}");
+    return dateString;
+  }
+
+  static void logAttendance() async {
+    String dateString = getDateString();
 
     List<dynamic>? attendeesGet = await DatabaseAccess.getInstance()
         .getField("Attendance", dateString, "attendance");
@@ -76,6 +81,24 @@ class Util {
 
     DatabaseAccess.getInstance()
         .addToDatabase("Attendance", dateString, {'attendance': attendees});
+  }
+
+  static Future<void> addToLog(String logText, {String? teamNumber}) async {
+    FlutterLogs.logInfo("LOGS", "team number", (teamNumber == null).toString());
+
+    teamNumber ??= await DatabaseAccess.getInstance()
+        .getField("student tasks", StudentData.studentEmail, "team number");
+
+    List<String>? prevLogs = (await DatabaseAccess.getInstance()
+            .getField("logs", teamNumber!, "logs"))
+        .cast<String>();
+
+    prevLogs ??= [];
+
+    prevLogs.add("${Util.formatDateTime(DateTime.now())}: $logText");
+
+    DatabaseAccess.getInstance()
+        .addToDatabase("logs", teamNumber, {"logs": prevLogs});
   }
 
   static List<Map<String, dynamic>> matchAndCombineExisting(

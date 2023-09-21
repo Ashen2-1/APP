@@ -171,6 +171,10 @@ class _Approve_pageState extends State<Approve_page>
                                       .getAllSignedUpTasks());
                           DatabaseAccess.getInstance().addToDatabase(
                               "student tasks", 'signed up', {"tasks": tasks});
+
+                          await Util.addToLog(
+                              "${StudentData.studentEmail} approved ${existingTaskData['task']}");
+
                           Navigator.push(
                               context,
                               MaterialPageRoute(

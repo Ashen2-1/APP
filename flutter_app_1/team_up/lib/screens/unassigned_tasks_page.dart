@@ -128,6 +128,9 @@ class _UnassignedTasksPageState extends State<UnassignedTasksPage> {
                                         "Tasks",
                                         "outstanding",
                                         {"tasks": studentTasksMap});
+                                    await Util.addToLog(
+                                        "${StudentData.studentEmail} redistributed task ${studentTasksMap![index]['task']}");
+
                                     ConfigUtils.goToScreen(
                                         TasksPage(), context);
                                   } else {
@@ -137,13 +140,15 @@ class _UnassignedTasksPageState extends State<UnassignedTasksPage> {
                                   }
                                 }),
                                 reusableSignUpTaskButton(
-                                    "Remove tracking", context, () {
+                                    "Remove tracking", context, () async {
                                   studentTasksMap!.removeWhere((element) =>
                                       element == studentTasksMap![index]);
                                   DatabaseAccess.getInstance().addToDatabase(
                                       "Tasks",
                                       "outstanding",
                                       {"tasks": studentTasksMap});
+                                  await Util.addToLog(
+                                      "${StudentData.studentEmail} removed unassigned task ${studentTasksMap![index]['task']}");
                                 })
                               ]),
                               // if (imageURL[index] != "None")

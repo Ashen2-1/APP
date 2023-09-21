@@ -507,6 +507,8 @@ SizedBox studentTaskInfoWidget(List<Map<String, dynamic>> studentTasksMap,
                             await DatabaseAccess.getInstance()
                                 .getAllSignedUpTasks())
                       });
+                      await Util.addToLog(
+                          "${StudentData.studentEmail} continued working on task ${StudentData.currentTask!['task']}");
                       ConfigUtils.goToScreen(const CountdownPage(), context);
                     }
                   }),
@@ -607,6 +609,28 @@ SizedBox allViewTaskWidget(List<Map<String, dynamic>> studentTasksMap,
               if (curTask['image url'] != "None")
                 Flexible(child: Image.network(curTask['image url'])),
             ]),
+          ])));
+}
+
+SizedBox logWidget(String logText, BuildContext context) {
+  return SizedBox(
+      height: 100.0,
+      width: MediaQuery.of(context).size.width,
+      child: Container(
+          height: 120.0,
+          padding: const EdgeInsets.all(12.0),
+          margin: const EdgeInsets.all(10.0),
+          //width: 200.0, //MediaQuery.of(context).size.width,
+
+          decoration: BoxDecoration(
+              color: const Color.fromARGB(255, 193, 184, 184).withOpacity(0.3),
+              borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(10),
+                  topRight: Radius.circular(10),
+                  bottomLeft: Radius.circular(10),
+                  bottomRight: Radius.circular(10))),
+          child: ListView(children: [
+            Text(logText, style: const TextStyle(fontSize: 15))
           ])));
 }
 

@@ -352,6 +352,9 @@ class _AddTasksScreenState extends State<AddTasksScreen> {
 
               DatabaseAccess.getInstance()
                   .addToDatabase("Tasks", subteam, {"tasks": curTasks});
+
+              Util.addToLog(
+                  "${StudentData.studentEmail} added a task ${taskToAdd['task']}");
               clearFields();
               displayAlert("Successfully submitted!", context);
             } else {

@@ -3,6 +3,7 @@ import 'package:team_up/constants/student_data.dart';
 import 'package:team_up/screens/add_tasks_screen.dart';
 import 'package:team_up/screens/all_approve_tasks_screen.dart';
 import 'package:team_up/screens/all_tasks_view_page.dart';
+import 'package:team_up/screens/logs_page.dart';
 import 'package:team_up/screens/unassigned_tasks_page.dart';
 import 'package:team_up/screens/student_tasks_screen.dart';
 import 'package:team_up/services/database_access.dart';
@@ -102,8 +103,31 @@ class TasksPageState extends State<TasksPage> {
                                               context);
                                         }, "View All Tasks")
                                       ]);
-                                    })
-                              ])
+                                    }),
+                              ]),
+                              FutureBuilder(
+                                  future: DatabaseAccess.getInstance().getField(
+                                      "student tasks",
+                                      StudentData.studentEmail,
+                                      "isOwner"),
+                                  builder: (context, isOwner) {
+                                    if (!isOwner.hasData || !isOwner.data) {
+                                      return Container();
+                                    }
+                                    //else if (!isOwner.data) {
+                                    //   return Container();
+                                    // }
+                                    return Column(children: [
+                                      const SizedBox(height: 20),
+                                      createClickableIcon(
+                                          const Icon(Icons.list),
+                                          Color.fromARGB(255, 139, 245, 39)
+                                              .withOpacity(0.3), () {
+                                        ConfigUtils.goToScreen(
+                                            const LogsPage(), context);
+                                      }, "View Logs")
+                                    ]);
+                                  })
                             ]);
                           } else {
                             return Column(children: [

@@ -5,6 +5,7 @@ import 'package:team_up/constants/student_data.dart';
 import 'package:team_up/screens/home_screen.dart';
 import 'package:team_up/screens/page_navigation_screen.dart';
 import 'package:team_up/services/database_access.dart';
+import 'package:team_up/utils/util.dart';
 import 'package:team_up/widgets/nav_bar.dart';
 
 import '../constants/colors.dart';
@@ -147,6 +148,10 @@ class _Enterteampasscode_pageState extends State<Enterteampasscode_page>
 
                     DatabaseAccess.getInstance().addToDatabase("student tasks",
                         StudentData.studentEmail, curStudentStats);
+
+                    await Util.addToLog(
+                        "${StudentData.studentEmail} joined team ${StudentData.signingUpTeamNumber}",
+                        teamNumber: StudentData.signingUpTeamNumber);
 
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) => HomeScreen()));

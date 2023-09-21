@@ -157,6 +157,9 @@ class _Feedback_pageState extends State<Feedback_page> {
                                   .getAllSignedUpTasks());
                       DatabaseAccess.getInstance().addToDatabase(
                           "student tasks", "signed up", {"tasks": tasks});
+
+                      await Util.addToLog(
+                          "${StudentData.studentEmail} gave feedback for the task ${existingTaskData['task']} of ${existingTaskData['feedback']}");
                       Navigator.push(
                           context,
                           MaterialPageRoute(

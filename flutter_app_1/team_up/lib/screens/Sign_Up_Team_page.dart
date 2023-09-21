@@ -9,6 +9,7 @@ import 'package:team_up/screens/page_navigation_screen.dart';
 import 'package:team_up/services/database_access.dart';
 import 'package:team_up/services/firebase_access.dart';
 import 'package:team_up/utils/configuration_util.dart';
+import 'package:team_up/utils/util.dart';
 
 import '../services/file_uploader.dart';
 import '../services/internet_connection.dart';
@@ -171,6 +172,10 @@ class _Signupteam_pageState extends State<Signupteam_page>
                       };
                       DatabaseAccess.getInstance().addToDatabase(
                           "Teams", _teamnumberTextController.text, teamToAdd);
+
+                      await Util.addToLog(
+                          "${StudentData.studentEmail} created team ${_teamnumberTextController.text}",
+                          teamNumber: _teamnumberTextController.text);
 
                       Navigator.push(
                           context,
