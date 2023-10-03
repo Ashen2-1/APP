@@ -280,7 +280,9 @@ Future<bool> isMachineAvailable(machine) async {
 SizedBox textFieldTaskInfo(List<Map<String, dynamic>> allTaskMap,
     String subteam, int index, String incomingPage, BuildContext context) {
   Color color = const Color.fromARGB(255, 193, 184, 184).withOpacity(0.3);
-  if (allTaskMap[index]['level'] == "Introductory") {
+  if (allTaskMap[index]['isForAll']) {
+    color = Color.fromARGB(255, 158, 66, 173).withOpacity(0.3);
+  } else if (allTaskMap[index]['level'] == "Introductory") {
     color = easyColor;
   } else if (allTaskMap[index]['level'] == "Comfortable with skill") {
     color = mediumColor;

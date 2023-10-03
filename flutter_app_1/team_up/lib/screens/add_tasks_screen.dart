@@ -86,6 +86,7 @@ class _AddTasksScreenState extends State<AddTasksScreen> {
   String time = 'Select a time for task';
   String machineUsed = 'What equipment is used?';
   String level = "Select a level";
+  bool isForAll = false;
 
   void menuToggleExpansion() {
     setState(() {
@@ -102,6 +103,7 @@ class _AddTasksScreenState extends State<AddTasksScreen> {
     time = 'Select a time for task';
     machineUsed = "What equipment is used?";
     level = "Select a level";
+    isForAll = false;
     day = DateTime.now().add(const Duration(minutes: 30));
     setState(() {
       fileInitialized = false;
@@ -278,6 +280,19 @@ class _AddTasksScreenState extends State<AddTasksScreen> {
                     }).toList()))
           ]),
         const SizedBox(height: 10),
+        Row(children: [
+          const SizedBox(width: 5),
+          Checkbox(
+              value: isForAll,
+              onChanged: (bool? value) {
+                setState(() {
+                  isForAll = value!;
+                });
+              }),
+          const Text("Is this a task for everyone in subteam?",
+              style: TextStyle(fontSize: 17)),
+        ]),
+        const SizedBox(height: 10),
         Container(
             width: MediaQuery.of(context).size.width - 25,
             decoration: BoxDecoration(
@@ -340,6 +355,7 @@ class _AddTasksScreenState extends State<AddTasksScreen> {
                 'feedback': "None",
                 'complete percentage': "None",
                 'level': level,
+                'isForAll': isForAll,
                 'team number': await StudentData.getStudentTeamNumber(),
               };
 

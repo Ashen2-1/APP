@@ -184,13 +184,16 @@ class DatabaseAccess {
             copy.removeWhere((element) => element == mapData);
             DatabaseAccess.getInstance()
                 .addToDatabase("Tasks", subteam, {'tasks': copy});
-            List<dynamic> databaseGet = await DatabaseAccess.getInstance()
-                .getField("Tasks", "outstanding", "tasks");
-            mapData['subteam'] = subteam;
-            List<Map<String, dynamic>> res = Util.combineTaskIntoExisting(
-                mapData, databaseGet.cast<Map<String, dynamic>>());
-            DatabaseAccess.getInstance()
-                .addToDatabase("Tasks", "outstanding", {"tasks": res});
+
+            if (!(mapData['isForAll'])) {
+              List<dynamic> databaseGet = await DatabaseAccess.getInstance()
+                  .getField("Tasks", "outstanding", "tasks");
+              mapData['subteam'] = subteam;
+              List<Map<String, dynamic>> res = Util.combineTaskIntoExisting(
+                  mapData, databaseGet.cast<Map<String, dynamic>>());
+              DatabaseAccess.getInstance()
+                  .addToDatabase("Tasks", "outstanding", {"tasks": res});
+            }
           }
         }
       }

@@ -238,12 +238,14 @@ class _TaskDescription_pageState extends State<TaskDescription_page> {
                                       {"tasks": curTasks});
 
                                   // Remove task from existing
-                                  StudentData.allViewingTask!
-                                      .removeAt(StudentData.viewingIndex!);
-                                  DatabaseAccess.getInstance().addToDatabase(
-                                      "Tasks",
-                                      StudentData.getQuerySubTeam(),
-                                      {"tasks": StudentData.allViewingTask!});
+                                  if (!taskToAdd['isForAll']) {
+                                    StudentData.allViewingTask!
+                                        .removeAt(StudentData.viewingIndex!);
+                                    DatabaseAccess.getInstance().addToDatabase(
+                                        "Tasks",
+                                        StudentData.getQuerySubTeam(),
+                                        {"tasks": StudentData.allViewingTask!});
+                                  }
 
                                   // Add machine to occupied database list
                                   if (taskToAdd['machine needed'] != null) {

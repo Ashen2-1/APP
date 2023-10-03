@@ -98,7 +98,7 @@ class _AllApproveTasksScreenState extends State<AllApproveTasksScreen> {
                                 regularText(studentTasksMap![index]['task'],
                                     context, true),
                                 regularText(
-                                    "Submission date:\n${Util.formatDateTime((studentTasksMap![index]['submit time'] ?? studentTasksMap![index]['due date']).toDate())}",
+                                    "Submission time:\n${Util.formatDateTime((studentTasksMap![index]['submit time'] ?? studentTasksMap![index]['due date']).toDate())}",
                                     context,
                                     false),
                                 const SizedBox(height: 10),
