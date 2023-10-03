@@ -31,17 +31,8 @@ class Approve_page extends StatefulWidget {
   _Approve_pageState createState() => _Approve_pageState();
 }
 
-class _Approve_pageState extends State<Approve_page>
-    with TickerProviderStateMixin {
-  late AnimationController controller;
-
+class _Approve_pageState extends State<Approve_page> {
   bool isPlaying = false;
-
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
-  }
 
   void menuToggleExpansion() {
     setState(() {
@@ -69,129 +60,150 @@ class _Approve_pageState extends State<Approve_page>
 
   @override
   Widget buildMainContent(BuildContext context) {
-    return Scaffold(
-        backgroundColor: const Color(0xfff5fbff),
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              const SizedBox(height: 20),
-              Text("Approving task:\n${StudentData.approvalTask!['task']}",
-                  style: defaultFont, textAlign: TextAlign.center),
-              const SizedBox(height: 20),
-              Container(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Column(children: const [
-                    Text("Submitted file:", style: defaultFont),
-                    Text("If link, copy and paste into browser for viewing")
-                  ])),
-              Container(
-                padding: const EdgeInsets.all(10.0),
-                child: Util.checkValidImage(
-                        StudentData.approvalTask!['submit file url'])
-                    ? Image.network(
-                        StudentData.approvalTask!['submit file url'])
-                    : SelectableText(
-                        "${StudentData.approvalTask!['submit file url']}",
-                        style: StudentData.approvalTask!['submit file url'] !=
-                                "None"
-                            ? const TextStyle(
-                                fontSize: 13,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.blue,
-                                decoration: TextDecoration.underline)
-                            : defaultFont),
-              ),
-              // ElevatedButton(
-              //     child: Text("Download and open file", style: defaultFont),
-              // Text("${StudentData.approvalTask!['submit file url']}",
-              //     style:
-              //         StudentData.approvalTask!['submit file url'] != "None"
-              //             ? const TextStyle(
-              //                 fontSize: 13,
-              //                 fontWeight: FontWeight.bold,
-              //                 color: Colors.blue,
-              //                 decoration: TextDecoration.underline)
-              //             : defaultFont),
-              // onPressed: () async {
-              //   String fileURL =
-              //       StudentData.approvalTask!['submit file url'];
-              //   //if (fileURL != "None") {
-              //   FlutterLogs.logInfo(
-              //       "open file method", "open", "In open file method");
-              //   await openFile(
-              //       "https://cdn.discordapp.com/attachments/1102762971949695048/1120172904580124692/Advice.pdf",
-              //       //"https://firebasestorage.googleapis.com/v0/b/team-up1-a6ad3.appspot.com/o/student_files%2F1360%20Programming%20Attendance%20October-12-2022.pdf?alt=media&token=561b9da9-c5b4-4a47-9090-8b6424c821f7",
-              //       "Advice.pdf");
-              //   //}
-              // ConfigUtils.goToScreen(
-              //     OpenUrlInWebView(
-              //         url: StudentData.approvalTask!['submit file url']),
-              //     context);
-              // }),
-              const SizedBox(
-                height: 0,
-                width: 20,
-              ),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 88),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    //SizedBox(height: 10,),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => Feedback_page()));
-                      },
-                      child: const RoundButton(
-                        icon: Icons.close,
-                      ),
+    return WillPopScope(
+        onWillPop: () async {
+          // Navigate to the destination screen and prevent going back to this screen
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (context) => const AllApproveTasksScreen()),
+          );
+          return false;
+        },
+        child: Scaffold(
+            backgroundColor: const Color(0xfff5fbff),
+            body: SingleChildScrollView(
+              child: Column(
+                children: [
+                  const SizedBox(height: 20),
+                  Text("Approving task:\n${StudentData.approvalTask!['task']}",
+                      style: defaultFont, textAlign: TextAlign.center),
+                  const SizedBox(height: 20),
+                  Container(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Column(children: const [
+                        Text("Submitted file:", style: defaultFont),
+                        Text("If link, copy and paste into browser for viewing")
+                      ])),
+                  Container(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Util.checkValidImage(
+                            StudentData.approvalTask!['submit file url'])
+                        ? Image.network(
+                            StudentData.approvalTask!['submit file url'])
+                        : SelectableText(
+                            "${StudentData.approvalTask!['submit file url']}",
+                            style:
+                                StudentData.approvalTask!['submit file url'] !=
+                                        "None"
+                                    ? const TextStyle(
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.blue,
+                                        decoration: TextDecoration.underline)
+                                    : defaultFont),
+                  ),
+                  // ElevatedButton(
+                  //     child: Text("Download and open file", style: defaultFont),
+                  // Text("${StudentData.approvalTask!['submit file url']}",
+                  //     style:
+                  //         StudentData.approvalTask!['submit file url'] != "None"
+                  //             ? const TextStyle(
+                  //                 fontSize: 13,
+                  //                 fontWeight: FontWeight.bold,
+                  //                 color: Colors.blue,
+                  //                 decoration: TextDecoration.underline)
+                  //             : defaultFont),
+                  // onPressed: () async {
+                  //   String fileURL =
+                  //       StudentData.approvalTask!['submit file url'];
+                  //   //if (fileURL != "None") {
+                  //   FlutterLogs.logInfo(
+                  //       "open file method", "open", "In open file method");
+                  //   await openFile(
+                  //       "https://cdn.discordapp.com/attachments/1102762971949695048/1120172904580124692/Advice.pdf",
+                  //       //"https://firebasestorage.googleapis.com/v0/b/team-up1-a6ad3.appspot.com/o/student_files%2F1360%20Programming%20Attendance%20October-12-2022.pdf?alt=media&token=561b9da9-c5b4-4a47-9090-8b6424c821f7",
+                  //       "Advice.pdf");
+                  //   //}
+                  // ConfigUtils.goToScreen(
+                  //     OpenUrlInWebView(
+                  //         url: StudentData.approvalTask!['submit file url']),
+                  //     context);
+                  // }),
+                  const SizedBox(
+                    height: 0,
+                    width: 20,
+                  ),
+                  const Text("Submitter's comments: ", style: defaultFont),
+                  const SizedBox(height: 10),
+                  Text(StudentData.approvalTask!['submit comments'] ?? "None",
+                      style: const TextStyle(fontSize: 15)),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 10, vertical: 88),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        //SizedBox(height: 10,),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Feedback_page()));
+                          },
+                          child: const RoundButton(
+                            icon: Icons.close,
+                          ),
+                        ),
+
+                        GestureDetector(
+                          onTap: () async {
+                            if (!(await connectedToInternet())) {
+                              displayError(
+                                  "You are not connected to the Internet",
+                                  context);
+                            } else {
+                              Map<String, dynamic> existingTaskData =
+                                  StudentData.getApprovalTask()!;
+
+                              existingTaskData['complete percentage'] = "100%";
+                              existingTaskData['feedback'] = "None";
+                              existingTaskData['approved'] = true;
+
+                              List<Map<String, dynamic>> tasks =
+                                  Util.matchAndCombineExisting(
+                                      existingTaskData,
+                                      await DatabaseAccess.getInstance()
+                                          .getAllSignedUpTasks());
+                              DatabaseAccess.getInstance().addToDatabase(
+                                  "student tasks",
+                                  'signed up',
+                                  {"tasks": tasks});
+
+                              await Util.addToLog(
+                                  "${StudentData.studentEmail} approved ${existingTaskData['task']}");
+
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const AllApproveTasksScreen()));
+                            }
+                          },
+                          child: const RoundButton(
+                            icon: Icons.check,
+                          ),
+                        ),
+                      ],
                     ),
-
-                    GestureDetector(
-                      onTap: () async {
-                        if (!(await connectedToInternet())) {
-                          displayError(
-                              "You are not connected to the Internet", context);
-                        } else {
-                          Map<String, dynamic> existingTaskData =
-                              StudentData.getApprovalTask()!;
-
-                          existingTaskData['complete percentage'] = "100%";
-                          existingTaskData['feedback'] = "None";
-                          existingTaskData['approved'] = true;
-
-                          List<Map<String, dynamic>> tasks =
-                              Util.matchAndCombineExisting(
-                                  existingTaskData,
-                                  await DatabaseAccess.getInstance()
-                                      .getAllSignedUpTasks());
-                          DatabaseAccess.getInstance().addToDatabase(
-                              "student tasks", 'signed up', {"tasks": tasks});
-
-                          await Util.addToLog(
-                              "${StudentData.studentEmail} approved ${existingTaskData['task']}");
-
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      const AllApproveTasksScreen()));
-                        }
-                      },
-                      child: const RoundButton(
-                        icon: Icons.check,
-                      ),
-                    ),
-                  ],
-                ),
-              )
-            ],
-          ),
-        ));
+                  )
+                ],
+              ),
+            )));
   }
 
   // Future<void> openFile(String url, String name) async {

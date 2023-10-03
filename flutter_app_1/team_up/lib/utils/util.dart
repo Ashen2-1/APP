@@ -42,10 +42,10 @@ class Util {
     if (prevTasks == null || prevTasks.isEmpty)
       prevTasks = [taskToAdd];
     else {
-      if (!Util.isTaskIn(
-          taskToAdd['task'], prevTasks.cast<Map<String, dynamic>>())) {
-        prevTasks.add(taskToAdd);
-      }
+      // if (!Util.isTaskIn(
+      //     taskToAdd['task'], prevTasks.cast<Map<String, dynamic>>())) {
+      prevTasks.insert(0, taskToAdd);
+      // }
     }
 
     return prevTasks;
@@ -95,7 +95,7 @@ class Util {
 
     prevLogs ??= [];
 
-    prevLogs.add("${Util.formatDateTime(DateTime.now())}: $logText");
+    prevLogs.insert(0, "${Util.formatDateTime(DateTime.now())}: $logText");
 
     DatabaseAccess.getInstance()
         .addToDatabase("logs", teamNumber, {"logs": prevLogs});

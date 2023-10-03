@@ -9,6 +9,7 @@ import 'package:team_up/screens/all_approve_tasks_screen.dart';
 import 'package:team_up/screens/all_tasks_view_page.dart';
 import 'package:team_up/screens/countdown-page.dart';
 import 'package:team_up/screens/home_screen.dart';
+import 'package:team_up/screens/logs_page.dart';
 import 'package:team_up/screens/page_navigation_screen.dart';
 import 'package:team_up/screens/student_tasks_screen.dart';
 import 'package:team_up/services/database_access.dart';
@@ -152,13 +153,14 @@ Future<bool?> askConfirmationGeneral(BuildContext context, String text) async {
 }
 
 Widget createClickableIcon(
-    Icon icon, Color iconColor, void Function()? onTap, String text) {
+    Icon icon, Color iconColor, void Function()? onTap, String text,
+    {double width = 80, double height = 60}) {
   return Column(children: [
     GestureDetector(
       onTap: onTap,
       child: Container(
-        height: 60,
-        width: 80,
+        height: height,
+        width: width,
         decoration: BoxDecoration(
           color: iconColor,
           shape: BoxShape.circle,
@@ -170,19 +172,20 @@ Widget createClickableIcon(
     const SizedBox(
       height: 10,
     ),
-    Align(
-        alignment: Alignment.topLeft, //Center(
-        //child:
-        child: Text(
-          //sub textsa colors
-          text,
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w500,
-            color: Colors.black.withOpacity(0.7),
-          ),
-          softWrap: true,
-        )),
+    if (text != "")
+      Align(
+          alignment: Alignment.topLeft, //Center(
+          //child:
+          child: Text(
+            //sub textsa colors
+            text,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+              color: Colors.black.withOpacity(0.7),
+            ),
+            softWrap: true,
+          )),
   ]);
 }
 
@@ -612,9 +615,9 @@ SizedBox allViewTaskWidget(List<Map<String, dynamic>> studentTasksMap,
           ])));
 }
 
-SizedBox logWidget(String logText, BuildContext context) {
+SizedBox logWidget(List<String> allLogs, int index, BuildContext context) {
   return SizedBox(
-      height: 100.0,
+      height: 110.0,
       width: MediaQuery.of(context).size.width,
       child: Container(
           height: 120.0,
@@ -630,7 +633,22 @@ SizedBox logWidget(String logText, BuildContext context) {
                   bottomLeft: Radius.circular(10),
                   bottomRight: Radius.circular(10))),
           child: ListView(children: [
-            Text(logText, style: const TextStyle(fontSize: 15))
+            //Row(children: [
+            Text(allLogs[index], style: const TextStyle(fontSize: 15)),
+            Align(
+                alignment: Alignment.centerRight,
+                child: createClickableIcon(const Icon(Icons.close_outlined),
+                    Color.fromARGB(255, 244, 90, 90), width: 40, height: 30,
+                    () async {
+                  allLogs.removeAt(index);
+                  String teamNumber = await DatabaseAccess.getInstance()
+                      .getField("student tasks", StudentData.studentEmail,
+                          "team number");
+                  DatabaseAccess.getInstance()
+                      .addToDatabase("logs", teamNumber, {"logs": allLogs});
+                  ConfigUtils.goToScreen(LogsPage(), context);
+                }, ""))
+            // ])
           ])));
 }
 

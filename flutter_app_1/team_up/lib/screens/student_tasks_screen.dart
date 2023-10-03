@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_logs/flutter_logs.dart';
 import 'package:team_up/constants/student_data.dart';
+import 'package:team_up/screens/home_screen.dart';
 import 'package:team_up/screens/page_navigation_screen.dart';
 import 'package:team_up/services/database_access.dart';
 import 'package:team_up/utils/configuration_util.dart';
@@ -45,16 +46,25 @@ class _StudentTasksScreenState extends State<StudentTasksScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return ConfigUtils.configForBackButtonBehaviour(mainLayout, context);
+    return mainLayout();
   }
 
-  Scaffold mainLayout() {
-    return Scaffold(
-      backgroundColor: tdBGColor,
-      appBar: AppBar(title: const Text("My Tasks")),
-      bottomNavigationBar: buildNavBar(context, 1),
-      body: buildMainContent(),
-    );
+  WillPopScope mainLayout() {
+    return WillPopScope(
+        onWillPop: () async {
+          // Navigate to the destination screen and prevent going back to this screen
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const HomeScreen()),
+          );
+          return false;
+        },
+        child: Scaffold(
+          backgroundColor: tdBGColor,
+          appBar: AppBar(title: const Text("My Tasks")),
+          bottomNavigationBar: buildNavBar(context, 1),
+          body: buildMainContent(),
+        ));
   }
 
   Widget buildMainContent() {

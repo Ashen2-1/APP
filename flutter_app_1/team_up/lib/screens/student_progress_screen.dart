@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_logs/flutter_logs.dart';
 import 'package:team_up/constants/student_data.dart';
 import 'package:team_up/screens/add_tasks_screen.dart';
+import 'package:team_up/screens/home_screen.dart';
 import 'package:team_up/screens/page_navigation_screen.dart';
 import 'package:team_up/services/database_access.dart';
 import 'package:team_up/utils/configuration_util.dart';
@@ -57,17 +58,26 @@ class _StudentProgressScreenState extends State<StudentProgressScreen> {
   bool buttonPressed = false;
   @override
   Widget build(BuildContext context) {
-    return ConfigUtils.configForBackButtonBehaviour(mainLayout, context);
+    return mainLayout();
   }
 
-  Scaffold mainLayout() {
-    return Scaffold(
-        //appBar: buildAppBar(menuToggleExpansion),
-        appBar: AppBar(title: const Text("Search for tasks")),
-        bottomNavigationBar: buildNavBar(context, 1),
-        body: buildMainContent() //ConfigUtils.configForNavMenu(
-        //buildMainContent, _isExpanded, context))
-        );
+  WillPopScope mainLayout() {
+    return WillPopScope(
+        onWillPop: () async {
+          // Navigate to the destination screen and prevent going back to this screen
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const HomeScreen()),
+          );
+          return false;
+        },
+        child: Scaffold(
+            //appBar: buildAppBar(menuToggleExpansion),
+            appBar: AppBar(title: const Text("Search for tasks")),
+            bottomNavigationBar: buildNavBar(context, 1),
+            body: buildMainContent() //ConfigUtils.configForNavMenu(
+            //buildMainContent, _isExpanded, context))
+            ));
   }
 
   Widget buildMainContent() {

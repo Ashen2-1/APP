@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_logs/flutter_logs.dart';
 import 'package:team_up/constants/student_data.dart';
 import 'package:team_up/screens/page_navigation_screen.dart';
+import 'package:team_up/screens/student_tasks_screen.dart';
 import 'package:team_up/screens/web_view_page.dart';
 import 'package:team_up/services/database_access.dart';
 import 'package:team_up/utils/configuration_util.dart';
@@ -34,6 +35,8 @@ class _CountdownPageState extends State<CountdownPage>
     with TickerProviderStateMixin {
   late AnimationController controller;
 
+  final TextEditingController _Textcontroller = TextEditingController();
+
   bool image = false;
 
   bool isPlaying = true;
@@ -60,6 +63,8 @@ class _CountdownPageState extends State<CountdownPage>
       taskToAdd['completed'] = true;
       taskToAdd['submit file url'] = fileURL;
       taskToAdd['approved'] = false;
+      taskToAdd['submit comments'] = _Textcontroller.text;
+      taskToAdd['submit time'] = Timestamp.now();
 
       List<Map<String, dynamic>> curPendingTasks = Util.matchAndCombineExisting(
           taskToAdd, await DatabaseAccess.getInstance().getAllSignedUpTasks());
@@ -76,6 +81,7 @@ class _CountdownPageState extends State<CountdownPage>
           "Student task", "Submission", "Successfully submitted");
 
       image = false;
+      _Textcontroller.text = "";
 
       ConfigUtils.goToScreen(HomeScreen(), context);
     }
@@ -136,143 +142,169 @@ class _CountdownPageState extends State<CountdownPage>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        //appBar: buildAppBar(menuToggleExpansion),
-        appBar: AppBar(title: const Text("Work Countdown")),
-        bottomNavigationBar: buildNavBar(context, 1),
-        backgroundColor: Color(0xfff5fbff),
-        body: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const SizedBox(height: 20.0),
-              Text(
-                "Current Task: ${StudentData.currentTask!['task']}",
-                style: TextStyle(fontSize: 25, decorationThickness: 1.5),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 10),
-              const Text("Will auto submit at time 0:00:00!!"),
-              const SizedBox(height: 10),
-              Flexible(
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    SizedBox(
-                      width: 300,
-                      height: 300,
-                      child: CircularProgressIndicator(
-                        backgroundColor: Colors.grey.shade300,
-                        value: progress,
-                        strokeWidth: 6,
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        if (controller.isDismissed) {
-                          showModalBottomSheet(
-                            context: context,
-                            builder: (context) => Container(
-                              height: 300,
-                              child: CupertinoTimerPicker(
-                                initialTimerDuration: controller.duration!,
-                                onTimerDurationChanged: (time) {
-                                  setState(() {
-                                    controller.duration = time;
-                                  });
-                                },
-                              ),
-                            ),
-                          );
-                        }
-                      },
-                      child: AnimatedBuilder(
-                        animation: controller,
-                        builder: (context, child) => Text(
-                          countText,
-                          style: TextStyle(
-                            fontSize: 70,
-                            fontWeight: FontWeight.bold,
+    return WillPopScope(
+        onWillPop: () async {
+          // Navigate to the destination screen and prevent going back to this screen
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const StudentTasksScreen()),
+          );
+          return false;
+        },
+        child: Scaffold(
+            //appBar: buildAppBar(menuToggleExpansion),
+            appBar: AppBar(title: const Text("Work Countdown")),
+            bottomNavigationBar: buildNavBar(context, 1),
+            backgroundColor: Color(0xfff5fbff),
+            body: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const SizedBox(height: 20.0),
+                  Text(
+                    "Current Task: ${StudentData.currentTask!['task']}",
+                    style: TextStyle(fontSize: 25, decorationThickness: 1.5),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 10),
+                  const Text("Will auto submit at time 0:00:00!!"),
+                  const SizedBox(height: 10),
+                  Flexible(
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        SizedBox(
+                          width: 300,
+                          height: 300,
+                          child: CircularProgressIndicator(
+                            backgroundColor: Colors.grey.shade300,
+                            value: progress,
+                            strokeWidth: 6,
                           ),
                         ),
-                      ),
+                        GestureDetector(
+                          onTap: () {
+                            if (controller.isDismissed) {
+                              showModalBottomSheet(
+                                context: context,
+                                builder: (context) => Container(
+                                  height: 300,
+                                  child: CupertinoTimerPicker(
+                                    initialTimerDuration: controller.duration!,
+                                    onTimerDurationChanged: (time) {
+                                      setState(() {
+                                        controller.duration = time;
+                                      });
+                                    },
+                                  ),
+                                ),
+                              );
+                            }
+                          },
+                          child: AnimatedBuilder(
+                            animation: controller,
+                            builder: (context, child) => Text(
+                              countText,
+                              style: TextStyle(
+                                fontSize: 70,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-              ),
-              SizedBox(height: 0),
-              reusableButton("Upload a file related to task", context,
-                  () async {
-                File result = (await FileUploader.pickFile())!;
-                setState(() {
-                  file = result;
-                  isPlaying = true;
-                });
-                if (file != null) {
-                  List<String> fileInfo = file!.path.split(".");
-                  String fileType = fileInfo.last.toLowerCase();
-                  List<String> fileParts =
-                      file!.path.split('/').last.split('.');
+                  ),
+                  SizedBox(height: 0),
+                  reusableButton("Upload a file related to task", context,
+                      () async {
+                    File result = (await FileUploader.pickFile())!;
+                    setState(() {
+                      file = result;
+                      isPlaying = true;
+                    });
+                    if (file != null) {
+                      List<String> fileInfo = file!.path.split(".");
+                      String fileType = fileInfo.last.toLowerCase();
+                      List<String> fileParts =
+                          file!.path.split('/').last.split('.');
 
-                  String fileName =
-                      fileParts.sublist(0, fileParts.length - 1).join(".");
+                      String fileName =
+                          fileParts.sublist(0, fileParts.length - 1).join(".");
 
-                  FlutterLogs.logInfo("FileNAMe", "Display", fileName);
-                  if (fileName.contains(".jpg") ||
-                      fileName.contains(".png") ||
-                      fileName.contains(".jpeg")) {
-                    fileURL = "";
-                    image = false;
-                    displayError(
-                        "Please do not submit a file with a name containing '.jpg', '.png', or '.jpeg' consecutive letters",
-                        context);
-                  } else {
-                    TaskSnapshot imageSnapshot =
-                        await FileUploader.getInstance()
-                            .addFileToFirebaseStorage(file!);
-                    fileURL = await imageSnapshot.ref.getDownloadURL();
-                    if (fileType == "png" ||
-                        fileType == 'jpg' ||
-                        fileType == 'jpeg') {
-                      image = true;
-                    } else {
-                      image = false;
+                      FlutterLogs.logInfo("FileNAMe", "Display", fileName);
+                      if (fileName.contains(".jpg") ||
+                          fileName.contains(".png") ||
+                          fileName.contains(".jpeg")) {
+                        fileURL = "";
+                        image = false;
+                        displayError(
+                            "Please do not submit a file with a name containing '.jpg', '.png', or '.jpeg' consecutive letters",
+                            context);
+                      } else {
+                        TaskSnapshot imageSnapshot =
+                            await FileUploader.getInstance()
+                                .addFileToFirebaseStorage(file!);
+                        fileURL = await imageSnapshot.ref.getDownloadURL();
+                        if (fileType == "png" ||
+                            fileType == 'jpg' ||
+                            fileType == 'jpeg') {
+                          image = true;
+                        } else {
+                          image = false;
+                        }
+                      }
                     }
-                  }
-                }
-                setState(() {});
-              }),
-              // if (fileURL != "None") WebView(initialUrl: fileURL),
-              const Text("View the file", style: defaultFont),
-              image
-                  ? Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                      child: Image.network(fileURL))
-                  : SelectableText(fileURL,
-                      style: const TextStyle(
-                          color: Colors.blue,
-                          decoration: TextDecoration.underline)),
-              // onDoubleTap: () async {
-              //   //WebViewPage.setURL(fileURL);
-              //   //ConfigUtils.goToScreen(WebViewPage(), context);
-              //   ConfigUtils.goToScreen(OpenUrlInWebView(url: fileURL), context);
-              // }
-              // ),
-              reusableButton("Submit for approval", context, () async {
-                await submit(fileURL);
-              }),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 5, vertical: 30),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    //SizedBox(height: 10,),
-                  ],
-                ),
-              )
-            ],
-          ),
-        ));
+                    setState(() {});
+                  }),
+                  // if (fileURL != "None") WebView(initialUrl: fileURL),
+                  const Text("View the file", style: defaultFont),
+                  image
+                      ? Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                          child: Image.network(fileURL))
+                      : SelectableText(fileURL,
+                          style: const TextStyle(
+                              color: Colors.blue,
+                              decoration: TextDecoration.underline)),
+                  // onDoubleTap: () async {
+                  //   //WebViewPage.setURL(fileURL);
+                  //   //ConfigUtils.goToScreen(WebViewPage(), context);
+                  //   ConfigUtils.goToScreen(OpenUrlInWebView(url: fileURL), context);
+                  // }
+                  // ),
+                  Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: TextFormField(
+                      controller: _Textcontroller,
+                      minLines: 2,
+                      maxLines: 5,
+                      keyboardType: TextInputType.multiline,
+                      decoration: const InputDecoration(
+                          hintText: 'Enter Your Submission Comments',
+                          hintStyle: TextStyle(
+                              color: Color.fromARGB(255, 104, 102, 102)),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                          )),
+                    ),
+                  ),
+
+                  reusableButton("Submit for approval", context, () async {
+                    await submit(fileURL);
+                  }),
+                  Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 5, vertical: 30),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        //SizedBox(height: 10,),
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            )));
   }
 }
