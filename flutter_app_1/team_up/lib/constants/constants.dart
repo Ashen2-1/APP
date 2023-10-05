@@ -8,3 +8,14 @@ final List<String> timeList = [
   '1 and 1/2 hour',
   '2 hours'
 ];
+
+List<String> subteamList = [
+  "Programming",
+  "Design",
+  "Build",
+  "Media",
+  "Business",
+  "Outreach",
+];
+
+List<String> typeOptions = ["Signed up", "In Sign Up Queue", "Unassigned"];

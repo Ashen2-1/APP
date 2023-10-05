@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_logs/flutter_logs.dart';
 import 'package:team_up/constants/borders.dart';
 import 'package:team_up/constants/colors.dart';
+import 'package:team_up/constants/constants.dart';
 import 'package:team_up/constants/student_data.dart';
 import 'package:team_up/screens/Approve_page.dart';
 import 'package:team_up/screens/all_approve_tasks_screen.dart';
@@ -277,10 +278,9 @@ Future<bool> isMachineAvailable(machine) async {
       machineNeeded[1].seconds > Timestamp.now().seconds);
 }
 
-SizedBox textFieldTaskInfo(List<Map<String, dynamic>> allTaskMap,
-    String subteam, int index, String incomingPage, BuildContext context) {
+Color determineSignUpColor(List<Map<String, dynamic>> allTaskMap, int index) {
   Color color = const Color.fromARGB(255, 193, 184, 184).withOpacity(0.3);
-  if (allTaskMap[index]['isForAll']) {
+  if (allTaskMap[index]['isForAll'] != null && allTaskMap[index]['isForAll']) {
     color = Color.fromARGB(255, 158, 66, 173).withOpacity(0.3);
   } else if (allTaskMap[index]['level'] == "Introductory") {
     color = easyColor;
@@ -289,6 +289,12 @@ SizedBox textFieldTaskInfo(List<Map<String, dynamic>> allTaskMap,
   } else if (allTaskMap[index]['level'] == "Experienced") {
     color = hardColor;
   }
+  return color;
+}
+
+SizedBox textFieldTaskInfo(List<Map<String, dynamic>> allTaskMap,
+    String subteam, int index, String incomingPage, BuildContext context) {
+  Color color = determineSignUpColor(allTaskMap, index);
   return SizedBox(
       height: 200.0,
       width: MediaQuery.of(context).size.width,
@@ -526,10 +532,15 @@ SizedBox studentTaskInfoWidget(List<Map<String, dynamic>> studentTasksMap,
 }
 
 SizedBox allViewTaskWidget(List<Map<String, dynamic>> studentTasksMap,
-    int index, BuildContext context) {
+    int index, BuildContext context, String type, String subteam) {
   Map<String, dynamic> curTask = studentTasksMap[index];
   FlutterLogs.logInfo("Error", "Test", curTask['task']);
-  Color color = determineColor(curTask);
+  Color color = const Color.fromARGB(255, 193, 184, 184).withOpacity(0.3);
+  if (type == typeOptions[0]) {
+    color = determineColor(curTask);
+  } else if (type == typeOptions[1]) {
+    color = determineSignUpColor(studentTasksMap, index);
+  }
 
   return SizedBox(
       height: 200.0,
@@ -601,10 +612,18 @@ SizedBox allViewTaskWidget(List<Map<String, dynamic>> studentTasksMap,
                       .then((confirmation) {
                     if (confirmation != null && confirmation) {
                       studentTasksMap.removeAt(index);
-                      DatabaseAccess.getInstance().addToDatabase(
-                          "student tasks",
-                          "signed up",
-                          {'tasks': studentTasksMap});
+                      if (type == typeOptions[0]) {
+                        DatabaseAccess.getInstance().addToDatabase(
+                            "student tasks",
+                            "signed up",
+                            {'tasks': studentTasksMap});
+                      } else if (type == typeOptions[1]) {
+                        DatabaseAccess.getInstance().addToDatabase(
+                            "Tasks", subteam, {'tasks': studentTasksMap});
+                      } else if (type == typeOptions[2]) {
+                        DatabaseAccess.getInstance().addToDatabase(
+                            "Tasks", "outstanding", {'tasks': studentTasksMap});
+                      }
                       ConfigUtils.goToScreen(const AllTasksViewPage(), context);
                     }
                   });

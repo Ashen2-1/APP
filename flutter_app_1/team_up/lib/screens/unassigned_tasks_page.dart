@@ -122,17 +122,20 @@ class _UnassignedTasksPageState extends State<UnassignedTasksPage> {
                                           databaseGet
                                               .cast<Map<String, dynamic>>())
                                     });
-                                    studentTasksMap!.removeWhere((element) =>
-                                        element == studentTasksMap![index]);
+                                    await Util.addToLog(
+                                        "${StudentData.studentEmail} redistributed task ${studentTasksMap![index]['task']}");
+
+                                    studentTasksMap!.removeAt(index);
                                     DatabaseAccess.getInstance().addToDatabase(
                                         "Tasks",
                                         "outstanding",
                                         {"tasks": studentTasksMap});
-                                    await Util.addToLog(
-                                        "${StudentData.studentEmail} redistributed task ${studentTasksMap![index]['task']}");
 
-                                    ConfigUtils.goToScreen(
-                                        TasksPage(), context);
+                                    studentTasksMap =
+                                        await DatabaseAccess.getInstance()
+                                            .getUnassignedTasks();
+
+                                    setState(() {});
                                   } else {
                                     displayError(
                                         "Did not resend, please press ok after selecting date/time",
@@ -141,8 +144,7 @@ class _UnassignedTasksPageState extends State<UnassignedTasksPage> {
                                 }),
                                 reusableSignUpTaskButton(
                                     "Remove tracking", context, () async {
-                                  studentTasksMap!.removeWhere((element) =>
-                                      element == studentTasksMap![index]);
+                                  studentTasksMap!.removeAt(index);
                                   DatabaseAccess.getInstance().addToDatabase(
                                       "Tasks",
                                       "outstanding",

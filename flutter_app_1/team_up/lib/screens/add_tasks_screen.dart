@@ -233,30 +233,32 @@ class _AddTasksScreenState extends State<AddTasksScreen> {
         reusableTextFieldRegular(
             "Enter skills required for task", _skillsRequiredController, false),
         const SizedBox(height: 10),
+        reusableTextFieldRegular("Enter the description of the task",
+            _taskdescriptionTextController, false),
+        const SizedBox(height: 10),
         Container(
             width: MediaQuery.of(context).size.width - 25,
             decoration: BoxDecoration(
                 color:
                     const Color.fromARGB(255, 199, 196, 196).withOpacity(0.3),
                 borderRadius: Borders.imageBorderRadius),
-            child: DropdownButton<String>(
-                value: time,
-                // hint: const Text("Select subteam:",
-                //     style: TextStyle(fontSize: 18), textAlign: TextAlign.left),
-                onChanged: (String? newValue) {
-                  setState(() {
-                    time = newValue!;
-                  });
-                },
-                items:
-                    timeList.map<DropdownMenuItem<String>>((String newValue) {
-                  return DropdownMenuItem<String>(
-                      value: newValue, child: Text(newValue));
-                }).toList())),
-        const SizedBox(height: 10),
+            child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: DropdownButton<String>(
+                    value: time,
+                    // hint: const Text("Select subteam:",
+                    //     style: TextStyle(fontSize: 18), textAlign: TextAlign.left),
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        time = newValue!;
+                      });
+                    },
+                    items: timeList
+                        .map<DropdownMenuItem<String>>((String newValue) {
+                      return DropdownMenuItem<String>(
+                          value: newValue, child: Text(newValue));
+                    }).toList()))),
         ///////////////////////////////////////////////// new
-        reusableTextFieldRegular("Enter the description of the task",
-            _taskdescriptionTextController, false),
         if (subteam == "Build")
           Column(children: [
             const SizedBox(height: 10),
@@ -266,19 +268,42 @@ class _AddTasksScreenState extends State<AddTasksScreen> {
                     color: const Color.fromARGB(255, 199, 196, 196)
                         .withOpacity(0.3),
                     borderRadius: Borders.imageBorderRadius),
+                child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: DropdownButton<String>(
+                        value: machineUsed,
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            machineUsed = newValue!;
+                          });
+                        },
+                        items: machineList
+                            .map<DropdownMenuItem<String>>((String newValue) {
+                          return DropdownMenuItem<String>(
+                              value: newValue, child: Text(newValue));
+                        }).toList())))
+          ]),
+        const SizedBox(height: 10),
+        Container(
+            width: MediaQuery.of(context).size.width - 25,
+            decoration: BoxDecoration(
+                color:
+                    const Color.fromARGB(255, 199, 196, 196).withOpacity(0.3),
+                borderRadius: Borders.imageBorderRadius),
+            child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 child: DropdownButton<String>(
-                    value: machineUsed,
+                    value: level,
                     onChanged: (String? newValue) {
                       setState(() {
-                        machineUsed = newValue!;
+                        level = newValue!;
                       });
                     },
-                    items: machineList
+                    items: levelList
                         .map<DropdownMenuItem<String>>((String newValue) {
                       return DropdownMenuItem<String>(
                           value: newValue, child: Text(newValue));
-                    }).toList()))
-          ]),
+                    }).toList()))),
         const SizedBox(height: 10),
         Row(children: [
           const SizedBox(width: 5),
@@ -292,25 +317,6 @@ class _AddTasksScreenState extends State<AddTasksScreen> {
           const Text("Is this a task for everyone in subteam?",
               style: TextStyle(fontSize: 17)),
         ]),
-        const SizedBox(height: 10),
-        Container(
-            width: MediaQuery.of(context).size.width - 25,
-            decoration: BoxDecoration(
-                color:
-                    const Color.fromARGB(255, 199, 196, 196).withOpacity(0.3),
-                borderRadius: Borders.imageBorderRadius),
-            child: DropdownButton<String>(
-                value: level,
-                onChanged: (String? newValue) {
-                  setState(() {
-                    level = newValue!;
-                  });
-                },
-                items:
-                    levelList.map<DropdownMenuItem<String>>((String newValue) {
-                  return DropdownMenuItem<String>(
-                      value: newValue, child: Text(newValue));
-                }).toList())),
         ///////////////////////////////////////////////////// Task description
         reusableButton("Upload a image related to task", context, () async {
           File result = (await FileUploader.pickFile())!;

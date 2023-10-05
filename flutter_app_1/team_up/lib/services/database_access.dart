@@ -215,6 +215,13 @@ class DatabaseAccess {
     return res;
   }
 
+  Future<List<Map<String, dynamic>>> getAllUnassignedTasks() async {
+    List<dynamic> unassigned = await DatabaseAccess.getInstance()
+        .getField("Tasks", "outstanding", "tasks");
+
+    return unassigned.cast<Map<String, dynamic>>();
+  }
+
   Future<int> getNumberOfSubteamTasks(String subteam) async {
     DocumentSnapshot<Map<String, dynamic>>? docSnapshot =
         await getDocumentByID("Tasks", subteam);

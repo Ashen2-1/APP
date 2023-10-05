@@ -13,6 +13,7 @@ import 'package:team_up/screens/student_progress_screen.dart';
 import 'package:team_up/utils/configuration_util.dart';
 import 'package:team_up/widgets/reusable_widgets/reusable_widget.dart';
 import '../constants/colors.dart';
+import '../constants/constants.dart';
 import '../services/database_access.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -52,15 +53,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   List textPageOptions = ['My Tasks'];
   static const List<Widget> pageOptions = [StudentTasksScreen()];
-
-  List subteamList = [
-    "Programming",
-    "Design",
-    "Build",
-    "Media",
-    "Business",
-    "Outreach",
-  ];
 
   List<int> numberTasks = [];
 
