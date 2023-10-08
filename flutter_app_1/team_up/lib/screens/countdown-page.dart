@@ -258,7 +258,7 @@ class _CountdownPageState extends State<CountdownPage>
                     setState(() {});
                   }),
                   // if (fileURL != "None") WebView(initialUrl: fileURL),
-                  const Text("View the file", style: defaultFont),
+                  const Text("View uploaded file", style: defaultFont),
                   image
                       ? Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 5.0),

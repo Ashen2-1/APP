@@ -9,6 +9,7 @@ import 'package:team_up/screens/Approve_page.dart';
 import 'package:team_up/screens/all_approve_tasks_screen.dart';
 import 'package:team_up/screens/all_tasks_view_page.dart';
 import 'package:team_up/screens/countdown-page.dart';
+import 'package:team_up/screens/created_tasks_page.dart';
 import 'package:team_up/screens/home_screen.dart';
 import 'package:team_up/screens/logs_page.dart';
 import 'package:team_up/screens/page_navigation_screen.dart';
@@ -532,7 +533,8 @@ SizedBox studentTaskInfoWidget(List<Map<String, dynamic>> studentTasksMap,
 }
 
 SizedBox allViewTaskWidget(List<Map<String, dynamic>> studentTasksMap,
-    int index, BuildContext context, String type, String subteam) {
+    int index, BuildContext context, String type, String subteam,
+    {bool isForCreated = false}) {
   Map<String, dynamic> curTask = studentTasksMap[index];
   FlutterLogs.logInfo("Error", "Test", curTask['task']);
   Color color = const Color.fromARGB(255, 193, 184, 184).withOpacity(0.3);
@@ -609,14 +611,35 @@ SizedBox allViewTaskWidget(List<Map<String, dynamic>> studentTasksMap,
                     () async {
                   await askConfirmationGeneral(context,
                           'Are you sure you want to remove task "${curTask['task']}"? Doing this means the task is permanently erased!')
-                      .then((confirmation) {
+                      .then((confirmation) async {
                     if (confirmation != null && confirmation) {
-                      studentTasksMap.removeAt(index);
                       if (type == typeOptions[0]) {
-                        DatabaseAccess.getInstance().addToDatabase(
-                            "student tasks",
-                            "signed up",
-                            {'tasks': studentTasksMap});
+                        // Needed because used for both my created tasks and view all tasks
+                        if (isForCreated) {
+                          List<Map<String, dynamic>>? tempInSignUp =
+                              await DatabaseAccess.getInstance()
+                                  .getAllSignedUpTasks();
+
+                          tempInSignUp!.removeWhere((element) {
+                            bool res = true;
+                            element.forEach((key, value) {
+                              if (element[key] != curTask[key]) {
+                                res = false;
+                              }
+                            });
+                            return res;
+                          });
+                          DatabaseAccess.getInstance().addToDatabase(
+                              "student tasks",
+                              "signed up",
+                              {'tasks': tempInSignUp});
+                        } else {
+                          studentTasksMap.removeAt(index);
+                          DatabaseAccess.getInstance().addToDatabase(
+                              "student tasks",
+                              "signed up",
+                              {'tasks': studentTasksMap});
+                        }
                       } else if (type == typeOptions[1]) {
                         DatabaseAccess.getInstance().addToDatabase(
                             "Tasks", subteam, {'tasks': studentTasksMap});
@@ -624,7 +647,13 @@ SizedBox allViewTaskWidget(List<Map<String, dynamic>> studentTasksMap,
                         DatabaseAccess.getInstance().addToDatabase(
                             "Tasks", "outstanding", {'tasks': studentTasksMap});
                       }
-                      ConfigUtils.goToScreen(const AllTasksViewPage(), context);
+                      if (isForCreated) {
+                        ConfigUtils.goToScreen(
+                            const CreatedTasksPage(), context);
+                      } else {
+                        ConfigUtils.goToScreen(
+                            const AllTasksViewPage(), context);
+                      }
                     }
                   });
                 })

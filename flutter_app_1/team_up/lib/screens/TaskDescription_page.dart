@@ -50,10 +50,10 @@ class _TaskDescription_pageState extends State<TaskDescription_page> {
         body: SingleChildScrollView(
           child: Container(
             child: Column(
-              children: StudentData.allViewingTask!.length > 0
+              children: StudentData.allViewingTask!.isNotEmpty
                   ? <Widget>[
                       const SizedBox(
-                        height: 70,
+                        height: 20,
                       ),
                       Center(
                         child: Text(
@@ -70,7 +70,7 @@ class _TaskDescription_pageState extends State<TaskDescription_page> {
                         child: Text(
                           "Task time: ${StudentData.allViewingTask![StudentData.viewingIndex!]['estimated time']}",
                           style: const TextStyle(
-                              fontSize: 25, fontWeight: FontWeight.bold),
+                              fontSize: 20, fontWeight: FontWeight.bold),
                         ),
                       ),
                       const SizedBox(
@@ -164,10 +164,19 @@ class _TaskDescription_pageState extends State<TaskDescription_page> {
                       if (StudentData.allViewingTask![StudentData.viewingIndex!]
                               ['image url'] !=
                           "None")
-                        Expanded(
-                            child: Image.network(StudentData
-                                    .allViewingTask![StudentData.viewingIndex!]
-                                ['image url'])),
+                        // Flexible(
+                        //     child:
+                        //         Stack(alignment: Alignment.center, children: [
+                        SizedBox(
+                            width: 300,
+                            height: 300,
+                            child:
+                                // Flexible(
+                                Image.network(
+                                    StudentData.allViewingTask![
+                                        StudentData.viewingIndex!]['image url'],
+                                    fit: BoxFit.cover)),
+
                       const SizedBox(
                         height: 40,
                       ),

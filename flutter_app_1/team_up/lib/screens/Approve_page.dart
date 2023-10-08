@@ -143,7 +143,7 @@ class _Approve_pageState extends State<Approve_page> {
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 10, vertical: 88),
+                        horizontal: 10, vertical: 30),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [

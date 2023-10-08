@@ -26,6 +26,18 @@ class DetailPageState extends State<DetailPage> {
       .getField("student tasks", StudentData.viewingUserEmail, "isAdmin");
   final TextEditingController _mentorEmailController = TextEditingController();
 
+  Future<bool?> viewMentor({String viewingUser = ""}) async {
+    if (viewingUser != "") {
+      return (await DatabaseAccess.getInstance().getField(
+              "student tasks", StudentData.viewingUserEmail, "isAdmin")) ||
+          (await DatabaseAccess.getInstance()
+              .getField("student tasks", StudentData.studentEmail, "isOwner"));
+    }
+    return (await StudentData.isAdmin()) ||
+        (await DatabaseAccess.getInstance()
+            .getField("student tasks", StudentData.studentEmail, "isOwner"));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,8 +50,7 @@ class DetailPageState extends State<DetailPage> {
         child: ListView(
           children: [
             FutureBuilder(
-                future: DatabaseAccess.getInstance().getField(
-                    "student tasks", StudentData.viewingUserEmail, "isAdmin"),
+                future: viewMentor(viewingUser: StudentData.viewingUserEmail),
                 builder: (context, isAdmin) {
                   if (!isAdmin.hasData) {
                     return Container();
@@ -183,7 +194,7 @@ class DetailPageState extends State<DetailPage> {
 /////////////////////////////////////////////////////////////////////////////////////////////////////
             ///
             FutureBuilder(
-                future: StudentData.isAdmin(),
+                future: viewMentor(),
                 builder: (context, isAdmin) {
                   if (!isAdmin.hasData) {
                     return Container();

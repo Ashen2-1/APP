@@ -89,7 +89,8 @@ class MyTeamPageState extends State<MyTeamPage> {
                         : students[index]['isAdmin']
                             ? const Text("Mentor")
                             : const Text("Student"),
-                    leading: students[index]['isAdmin']
+                    leading: (students[index]['isAdmin'] ||
+                            students[index]['isOwner'])
                         ? Image.asset(
                             'assets/images/Mentor2.png',
                             height: 45,

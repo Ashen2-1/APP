@@ -185,7 +185,7 @@ class DatabaseAccess {
             DatabaseAccess.getInstance()
                 .addToDatabase("Tasks", subteam, {'tasks': copy});
 
-            if (!(mapData['isForAll'])) {
+            if (mapData['isForAll'] != null && !(mapData['isForAll'])) {
               List<dynamic> databaseGet = await DatabaseAccess.getInstance()
                   .getField("Tasks", "outstanding", "tasks");
               mapData['subteam'] = subteam;
@@ -252,6 +252,19 @@ class DatabaseAccess {
       return parseStudentTaskData(docSnapshot, "");
     }
     return null;
+  }
+
+  Future<List<Map<String, dynamic>>> getMyCreatedTasksInProgress() async {
+    List<Map<String, dynamic>> res = [];
+
+    for (Map<String, dynamic> task
+        in (await DatabaseAccess.getInstance().getAllSignedUpTasks())!) {
+      if (task['assigner'] == StudentData.studentEmail &&
+          task['studentViewable']) {
+        res.add(task);
+      }
+    }
+    return res;
   }
 
   Future<List<Map<String, dynamic>>?> getMyAssignedStudentSubmissions() async {
