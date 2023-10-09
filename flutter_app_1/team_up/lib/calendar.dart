@@ -26,10 +26,10 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
 
   Future<String> getAttendaceStringForDay(String day) async {
     // List<String> res = await getAttendanceForDay(day.toString().split(" ")[0]);
-    // FlutterLogs.logInfo("Attendance", "curent student", res.toString());
+    // //FlutterLogs.logInfo("Attendance", "curent student", res.toString());
     String attendance = "";
     for (String student in await getAttendanceForDay(day)) {
-      FlutterLogs.logInfo("Attendance", "curent student", student);
+      //FlutterLogs.logInfo("Attendance", "curent student", student);
       if (StudentData.viewingOwnAttendance) {
         if (student == StudentData.viewingUserEmail) {
           attendance += "Present on this day";
@@ -50,7 +50,7 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
     }
     List<String>? res = databaseGet.cast<String>();
 
-    FlutterLogs.logInfo("Attendance", "database get", res.toString());
+    //FlutterLogs.logInfo("Attendance", "database get", res.toString());
     return res;
   }
 

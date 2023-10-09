@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>678384237313-a95ec58a00peta3i8f9qae1rc6i2lmer.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.678384237313-a95ec58a00peta3i8f9qae1rc6i2lmer</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>678384237313-mbjli1tio4stht1um9qgcf1hqld70l51.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyAy07tFt-nLvkzewk5m11nvqp0ZWn4hXtA</string>
+	<key>GCM_SENDER_ID</key>
+	<string>678384237313</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.teamUp</string>
+	<key>PROJECT_ID</key>
+	<string>team-up1-a6ad3</string>
+	<key>STORAGE_BUCKET</key>
+	<string>team-up1-a6ad3.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:678384237313:ios:51058a2adc123e233a7900</string>
+</dict>
+</plist>

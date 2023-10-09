@@ -32,8 +32,8 @@ class _AllApproveTasksScreenState extends State<AllApproveTasksScreen> {
     studentTasksMap =
         await DatabaseAccess.getInstance().getMyAssignedStudentSubmissions();
     ;
-    FlutterLogs.logInfo(
-        "My Tasks", "Add to ListView", "studentTasksMap: ${studentTasksMap}");
+    //FlutterLogs.logInfo(
+    //"My Tasks", "Add to ListView", "studentTasksMap: ${studentTasksMap}");
     setState(() {});
   }
 

@@ -30,8 +30,8 @@ class _UnassignedTasksPageState extends State<UnassignedTasksPage> {
 
   Future<void> configure() async {
     studentTasksMap = await DatabaseAccess.getInstance().getUnassignedTasks();
-    FlutterLogs.logInfo(
-        "My Tasks", "Add to ListView", "studentTasksMap: ${studentTasksMap}");
+    //FlutterLogs.logInfo(
+    //"My Tasks", "Add to ListView", "studentTasksMap: ${studentTasksMap}");
     setState(() {});
   }
 

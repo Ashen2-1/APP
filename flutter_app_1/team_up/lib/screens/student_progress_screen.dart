@@ -32,8 +32,8 @@ class _StudentProgressScreenState extends State<StudentProgressScreen> {
     queryResults = await DatabaseAccess.getInstance()
         .getAvailableTasks(_time, StudentData.getQuerySubTeam());
 
-    FlutterLogs.logInfo(
-        "MAINFRAME", "put widgets on screen", "query results: ${queryResults}");
+    //FlutterLogs.logInfo(
+    //  "MAINFRAME", "put widgets on screen", "query results: ${queryResults}");
     // tasksList = DatabaseAccess.getInstance().parseData("task", queryResults);
     // dueDates =
     //     DatabaseAccess.getInstance().parseData("due date", queryResults);
@@ -81,8 +81,8 @@ class _StudentProgressScreenState extends State<StudentProgressScreen> {
   }
 
   Widget buildMainContent() {
-    FlutterLogs.logInfo("Student Progress Screen", "Query Subteam",
-        "Current: ${StudentData.getQuerySubTeam()}");
+    //FlutterLogs.logInfo("Student Progress Screen", "Query Subteam",
+    //"Current: ${StudentData.getQuerySubTeam()}");
     return Column(children: [
       const SizedBox(height: 20),
       const Text("How much time do you have?", style: TextStyle(fontSize: 15)),

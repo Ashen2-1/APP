@@ -38,26 +38,26 @@ class DatabaseAccess {
   Future<QuerySnapshot<Map<String, dynamic>>?> query(
       String collectionId, String queryCategory, Object item) async {
     QuerySnapshot<Map<String, dynamic>>? res;
-    FlutterLogs.logInfo("Cloud Firestore Database", "GET Operation",
-        "Getting for: $collectionId, $queryCategory, $item");
+    //FlutterLogs.logInfo("Cloud Firestore Database", "GET Operation",
+    //"Getting for: $collectionId, $queryCategory, $item");
     await db
         .collection(collectionId)
         .where(queryCategory, isEqualTo: item)
         .get()
         .then((querySnapshot) {
-      FlutterLogs.logInfo(
-          "Cloud Firestore Database", "GET Operation", "Sucessfully got");
+      //FlutterLogs.logInfo(
+      //"Cloud Firestore Database", "GET Operation", "Sucessfully got");
       res = querySnapshot;
       // for (QueryDocumentSnapshot<Map<String, dynamic>> docSnapshot
       //     in querySnapshot.docs) {
-      //   FlutterLogs.logInfo("Cloud Firestore Database", "GET Operation",
+      //   //FlutterLogs.logInfo("Cloud Firestore Database", "GET Operation",
       //       "Got data: ${docSnapshot.data()}");
       //docSnapshot.data();
       // for (String item in data.keys) {
       //   res += "$item: ${data[item]}, ";
       // }
     }
-            // FlutterLogs.logInfo(
+            // //FlutterLogs.logInfo(
             //     "Cloud Firestore Database", "GET Operation", "Output string: $res");
             );
     return res;
@@ -68,12 +68,12 @@ class DatabaseAccess {
     List<String> fieldResults = [];
     for (QueryDocumentSnapshot<Map<String, dynamic>> docSnapshot
         in querySnapshot!.docs) {
-      FlutterLogs.logInfo("Cloud Firestore Database", "GET Operation",
-          "Got data: ${docSnapshot.data()}");
+      //FlutterLogs.logInfo("Cloud Firestore Database", "GET Operation",
+      //"Got data: ${docSnapshot.data()}");
       Map<String, dynamic> data = docSnapshot.data();
       fieldResults.add(data[searchField]);
-      FlutterLogs.logInfo("Cloud Firestore Database", "GET Operation",
-          "Adding string to field results: ${data[searchField]}");
+      //FlutterLogs.logInfo("Cloud Firestore Database", "GET Operation",
+      // "Adding string to field results: ${data[searchField]}");
     }
     return fieldResults;
   }
@@ -101,11 +101,11 @@ class DatabaseAccess {
   Future<List<Map<String, dynamic>>> parseStudentTaskData(
       DocumentSnapshot<Map<String, dynamic>>? docSnapshot, String time) async {
     List<Map<String, dynamic>> fieldResults = [];
-    FlutterLogs.logInfo(
-        "Cloud Firestore Database", "GET Operation", "In parse student data");
-    FlutterLogs.logInfo("Cloud Firestore Database", "GET Operation",
-        "Got data: ${docSnapshot!.data()}");
-    Map<String, dynamic>? data = docSnapshot.data();
+    //FlutterLogs.logInfo(
+    //"Cloud Firestore Database", "GET Operation", "In parse student data");
+    //FlutterLogs.logInfo("Cloud Firestore Database", "GET Operation",
+    //"Got data: ${docSnapshot!.data()}");
+    Map<String, dynamic>? data = docSnapshot!.data();
     if (data!.isNotEmpty) {
       List<dynamic> listData = data['tasks'];
       for (Map<String, dynamic> mapData in listData) {
@@ -119,8 +119,8 @@ class DatabaseAccess {
             }
           }
         }
-        FlutterLogs.logInfo("Cloud Firestore Database", "GET Operation",
-            "Adding string to field results: ${data['tasks']}");
+        //FlutterLogs.logInfo("Cloud Firestore Database", "GET Operation",
+        //"Adding string to field results: ${data['tasks']}");
       }
     }
     return fieldResults;
@@ -156,7 +156,7 @@ class DatabaseAccess {
         }
       }
     }
-    FlutterLogs.logInfo("Hi", "ERROR", fieldResults.toString());
+    //FlutterLogs.logInfo("Hi", "ERROR", fieldResults.toString());
     return fieldResults;
   }
 

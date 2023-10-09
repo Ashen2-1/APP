@@ -26,7 +26,7 @@ class GoogleSignInButton {
         User? user = await GoogleSignInAuth.signInWithGoogle(context: context);
 
         if (user != null && user.email != null) {
-          FlutterLogs.logInfo("Google User Sign in", "User Email", user.email!);
+          //FlutterLogs.logInfo("Google User Sign in", "User Email", user.email!);
           if (!(await connectedToInternet())) {
             displayError("You are not connected to the Internet", context);
           } else if (await DatabaseAccess.getInstance()

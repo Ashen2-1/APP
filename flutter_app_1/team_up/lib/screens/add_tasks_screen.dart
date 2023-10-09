@@ -340,8 +340,8 @@ class _AddTasksScreenState extends State<AddTasksScreen> {
               TaskSnapshot imageSnapshot = await FileUploader.getInstance()
                   .addFileToFirebaseStorage(file!);
               imageURL = await imageSnapshot.ref.getDownloadURL();
-              FlutterLogs.logInfo(
-                  "Add to Database", "Upload image", "Image URL: $imageURL");
+              //FlutterLogs.logInfo(
+//"Add to Database", "Upload image", "Image URL: $imageURL");
             }
             if (subteam != 'Select a subteam' &&
                 time != 'Select a time for task' &&

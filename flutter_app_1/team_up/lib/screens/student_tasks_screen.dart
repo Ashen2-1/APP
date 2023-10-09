@@ -29,8 +29,8 @@ class _StudentTasksScreenState extends State<StudentTasksScreen> {
   Future<void> configure() async {
     //studentTasksMap
     studentTasksMap = await DatabaseAccess.getInstance().getStudentTasks();
-    FlutterLogs.logInfo(
-        "My Tasks", "Add to ListView", "studentTasksMap: ${studentTasksMap}");
+    //FlutterLogs.logInfo(
+    // "My Tasks", "Add to ListView", "studentTasksMap: ${studentTasksMap}");
     // for (String imageUrl in imageUrlList) {
     //   resizedImageList.add(await Util.resizeImage(imageUrl, 1 / 8));
     // }

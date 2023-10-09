@@ -17,7 +17,7 @@ class FileUploader {
 
   Future<TaskSnapshot> addFileToFirebaseStorage(File file) async {
     String imageName = file.path.split('/').last;
-    FlutterLogs.logInfo("Firebase", "Add image", "file Name: $imageName");
+    //FlutterLogs.logInfo("Firebase", "Add image", "file Name: $imageName");
     Reference storageLocation = storage.ref().child("student_files/$imageName");
 
     return await storageLocation.putFile(file);

@@ -14,14 +14,14 @@ class PushNotificationService {
 
   static Future<void> _firebaseMessagingBackgroundHandler(
       RemoteMessage message) async {
-    FlutterLogs.logInfo("Push Notification Service", "On Message Background",
-        "Received Message: ${message.notification?.body}");
+    //FlutterLogs.logInfo("Push Notification Service", "On Message Background",
+    //"Received Message: ${message.notification?.body}");
     sendNotification(message);
   }
 
   static Future initialize() async {
-    FlutterLogs.logInfo(
-        "Push Notification Service", "Init", "In init function");
+    //FlutterLogs.logInfo(
+    // "Push Notification Service", "Init", "In init function");
 
     // if (Platform.isIOS) {
     //   NotificationSettings settings =
@@ -30,15 +30,15 @@ class PushNotificationService {
     // }
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      FlutterLogs.logInfo("Push Notification Service", "On Message Listening",
-          "Received Message: ${message.notification?.body}");
+      //FlutterLogs.logInfo("Push Notification Service", "On Message Listening",
+      // "Received Message: ${message.notification?.body}");
       sendNotification(message);
       //NotificationChannel channel =
     });
 
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
-    FlutterLogs.logInfo("Push Notification Service", "Init", "Finished init");
+    //FlutterLogs.logInfo("Push Notification Service", "Init", "Finished init");
   }
 
   static Future<void> sendNotification(RemoteMessage notification) async {
@@ -59,8 +59,8 @@ class PushNotificationService {
     //   PendingIntent.FLAG_IMMUTABLE,
     // );
 
-    FlutterLogs.logInfo("Push Notification Service", "Send Notification",
-        "Sending Notification");
+    //FlutterLogs.logInfo("Push Notification Service", "Send Notification",
+    //"Sending Notification");
 
     final String channelId = "notif"; //notification.data["channelId"];
     // final Uri defaultSoundUri = RingtoneManager.getDefaultUri(
@@ -79,8 +79,8 @@ class PushNotificationService {
       ),
     );
 
-    FlutterLogs.logInfo("Push Notification Service", "Send Notification",
-        "Created Notification Details");
+    //FlutterLogs.logInfo("Push Notification Service", "Send Notification",
+    //"Created Notification Details");
 
     await FlutterLocalNotificationsPlugin().show(
       0,
@@ -90,7 +90,7 @@ class PushNotificationService {
       //payload: notification.data["payload"],
     );
 
-    FlutterLogs.logInfo(
-        "Push Notification Service", "Send Notification", "Sent");
+    //FlutterLogs.logInfo(
+    // "Push Notification Service", "Send Notification", "Sent");
   }
 }

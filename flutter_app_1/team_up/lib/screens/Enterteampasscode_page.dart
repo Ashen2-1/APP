@@ -126,8 +126,8 @@ class _Enterteampasscode_pageState extends State<Enterteampasscode_page>
                       await DatabaseAccess.getInstance()
                           .getPotentialTeam(StudentData.signingUpTeamNumber);
 
-                  FlutterLogs.logInfo(
-                      "Sign up team", "Enter team", "$team_data");
+                  //FlutterLogs.logInfo(
+                  // "Sign up team", "Enter team", "$team_data");
                   if (_passcodeTextController.text ==
                       team_data!['team passcode']) {
                     StudentData.studentTeamNumber =
@@ -137,8 +137,8 @@ class _Enterteampasscode_pageState extends State<Enterteampasscode_page>
 
                     curStudentStats ??= {};
 
-                    FlutterLogs.logInfo(
-                        "Add team", "curStudentStats", "$curStudentStats");
+                    //FlutterLogs.logInfo(
+                    // "Add team", "curStudentStats", "$curStudentStats");
 
                     curStudentStats['team number'] =
                         StudentData.signingUpTeamNumber;

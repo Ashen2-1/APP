@@ -266,7 +266,7 @@ Future<void> displayErrorFromString(String error, BuildContext context) async {
 Future<bool> isMachineAvailable(machine) async {
   dynamic? machineNeeded = await DatabaseAccess.getInstance()
       .getField("Machines", "Occupied", machine);
-  // FlutterLogs.logInfo(
+  // //FlutterLogs.logInfo(
   //     "Machine availbility",
   //     "boolean",
   //     (machineNeeded == null ||
@@ -392,7 +392,7 @@ SizedBox studentTaskInfoWidget(List<Map<String, dynamic>> studentTasksMap,
   //     await DatabaseAccess.getInstance().getAllSignedUpTasks();
 
   Map<String, dynamic> curTask = studentTasksMap[index];
-  FlutterLogs.logInfo("Error", "Test", curTask['task']);
+  //FlutterLogs.logInfo("Error", "Test", curTask['task']);
   Color color = determineColor(curTask);
 
   bool ableWorkTaskCondition = curTask['complete percentage'] != "100%" &&
@@ -476,9 +476,9 @@ SizedBox studentTaskInfoWidget(List<Map<String, dynamic>> studentTasksMap,
                 if (ableWorkTaskCondition)
                   reusableSignUpTaskButton("Work on this task", context,
                       () async {
-                    // FlutterLogs.logInfo("Sign up task", "Machine available",
+                    // //FlutterLogs.logInfo("Sign up task", "Machine available",
                     //     curTask['machine needed']);
-                    // FlutterLogs.logInfo("Sign up task", "Machine available",
+                    // //FlutterLogs.logInfo("Sign up task", "Machine available",
                     //     "Status: ${!(await DatabaseAccess.getInstance().getField("Machines", "Occupied", curTask['machine needed']))}");
                     if (curTask['machine needed'] != null &&
                         !(await isMachineAvailable(
@@ -536,7 +536,7 @@ SizedBox allViewTaskWidget(List<Map<String, dynamic>> studentTasksMap,
     int index, BuildContext context, String type, String subteam,
     {bool isForCreated = false}) {
   Map<String, dynamic> curTask = studentTasksMap[index];
-  FlutterLogs.logInfo("Error", "Test", curTask['task']);
+  //FlutterLogs.logInfo("Error", "Test", curTask['task']);
   Color color = const Color.fromARGB(255, 193, 184, 184).withOpacity(0.3);
   if (type == typeOptions[0]) {
     color = determineColor(curTask);

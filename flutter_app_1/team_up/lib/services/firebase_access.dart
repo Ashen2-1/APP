@@ -19,9 +19,9 @@ class FirebaseAccess {
 
   String getUserEmail() {
     User? user = _auth.currentUser;
-    FlutterLogs.logInfo(
-        "Firebase Data", "User Email", "Current Email is: ${user!.email}");
-    return user.email!;
+    //FlutterLogs.logInfo(
+    //"Firebase Data", "User Email", "Current Email is: ${user!.email}");
+    return user!.email!;
   }
 
   void signOut() {

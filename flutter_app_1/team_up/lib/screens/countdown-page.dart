@@ -77,8 +77,8 @@ class _CountdownPageState extends State<CountdownPage>
             "Machines", "Occupied", {taskToAdd['machine needed']: ""});
       }
 
-      FlutterLogs.logInfo(
-          "Student task", "Submission", "Successfully submitted");
+      //FlutterLogs.logInfo(
+      // "Student task", "Submission", "Successfully submitted");
 
       image = false;
       _Textcontroller.text = "";
@@ -107,12 +107,12 @@ class _CountdownPageState extends State<CountdownPage>
   @override
   void initState() {
     super.initState();
-    FlutterLogs.logInfo("Count Down", "Finish time",
-        "${StudentData.currentTask!['finish time']}");
+    //FlutterLogs.logInfo("Count Down", "Finish time",
+    // "${StudentData.currentTask!['finish time']}");
     DateTime finishTime = StudentData.currentTask!['finish time'].toDate();
     Duration time = finishTime.difference(DateTime.now());
-    FlutterLogs.logInfo("Count Down", "Time stamp",
-        "Current time: ${StudentData.currentTask!['finish time']}");
+    //FlutterLogs.logInfo("Count Down", "Time stamp",
+    //"Current time: ${StudentData.currentTask!['finish time']}");
 
     // Duration time =
     //     StudentData.currentTask!['finish time'].difference(DateTime.now());
@@ -232,7 +232,7 @@ class _CountdownPageState extends State<CountdownPage>
                       String fileName =
                           fileParts.sublist(0, fileParts.length - 1).join(".");
 
-                      FlutterLogs.logInfo("FileNAMe", "Display", fileName);
+                      //FlutterLogs.logInfo("FileNAMe", "Display", fileName);
                       if (fileName.contains(".jpg") ||
                           fileName.contains(".png") ||
                           fileName.contains(".jpeg")) {

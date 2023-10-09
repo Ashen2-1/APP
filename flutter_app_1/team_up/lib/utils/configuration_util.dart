@@ -23,12 +23,12 @@ class ConfigUtils {
         scheduledScreen.runtimeType != PageNavigationScreen().runtimeType &&
         scheduledScreen != PageNavigationScreen.incomingScreen) {
       previousScreens.add(scheduledScreen!);
-      FlutterLogs.logInfo(
-          "Navigation", "Go To Screen", "List screens: $previousScreens");
+      //FlutterLogs.logInfo(
+      // "Navigation", "Go To Screen", "List screens: $previousScreens");
     }
     scheduledScreen = screen;
-    FlutterLogs.logInfo("Navigation", "Go To Screen",
-        "Scheduled current screen: $scheduledScreen");
+    //FlutterLogs.logInfo("Navigation", "Go To Screen",
+    // "Scheduled current screen: $scheduledScreen");
     Navigator.push(context, MaterialPageRoute(builder: (context) => screen));
   }
 

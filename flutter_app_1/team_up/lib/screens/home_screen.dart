@@ -57,7 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
   List<int> numberTasks = [];
 
   Future<void> configureNumberTasks() async {
-    FlutterLogs.logInfo("Home screen", "Configure number tasks", "in method");
+    //FlutterLogs.logInfo("Home screen", "Configure number tasks", "in method");
     numberTasks.clear();
     for (String subteam in subteamList) {
       numberTasks.add(

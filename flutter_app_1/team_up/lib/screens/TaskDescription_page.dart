@@ -35,7 +35,6 @@ class _TaskDescription_pageState extends State<TaskDescription_page> {
   late AnimationController controller;
 
   @override
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
@@ -205,10 +204,10 @@ class _TaskDescription_pageState extends State<TaskDescription_page> {
                               } else {
                                 Util.logAttendance();
                                 //DatabaseAccess.getInstance().addToDatabase("Attendance", , data)
-                                FlutterLogs.logInfo(
-                                    "TASK FIELD",
-                                    "Sign up button",
-                                    "Adding ${StudentData.allViewingTask![StudentData.viewingIndex!]['task']}");
+                                //FlutterLogs.logInfo(
+                                // "TASK FIELD",
+                                // "Sign up button",
+                                // "Adding ${StudentData.allViewingTask![StudentData.viewingIndex!]['task']}");
                                 Map<String, dynamic> taskToAdd = StudentData
                                     .allViewingTask![StudentData.viewingIndex!];
                                 taskToAdd['completer'] =
@@ -296,7 +295,7 @@ class _TaskDescription_pageState extends State<TaskDescription_page> {
                       //                 ['task'])
                       //         .then((confirmation) async {
                       //       if (confirmation != null && confirmation) {
-                      //         FlutterLogs.logInfo("TASK FIELD", "Sign up button",
+                      //         //FlutterLogs.logInfo("TASK FIELD", "Sign up button",
                       //             "Adding ${StudentData.allViewingTask![StudentData.viewingIndex!]['task']}");
                       //         Map<String, dynamic> taskToAdd = StudentData
                       //             .allViewingTask![StudentData.viewingIndex!];

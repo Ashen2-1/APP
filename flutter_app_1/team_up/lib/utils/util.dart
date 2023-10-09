@@ -38,7 +38,7 @@ class Util {
 
   static List<Map<String, dynamic>> combineTaskIntoExisting(
       Map<String, dynamic> taskToAdd, List<Map<String, dynamic>>? prevTasks) {
-    FlutterLogs.logInfo("print prev tasks", " ", "$prevTasks");
+    //FlutterLogs.logInfo("print prev tasks", " ", "$prevTasks");
     if (prevTasks == null || prevTasks.isEmpty)
       prevTasks = [taskToAdd];
     else {
@@ -71,10 +71,10 @@ class Util {
     } else {
       attendees = attendeesGet.cast<String>();
     }
-    FlutterLogs.logInfo("Email", "attendees", attendees.toString());
+    //FlutterLogs.logInfo("Email", "attendees", attendees.toString());
 
     if (!contains(StudentData.studentEmail, attendees)) {
-      // FlutterLogs.logInfo(
+      // //FlutterLogs.logInfo(
       //     "Attendance", "checking and checking", StudentData.studentEmail);
       attendees.add(StudentData.studentEmail);
     }
@@ -84,7 +84,7 @@ class Util {
   }
 
   static Future<void> addToLog(String logText, {String? teamNumber}) async {
-    FlutterLogs.logInfo("LOGS", "team number", (teamNumber == null).toString());
+    //FlutterLogs.logInfo("LOGS", "team number", (teamNumber == null).toString());
 
     teamNumber ??= await DatabaseAccess.getInstance()
         .getField("student tasks", StudentData.studentEmail, "team number");
@@ -134,7 +134,7 @@ class Util {
       time = time.replaceAll("s", "");
       time = time.replaceAll(" and 1/2 ", ".5");
       time = time.substring(0, time.length - 4);
-      FlutterLogs.logInfo("parsing time", "calc", "string: $time");
+      //FlutterLogs.logInfo("parsing time", "calc", "string: $time");
       return (double.parse(time) * 60).toInt();
     }
     return -1;

@@ -10,13 +10,15 @@ class GoogleSignInAuth {
     FirebaseAuth auth = FirebaseAccess.getInstance().getFirebaseAuth();
     User? user;
 
-    final GoogleSignIn googleSignIn = GoogleSignIn();
+    final GoogleSignIn googleSignIn = GoogleSignIn(
+        clientId:
+            "678384237313-e9kll2d5n27qorko6i5qes41qol57jdt.apps.googleusercontent.com");
 
     final GoogleSignInAccount? googleSignInAccount =
         await googleSignIn.signIn();
 
-    FlutterLogs.logInfo(
-        "Google Sign In", "account info", "$googleSignInAccount");
+    //FlutterLogs.logInfo(
+    //"Google Sign In", "account info", "$googleSignInAccount");
 
     if (googleSignInAccount != null) {
       final GoogleSignInAuthentication googleSignInAuthentication =
@@ -47,7 +49,7 @@ class GoogleSignInAuth {
             context);
       }
     }
-    FlutterLogs.logInfo("Google Sign In", "account info", "$user");
+    //FlutterLogs.logInfo("Google Sign In", "account info", "$user");
     return user;
   }
 }

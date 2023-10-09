@@ -76,7 +76,7 @@ class MyTeamPageState extends State<MyTeamPage> {
                 return Container();
               }
               List<Map<String, dynamic>>? students = teamStudents.data;
-              FlutterLogs.logInfo("Team list", "students", students.toString());
+              //FlutterLogs.logInfo("Team list", "students", students.toString());
               return ListView.builder(
                 itemCount: students!.length,
                 itemBuilder: (_, index) {

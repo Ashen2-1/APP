@@ -118,7 +118,7 @@ class _Approve_pageState extends State<Approve_page> {
                   //   String fileURL =
                   //       StudentData.approvalTask!['submit file url'];
                   //   //if (fileURL != "None") {
-                  //   FlutterLogs.logInfo(
+                  //   //FlutterLogs.logInfo(
                   //       "open file method", "open", "In open file method");
                   //   await openFile(
                   //       "https://cdn.discordapp.com/attachments/1102762971949695048/1120172904580124692/Advice.pdf",
@@ -209,7 +209,7 @@ class _Approve_pageState extends State<Approve_page> {
   // Future<void> openFile(String url, String name) async {
   //   File? file = await downloadFile(url, name);
   //   if (file != null) {
-  //     FlutterLogs.logInfo("Open file", "file download path", "${file.path}");
+  //     //FlutterLogs.logInfo("Open file", "file download path", "${file.path}");
   //     OpenFile.open("1360 Programming Attendance October-12-2022.pdf");
   //   }
   // }
