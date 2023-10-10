@@ -36,6 +36,23 @@ class Util {
             url.toLowerCase().contains(".jpeg"));
   }
 
+  static bool checkTaskEqual(
+      Map<String, dynamic> taskOne, Map<String, dynamic> taskTwo) {
+    for (String key in taskOne.keys.toList()) {
+      if (!taskTwo.keys.toList().contains(key)) {
+        print("key false");
+        return false;
+      }
+    }
+    if (taskOne['assigner'] != taskTwo['assigner'] ||
+        taskOne['completer'] != taskTwo['completer'] ||
+        taskOne['task'] != taskTwo['task']) {
+      print("value false");
+      return false;
+    }
+    return true;
+  }
+
   static List<Map<String, dynamic>> combineTaskIntoExisting(
       Map<String, dynamic> taskToAdd, List<Map<String, dynamic>>? prevTasks) {
     //FlutterLogs.logInfo("print prev tasks", " ", "$prevTasks");
@@ -89,9 +106,14 @@ class Util {
     teamNumber ??= await DatabaseAccess.getInstance()
         .getField("student tasks", StudentData.studentEmail, "team number");
 
-    List<String>? prevLogs = (await DatabaseAccess.getInstance()
-            .getField("logs", teamNumber!, "logs"))
-        .cast<String>();
+    List<dynamic>? prevLogsGet = (await DatabaseAccess.getInstance()
+        .getField("logs", teamNumber!, "logs"));
+
+    List<String>? prevLogs;
+
+    if (prevLogsGet != null) {
+      prevLogs = prevLogsGet.cast<String>();
+    }
 
     prevLogs ??= [];
 

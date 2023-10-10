@@ -428,9 +428,11 @@ class DetailPageState extends State<DetailPage> {
                               context);
                         } else {
                           DatabaseAccess.getInstance().updateField(
-                              "student tasks",
-                              StudentData.viewingUserEmail,
-                              {"team number": "", "normal team": ""});
+                              "student tasks", StudentData.viewingUserEmail, {
+                            "team number": "",
+                            "normal team": "",
+                            "isOwner": false
+                          });
                           ConfigUtils.goToScreen(const MyTeamPage(), context);
                         }
                       },

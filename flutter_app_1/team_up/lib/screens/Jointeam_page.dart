@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_logs/flutter_logs.dart';
 import 'package:team_up/constants/student_data.dart';
 import 'package:team_up/screens/Enterteampasscode_page.dart';
+import 'package:team_up/screens/home_screen.dart';
 import 'package:team_up/screens/page_navigation_screen.dart';
 import 'package:team_up/services/database_access.dart';
 import 'package:team_up/utils/configuration_util.dart';
@@ -48,39 +49,47 @@ class _Jointeam_pageState extends State<Jointeam_page> {
 
   @override
   Widget build(BuildContext context) {
-    return ConfigUtils.configForBackButtonBehaviour(
-        () => mainLayout(context), context);
+    return mainLayout(context);
   }
 
-  Scaffold mainLayout(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Color.fromARGB(255, 201, 141, 141),
-      bottomNavigationBar: buildNavBar(context, 2),
-      appBar: AppBar(
-        backgroundColor: Color.fromARGB(231, 178, 34, 230),
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            IconButton(
-                icon: const Icon(Icons.menu, color: tdBlack, size: 30),
-                onPressed: menuToggleExpansion),
-            const Text(
-              "Join a team channel!",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+  WillPopScope mainLayout(BuildContext context) {
+    return WillPopScope(
+        onWillPop: () async {
+          // Navigate to the destination screen and prevent going back to this screen
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const HomeScreen()),
+          );
+          return false;
+        },
+        child: Scaffold(
+          backgroundColor: Color.fromARGB(255, 201, 141, 141),
+          bottomNavigationBar: buildNavBar(context, 2),
+          appBar: AppBar(
+            backgroundColor: Color.fromARGB(231, 178, 34, 230),
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                IconButton(
+                    icon: const Icon(Icons.menu, color: tdBlack, size: 30),
+                    onPressed: menuToggleExpansion),
+                const Text(
+                  "Join a team channel!",
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                Container(
+                  height: 50,
+                  width: 50,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(25),
+                    child: Image.asset("assets/images/avatar.jpeg"),
+                  ),
+                ),
+              ],
             ),
-            Container(
-              height: 50,
-              width: 50,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(25),
-                child: Image.asset("assets/images/avatar.jpeg"),
-              ),
-            ),
-          ],
-        ),
-      ),
-      body: buildMainContent(),
-    );
+          ),
+          body: buildMainContent(),
+        ));
   }
 
   Widget buildMainContent() {

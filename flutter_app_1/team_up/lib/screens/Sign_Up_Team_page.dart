@@ -176,6 +176,13 @@ class _Signupteam_pageState extends State<Signupteam_page>
                       DatabaseAccess.getInstance().addToDatabase(
                           "Teams", _teamnumberTextController.text, teamToAdd);
 
+                      DatabaseAccess.getInstance().updateField(
+                          "student tasks", StudentData.studentEmail, {
+                        'isOwner': true,
+                        'normal team': _teamnumberTextController.text,
+                        'team number': _teamnumberTextController.text
+                      });
+
                       await Util.addToLog(
                           "${StudentData.studentEmail} created team ${_teamnumberTextController.text}",
                           teamNumber: _teamnumberTextController.text);

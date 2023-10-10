@@ -81,10 +81,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       DatabaseAccess.getInstance().addToDatabase(
                           "student tasks", _emailTextController.text, {
                         "isAdmin": StudentData.tempSignUpAdmin,
+                        "isOwner": false,
                         "team number": 'Public',
                         "normal team": "",
                         'email': _emailTextController.text,
                         'username': _userNameTextController.text,
+                        'description': ''
                       });
 
                       Navigator.push(

@@ -208,6 +208,7 @@ class _AddTasksScreenState extends State<AddTasksScreen> {
         ),
         const SizedBox(height: 10),
         Text("Selected Due Date: ${Util.formatDateTime(day)}"),
+        const SizedBox(height: 8),
         ElevatedButton(
             onPressed: () async {
               DateTime? dateTime = await showDatePicker(
@@ -325,6 +326,9 @@ class _AddTasksScreenState extends State<AddTasksScreen> {
               (await FilePicker.platform.pickFiles(allowMultiple: false));
 
           if (result != null) {
+            // if (result.files.length > 1) {
+            //   displayError("Only 1 image can be attached", context);
+            // } else {
             PlatformFile file = result.files[0];
             String fileType = file.extension!;
 
@@ -344,6 +348,7 @@ class _AddTasksScreenState extends State<AddTasksScreen> {
             } else {
               displayError("Invalid file type selected (image only)", context);
             }
+            //}
           }
         }),
         if (fileInitialized) Image.network(imageURL),
@@ -352,7 +357,8 @@ class _AddTasksScreenState extends State<AddTasksScreen> {
               time != 'Select a time for task' &&
               (subteam != "Build" ||
                   machineUsed != "What equipment is used?") &&
-              level != "Select a level") {
+              level != "Select a level" &&
+              _taskTextController.text != "") {
             Map<String, dynamic> taskToAdd = {
               "task": _taskTextController.text,
               ///////////////////////////////////new

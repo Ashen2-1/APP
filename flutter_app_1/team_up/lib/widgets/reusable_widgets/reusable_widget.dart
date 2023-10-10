@@ -276,7 +276,7 @@ Future<bool> isMachineAvailable(machine) async {
   return (machineNeeded == null ||
       machineNeeded == "" ||
       machineNeeded[0] == StudentData.studentEmail ||
-      machineNeeded[1].seconds > Timestamp.now().seconds);
+      machineNeeded[1].seconds < Timestamp.now().seconds);
 }
 
 Color determineSignUpColor(List<Map<String, dynamic>> allTaskMap, int index) {
@@ -467,10 +467,21 @@ SizedBox studentTaskInfoWidget(List<Map<String, dynamic>> studentTasksMap,
                   child: const Text("Description"),
                 ),
                 if (curTask['complete percentage'] == "100%")
-                  reusableSignUpTaskButton("Clear this task", context, () {
-                    studentTasksMap[index]['studentViewable'] = false;
+                  reusableSignUpTaskButton("Clear this task", context,
+                      () async {
+                    List<Map<String, dynamic>>? tempAllTasksMap =
+                        await DatabaseAccess.getInstance()
+                            .getAllSignedUpTasks();
+                    for (int i = 0; i < tempAllTasksMap!.length; i++) {
+                      print('hello');
+                      if (Util.checkTaskEqual(
+                          tempAllTasksMap[i], studentTasksMap[index])) {
+                        tempAllTasksMap[i]['studentViewable'] = false;
+                        print("in here");
+                      }
+                    }
                     DatabaseAccess.getInstance().addToDatabase("student tasks",
-                        "signed up", {'tasks': studentTasksMap});
+                        "signed up", {'tasks': tempAllTasksMap});
                     ConfigUtils.goToScreen(const StudentTasksScreen(), context);
                   }),
                 if (ableWorkTaskCondition)
@@ -701,6 +712,18 @@ SizedBox logWidget(List<String> allLogs, int index, BuildContext context) {
                 }, ""))
             // ])
           ])));
+}
+
+Widget removeButton(void Function()? remove) {
+  return Align(
+      alignment: Alignment.centerRight,
+      child: createClickableIcon(
+          const Icon(Icons.close_outlined),
+          Color.fromARGB(255, 244, 90, 90),
+          width: 40,
+          height: 30,
+          remove,
+          ""));
 }
 
 SizedBox regularText(String text, BuildContext context, bool isTitle) {

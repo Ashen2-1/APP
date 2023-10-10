@@ -35,6 +35,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
   //TextEditingController password_controller = TextEditingController();
   TextEditingController description_controller = TextEditingController();
 
+  bool loadedOnce = false;
+  bool loadedOnceDescription = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -152,7 +155,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     if (!username.hasData) {
                       return Container();
                     }
-                    username_controller.text = username.data;
+                    if (!loadedOnce) {
+                      username_controller.text = username.data;
+                      //print("loaded");
+                      loadedOnce = true;
+                    }
                     return buildTextFiels(
                         "User Name", "User", false, username_controller);
                   }),
@@ -170,7 +177,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     if (!description.hasData) {
                       return Container();
                     }
-                    description_controller.text = description.data;
+                    if (!loadedOnceDescription) {
+                      description_controller.text = description.data;
+                      loadedOnceDescription = true;
+                    }
                     return buildTextFiels("Description", "Tell us some thing",
                         false, description_controller);
                   }),

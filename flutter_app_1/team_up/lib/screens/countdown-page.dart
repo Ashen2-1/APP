@@ -219,10 +219,10 @@ class _CountdownPageState extends State<CountdownPage>
                     ),
                   ),
                   SizedBox(height: 0),
-                  reusableButton("Upload a file related to task", context,
+                  reusableButton("Upload file(s) related to task", context,
                       () async {
-                    FilePickerResult? result =
-                        (await FilePicker.platform.pickFiles());
+                    FilePickerResult? result = (await FilePicker.platform
+                        .pickFiles(allowMultiple: true));
 
                     setState(() {
                       isPlaying = true;
@@ -269,23 +269,44 @@ class _CountdownPageState extends State<CountdownPage>
                   Column(
                       children: files
                           .map(
-                            (file) => (file.contains(".png") ||
-                                    file.contains(".jpg") ||
-                                    file.contains(".jpeg"))
-                                ? Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 5.0),
-                                    child: Image.network(file))
-                                : (file != "None")
-                                    ? InkWell(
-                                        onTap: () async {
-                                          await launchUrlString(file,
-                                              webOnlyWindowName: "_blank");
-                                        },
-                                        child: Text(file.toString(),
-                                            style: const TextStyle(
-                                                color: Colors.blue)))
-                                    : const Text("None", style: defaultFont),
+                            (file) => Row(children: [
+                              (file.contains(".png") ||
+                                      file.contains(".jpg") ||
+                                      file.contains(".jpeg"))
+                                  ? Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 5.0),
+                                      child: Image.network(file,
+                                          fit: BoxFit.contain,
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width -
+                                              75,
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height -
+                                              75))
+                                  : SizedBox(
+                                      width: MediaQuery.of(context).size.width -
+                                          75,
+                                      child: (file != "None")
+                                          ? InkWell(
+                                              onTap: () async {
+                                                await launchUrlString(file,
+                                                    webOnlyWindowName:
+                                                        "_blank");
+                                              },
+                                              child: Text(file.toString(),
+                                                  style: const TextStyle(
+                                                      color: Colors.blue)))
+                                          : const Text("None",
+                                              style: defaultFont)),
+                              // Delete button
+                              removeButton(() async {
+                                files.removeWhere((element) => element == file);
+                                setState(() {});
+                              })
+                            ]),
                           )
                           .toList()),
                   // onDoubleTap: () async {

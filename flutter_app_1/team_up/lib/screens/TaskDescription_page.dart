@@ -174,7 +174,9 @@ class _TaskDescription_pageState extends State<TaskDescription_page> {
                                 Image.network(
                                     StudentData.allViewingTask![
                                         StudentData.viewingIndex!]['image url'],
-                                    fit: BoxFit.cover)),
+                                    fit: BoxFit.contain,
+                                    width: 300,
+                                    height: 300)),
 
                       const SizedBox(
                         height: 40,

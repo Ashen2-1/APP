@@ -36,10 +36,12 @@ class GoogleSignInButton {
             DatabaseAccess.getInstance()
                 .addToDatabase("student tasks", user.email!, {
               "isAdmin": StudentData.tempSignUpAdmin,
+              'isOwner': false,
               "team number": 'Public',
               "normal team": "",
               "email": user.email!,
-              'username': ''
+              'username': '',
+              'description': ''
             });
           }
           StudentData.studentEmail = user.email!;

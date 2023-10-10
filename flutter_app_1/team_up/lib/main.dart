@@ -71,9 +71,9 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: const HomeScreen(),
-      //const AddTasksScreen(), //StudentProgressScreen(), //const SignInScreen(),
-      //const SignInScreen(),
+      home: //const HomeScreen(),
+          //const AddTasksScreen(), //StudentProgressScreen(), //const SignInScreen(),
+          const SignInScreen(),
     );
     // } else if (Platform.isWindows) {
     //   return FluentUI.FluentApp(

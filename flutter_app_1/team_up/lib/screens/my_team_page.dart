@@ -81,10 +81,12 @@ class MyTeamPageState extends State<MyTeamPage> {
                 itemCount: students!.length,
                 itemBuilder: (_, index) {
                   return ListTile(
-                    title: students[index]['username'] != null
+                    title: (students[index]['username'] != null &&
+                            students[index]['username'] != "")
                         ? Text(students[index]['username'])
                         : Text(students[index]['email']),
-                    subtitle: students[index]['description'] != null
+                    subtitle: (students[index]['description'] != null &&
+                            students[index]['description'] != "")
                         ? Text(students[index]['description'])
                         : students[index]['isAdmin']
                             ? const Text("Mentor")
