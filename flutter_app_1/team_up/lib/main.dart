@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:team_up/screens/add_tasks_screen.dart';
+import 'package:team_up/screens/home_screen.dart';
 import 'package:team_up/screens/signin_screen.dart';
 import 'package:team_up/screens/student_progress_screen.dart';
 import 'package:team_up/services/PushNotificationService.dart';
@@ -70,9 +71,9 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home:
-          //const AddTasksScreen(), //StudentProgressScreen(), //const SignInScreen(),
-          const SignInScreen(),
+      home: const HomeScreen(),
+      //const AddTasksScreen(), //StudentProgressScreen(), //const SignInScreen(),
+      //const SignInScreen(),
     );
     // } else if (Platform.isWindows) {
     //   return FluentUI.FluentApp(

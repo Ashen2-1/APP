@@ -1,3 +1,4 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -124,24 +125,26 @@ class _Signupteam_pageState extends State<Signupteam_page>
                 reusableTextField("Enter Team Creation Pass Code", Icons.lock,
                     true, _createTeamPasscodeTextController),
                 reusableButton("Upload a logo for the team", context, () async {
-                  File result = (await FileUploader.pickFile())!;
-                  setState(() {
-                    String fileType = result.path.split(".").last.toLowerCase();
+                  FilePickerResult? result = (await FilePicker.platform
+                      .pickFiles(allowMultiple: false));
+
+                  if (result != null) {
+                    PlatformFile file = result.files[0];
+                    String fileType = file.extension!;
                     if (fileType == "png" ||
                         fileType == 'jpg' ||
                         fileType == 'jpeg') {
-                      file = result;
+                      TaskSnapshot imageSnapshot =
+                          await FileUploader.getInstance()
+                              .addFileToFirebaseStorage(file.name, file.bytes);
+                      fileURL = await imageSnapshot.ref.getDownloadURL();
+
                       isPlaying = true;
                     } else {
                       displayError("Invalid file type", context);
                     }
-                  });
-                  if (file != null) {
-                    TaskSnapshot imageSnapshot =
-                        await FileUploader.getInstance()
-                            .addFileToFirebaseStorage(file!);
-                    fileURL = await imageSnapshot.ref.getDownloadURL();
                   }
+                  setState(() {});
                 }),
                 if (fileURL != "None") Image.network(fileURL),
                 ElevatedButton(

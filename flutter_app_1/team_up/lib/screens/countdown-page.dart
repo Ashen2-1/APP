@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +14,7 @@ import 'package:team_up/utils/fonts.dart';
 import 'package:team_up/utils/util.dart';
 import 'package:team_up/widgets/nav_bar.dart';
 import 'package:team_up/widgets/reusable_widgets/reusable_widget.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:team_up/screens/home_screen.dart';
 import '../services/file_uploader.dart';
@@ -40,9 +42,9 @@ class _CountdownPageState extends State<CountdownPage>
   bool image = false;
 
   bool isPlaying = true;
-  File? file;
 
-  String fileURL = "None";
+  List<String> files = [];
+
   String get countText {
     Duration count = controller.duration! * controller.value;
     return controller.isDismissed
@@ -52,7 +54,7 @@ class _CountdownPageState extends State<CountdownPage>
 
   double progress = 1.0;
 
-  Future<void> submit(String fileURL) async {
+  Future<void> submit(List<String> fileURL) async {
     if (!(await connectedToInternet())) {
       await displayError(
           "You are not connected to the Internet, connect and press ok to try again",
@@ -82,6 +84,7 @@ class _CountdownPageState extends State<CountdownPage>
 
       image = false;
       _Textcontroller.text = "";
+      files = [];
 
       ConfigUtils.goToScreen(HomeScreen(), context);
     }
@@ -90,7 +93,7 @@ class _CountdownPageState extends State<CountdownPage>
   void notify() async {
     if (countText == '0:00:00') {
       FlutterRingtonePlayer.stop();
-      submit(fileURL);
+      submit(files);
     }
     if (countText == "0:01:00") {
       FlutterRingtonePlayer.playNotification();
@@ -218,55 +221,73 @@ class _CountdownPageState extends State<CountdownPage>
                   SizedBox(height: 0),
                   reusableButton("Upload a file related to task", context,
                       () async {
-                    File result = (await FileUploader.pickFile())!;
+                    FilePickerResult? result =
+                        (await FilePicker.platform.pickFiles());
+
                     setState(() {
-                      file = result;
                       isPlaying = true;
                     });
-                    if (file != null) {
-                      List<String> fileInfo = file!.path.split(".");
-                      String fileType = fileInfo.last.toLowerCase();
-                      List<String> fileParts =
-                          file!.path.split('/').last.split('.');
+                    if (result != null) {
+                      // List<String> fileInfo = file!.path.split(".");
+                      // String fileType = fileInfo.last.toLowerCase();
+                      // List<String> fileParts =
+                      //     file!.path.split('/').last.split('.');
 
-                      String fileName =
-                          fileParts.sublist(0, fileParts.length - 1).join(".");
+                      // String fileName =
+                      //     fileParts.sublist(0, fileParts.length - 1).join(".");
 
-                      //FlutterLogs.logInfo("FileNAMe", "Display", fileName);
-                      if (fileName.contains(".jpg") ||
-                          fileName.contains(".png") ||
-                          fileName.contains(".jpeg")) {
-                        fileURL = "";
-                        image = false;
-                        displayError(
-                            "Please do not submit a file with a name containing '.jpg', '.png', or '.jpeg' consecutive letters",
-                            context);
-                      } else {
+                      // //FlutterLogs.logInfo("FileNAMe", "Display", fileName);
+                      // if (fileName.contains(".jpg") ||
+                      //     fileName.contains(".png") ||
+                      //     fileName.contains(".jpeg")) {
+                      //   fileURL = "";
+                      //   image = false;
+                      //   displayError(
+                      //       "Please do not submit a file with a name containing '.jpg', '.png', or '.jpeg' consecutive letters",
+                      //       context);
+                      // } else {
+                      for (PlatformFile file in result.files) {
+                        String fileURL = "";
                         TaskSnapshot imageSnapshot =
                             await FileUploader.getInstance()
-                                .addFileToFirebaseStorage(file!);
+                                .addFileToFirebaseStorage(
+                                    file.name, file.bytes);
                         fileURL = await imageSnapshot.ref.getDownloadURL();
-                        if (fileType == "png" ||
-                            fileType == 'jpg' ||
-                            fileType == 'jpeg') {
-                          image = true;
-                        } else {
-                          image = false;
-                        }
+                        files.add(fileURL);
+
+                        // if (fileType == "png" ||
+                        //     fileType == 'jpg' ||
+                        //     fileType == 'jpeg')
+                        //}
                       }
                     }
                     setState(() {});
                   }),
                   // if (fileURL != "None") WebView(initialUrl: fileURL),
                   const Text("View uploaded file", style: defaultFont),
-                  image
-                      ? Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                          child: Image.network(fileURL))
-                      : SelectableText(fileURL,
-                          style: const TextStyle(
-                              color: Colors.blue,
-                              decoration: TextDecoration.underline)),
+
+                  Column(
+                      children: files
+                          .map(
+                            (file) => (file.contains(".png") ||
+                                    file.contains(".jpg") ||
+                                    file.contains(".jpeg"))
+                                ? Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 5.0),
+                                    child: Image.network(file))
+                                : (file != "None")
+                                    ? InkWell(
+                                        onTap: () async {
+                                          await launchUrlString(file,
+                                              webOnlyWindowName: "_blank");
+                                        },
+                                        child: Text(file.toString(),
+                                            style: const TextStyle(
+                                                color: Colors.blue)))
+                                    : const Text("None", style: defaultFont),
+                          )
+                          .toList()),
                   // onDoubleTap: () async {
                   //   //WebViewPage.setURL(fileURL);
                   //   //ConfigUtils.goToScreen(WebViewPage(), context);
@@ -291,7 +312,7 @@ class _CountdownPageState extends State<CountdownPage>
                   ),
 
                   reusableButton("Submit for approval", context, () async {
-                    await submit(fileURL);
+                    await submit(files);
                   }),
                   Padding(
                     padding:

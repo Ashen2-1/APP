@@ -1,3 +1,4 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_logs/flutter_logs.dart';
@@ -37,7 +38,6 @@ class _AddTasksScreenState extends State<AddTasksScreen> {
 
   bool _isExpanded = false;
 
-  File? file;
   bool fileInitialized = false;
 
   final List<String> subteamList = [
@@ -87,6 +87,7 @@ class _AddTasksScreenState extends State<AddTasksScreen> {
   String machineUsed = 'What equipment is used?';
   String level = "Select a level";
   bool isForAll = false;
+  String imageURL = "None";
 
   void menuToggleExpansion() {
     setState(() {
@@ -103,6 +104,7 @@ class _AddTasksScreenState extends State<AddTasksScreen> {
     time = 'Select a time for task';
     machineUsed = "What equipment is used?";
     level = "Select a level";
+    imageURL = "";
     isForAll = false;
     day = DateTime.now().add(const Duration(minutes: 30));
     setState(() {
@@ -319,69 +321,71 @@ class _AddTasksScreenState extends State<AddTasksScreen> {
         ]),
         ///////////////////////////////////////////////////// Task description
         reusableButton("Upload a image related to task", context, () async {
-          File result = (await FileUploader.pickFile())!;
-          setState(() {
-            String fileType = result.path.split(".").last.toLowerCase();
+          FilePickerResult? result =
+              (await FilePicker.platform.pickFiles(allowMultiple: false));
+
+          if (result != null) {
+            PlatformFile file = result.files[0];
+            String fileType = file.extension!;
+
             if (fileType == "png" || fileType == 'jpg' || fileType == 'jpeg') {
-              file = result;
-              fileInitialized = true;
-            } else {
-              displayError("Invalid file type selected", context);
-            }
-          });
-        }),
-        if (fileInitialized && file != null) Image.file(file!),
-        reusableButton("ADD TO DATABASE", context, () async {
-          if (!(await connectedToInternet())) {
-            displayError("You are not connected to the Internet", context);
-          } else {
-            String imageURL = "None";
-            if (file != null) {
-              TaskSnapshot imageSnapshot = await FileUploader.getInstance()
-                  .addFileToFirebaseStorage(file!);
-              imageURL = await imageSnapshot.ref.getDownloadURL();
-              //FlutterLogs.logInfo(
+              if (!(await connectedToInternet())) {
+                displayError("You are not connected to the Internet", context);
+              } else {
+                TaskSnapshot imageSnapshot = await FileUploader.getInstance()
+                    .addFileToFirebaseStorage(file.name, file.bytes);
+                imageURL = await imageSnapshot.ref.getDownloadURL();
+                //FlutterLogs.logInfo(
 //"Add to Database", "Upload image", "Image URL: $imageURL");
-            }
-            if (subteam != 'Select a subteam' &&
-                time != 'Select a time for task' &&
-                (subteam != "Build" ||
-                    machineUsed != "What equipment is used?") &&
-                level != "Select a level") {
-              Map<String, dynamic> taskToAdd = {
-                "task": _taskTextController.text,
-                ///////////////////////////////////new
-                "description": _taskdescriptionTextController.text,
-                //////////////////////////////////// task description
-                "estimated time": time,
-                "due date": day,
-                "skills needed": _skillsRequiredController.text,
-                "image url": imageURL,
-                'assigner': StudentData.studentEmail,
-                'feedback': "None",
-                'complete percentage': "None",
-                'level': level,
-                'isForAll': isForAll,
-                'team number': await StudentData.getStudentTeamNumber(),
-              };
 
-              if (machineUsed != "What equipment is used?") {
-                taskToAdd['machine needed'] = machineUsed;
+                fileInitialized = true;
+                setState(() {});
               }
-              List<Map<String, dynamic>> curTasks =
-                  await Util.combineTaskIntoExisting(taskToAdd,
-                      await DatabaseAccess.getInstance().getAllTasks(subteam));
-
-              DatabaseAccess.getInstance()
-                  .addToDatabase("Tasks", subteam, {"tasks": curTasks});
-
-              Util.addToLog(
-                  "${StudentData.studentEmail} added a task ${taskToAdd['task']}");
-              clearFields();
-              displayAlert("Successfully submitted!", context);
             } else {
-              displayError("A field was not filled out", context);
+              displayError("Invalid file type selected (image only)", context);
             }
+          }
+        }),
+        if (fileInitialized) Image.network(imageURL),
+        reusableButton("ADD TO DATABASE", context, () async {
+          if (subteam != 'Select a subteam' &&
+              time != 'Select a time for task' &&
+              (subteam != "Build" ||
+                  machineUsed != "What equipment is used?") &&
+              level != "Select a level") {
+            Map<String, dynamic> taskToAdd = {
+              "task": _taskTextController.text,
+              ///////////////////////////////////new
+              "description": _taskdescriptionTextController.text,
+              //////////////////////////////////// task description
+              "estimated time": time,
+              "due date": day,
+              "skills needed": _skillsRequiredController.text,
+              "image url": imageURL,
+              'assigner': StudentData.studentEmail,
+              'feedback': "None",
+              'complete percentage': "None",
+              'level': level,
+              'isForAll': isForAll,
+              'team number': await StudentData.getStudentTeamNumber(),
+            };
+
+            if (machineUsed != "What equipment is used?") {
+              taskToAdd['machine needed'] = machineUsed;
+            }
+            List<Map<String, dynamic>> curTasks =
+                await Util.combineTaskIntoExisting(taskToAdd,
+                    await DatabaseAccess.getInstance().getAllTasks(subteam));
+
+            DatabaseAccess.getInstance()
+                .addToDatabase("Tasks", subteam, {"tasks": curTasks});
+
+            Util.addToLog(
+                "${StudentData.studentEmail} added a task ${taskToAdd['task']}");
+            clearFields();
+            displayAlert("Successfully submitted!", context);
+          } else {
+            displayError("A field was not filled out", context);
           }
         }),
       ],

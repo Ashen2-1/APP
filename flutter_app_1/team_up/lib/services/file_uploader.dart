@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'dart:io';
@@ -15,12 +17,14 @@ class FileUploader {
     return _instance!;
   }
 
-  Future<TaskSnapshot> addFileToFirebaseStorage(File file) async {
-    String imageName = file.path.split('/').last;
+  Future<TaskSnapshot> addFileToFirebaseStorage(
+      String fileName, Uint8List? data) async {
+    String imageName = fileName; //.path.split('/').last;
     //FlutterLogs.logInfo("Firebase", "Add image", "file Name: $imageName");
     Reference storageLocation = storage.ref().child("student_files/$imageName");
 
-    return await storageLocation.putFile(file);
+    //return await storageLocation.putFile(file);
+    return await storageLocation.putData(data!);
   }
 
   static Future<File?> pickFile() async {

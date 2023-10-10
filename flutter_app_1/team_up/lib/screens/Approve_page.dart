@@ -12,6 +12,8 @@ import 'package:team_up/screens/home_screen.dart';
 import 'package:team_up/screens/page_navigation_screen.dart';
 import 'package:team_up/screens/web_view_page.dart';
 import 'package:team_up/widgets/nav_bar.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 import '../constants/colors.dart';
 import '../services/database_access.dart';
@@ -83,26 +85,28 @@ class _Approve_pageState extends State<Approve_page> {
                       padding: const EdgeInsets.all(10.0),
                       child: Column(children: const [
                         Text("Submitted file:", style: defaultFont),
-                        Text("If link, copy and paste into browser for viewing")
+                        Text("If link, click to view")
                       ])),
                   Container(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Util.checkValidImage(
-                            StudentData.approvalTask!['submit file url'])
-                        ? Image.network(
-                            StudentData.approvalTask!['submit file url'])
-                        : SelectableText(
-                            "${StudentData.approvalTask!['submit file url']}",
-                            style:
-                                StudentData.approvalTask!['submit file url'] !=
-                                        "None"
-                                    ? const TextStyle(
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.blue,
-                                        decoration: TextDecoration.underline)
-                                    : defaultFont),
-                  ),
+                      padding: const EdgeInsets.all(10.0),
+                      child: Column(
+                        children: StudentData.approvalTask!['submit file url']
+                            .cast<String>()
+                            .map((file) => Util.checkValidImage(file)
+                                ? Image.network(file)
+                                : (file != "None")
+                                    ? InkWell(
+                                        onTap: () async {
+                                          await launchUrlString(file,
+                                              webOnlyWindowName: "_blank");
+                                        },
+                                        child: Text(file.toString(),
+                                            style: const TextStyle(
+                                                color: Colors.blue)))
+                                    : const Text("None", style: defaultFont))
+                            .toList()
+                            .cast<Widget>(),
+                      )),
                   // ElevatedButton(
                   //     child: Text("Download and open file", style: defaultFont),
                   // Text("${StudentData.approvalTask!['submit file url']}",

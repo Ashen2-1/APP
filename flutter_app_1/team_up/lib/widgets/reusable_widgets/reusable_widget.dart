@@ -588,6 +588,7 @@ SizedBox allViewTaskWidget(List<Map<String, dynamic>> studentTasksMap,
                 // regularText(
                 //     "Task time: ${curTask['estimated time']}", context, false)
                 ////////////////////////////////////////////////new
+                const SizedBox(height: 10),
                 ElevatedButton(
                   onPressed: () {
                     StudentData.setViewingTask(studentTasksMap);

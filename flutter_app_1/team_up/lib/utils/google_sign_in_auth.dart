@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_logs/flutter_logs.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:team_up/services/firebase_access.dart';
@@ -13,9 +14,12 @@ class GoogleSignInAuth {
     final GoogleSignIn googleSignIn = GoogleSignIn(
         clientId:
             "678384237313-e9kll2d5n27qorko6i5qes41qol57jdt.apps.googleusercontent.com");
-
-    final GoogleSignInAccount? googleSignInAccount =
-        await googleSignIn.signIn();
+    final GoogleSignInAccount? googleSignInAccount;
+    try {
+      googleSignInAccount = await googleSignIn.signIn();
+    } on PlatformException catch (e) {
+      return null;
+    }
 
     //FlutterLogs.logInfo(
     //"Google Sign In", "account info", "$googleSignInAccount");

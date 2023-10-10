@@ -226,68 +226,68 @@ class _HomeScreenState extends State<HomeScreen> {
               padding: const EdgeInsets.only(top: 20, left: 15, right: 15),
               child: Column(
                 children: [
-                  GridView.builder(
-                    itemCount: textPageOptions.length,
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 3,
-                      childAspectRatio: 1.1,
-                    ),
-                    itemBuilder: (context, index) {
-                      return Column(
-                        children: [
-                          GestureDetector(
-                              child: Container(
-                                height: 60,
-                                width: 60,
-                                decoration: BoxDecoration(
-                                  color: optionColors[index], //subcolors
-                                  shape: BoxShape.circle,
-                                ),
-                                child: Center(
-                                  child: optionIcons[index],
-                                ),
-                              ),
-                              onTap: () {
-                                ConfigUtils.goToScreen(
-                                    pageOptions[index], context);
-                              }),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          Text(
-                            //sub textsa colors
-                            textPageOptions[index],
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.black.withOpacity(0.7),
+                  //       GridView.builder(
+                  //         itemCount: textPageOptions.length,
+                  //         shrinkWrap: true,
+                  //         physics: const NeverScrollableScrollPhysics(),
+                  //         gridDelegate:
+                  //             const SliverGridDelegateWithFixedCrossAxisCount(
+                  //           crossAxisCount: 3,
+                  //           childAspectRatio: 1.1,
+                  //         ),
+                  //         itemBuilder: (context, index) {
+                  //           return
+                  Column(
+                    children: [
+                      GestureDetector(
+                          child: Container(
+                            height: 60,
+                            width: 60,
+                            decoration: BoxDecoration(
+                              color: optionColors[0], //subcolors
+                              shape: BoxShape.circle,
                             ),
-                          )
-                        ],
-                      );
-                    },
+                            child: Center(
+                              child: optionIcons[0],
+                            ),
+                          ),
+                          onTap: () {
+                            ConfigUtils.goToScreen(pageOptions[0], context);
+                          }),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        //sub textsa colors
+                        textPageOptions[0],
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.black.withOpacity(0.7),
+                        ),
+                      )
+                    ],
                   ),
+                  //   },
+                  // ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
+                    children: const [
+                      Text(
                         "Search for Tasks",
                         style: TextStyle(
                           fontSize: 23,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
-                      const Text(
-                        "See All",
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w500,
-                          color: Color(0xFF674AEF),
-                        ),
-                      ),
+                      // Text(
+                      //   "See All",
+                      //   style: TextStyle(
+                      //     fontSize: 18,
+                      //     fontWeight: FontWeight.w500,
+                      //     color: Color(0xFF674AEF),
+                      //   ),
+                      // ),
                     ],
                   ),
                   const SizedBox(
@@ -300,8 +300,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
                       childAspectRatio:
-                          (MediaQuery.of(context).size.height - 50 - 25) /
-                              (4 * 240),
+                          (MediaQuery.of(context).size.width - 50 - 25) / (600),
                       mainAxisSpacing: 10,
                       crossAxisSpacing: 10,
                     ),
@@ -317,12 +316,15 @@ class _HomeScreenState extends State<HomeScreen> {
                               vertical: 20, horizontal: 10),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(20),
-                            color: const Color(0xFFF5F3FF),
+                            color: Color.fromARGB(255, 227, 225, 235),
                           ),
                           child: Column(
                             children: [
+                              SizedBox(
+                                  height: ((MediaQuery.of(context).size.width /
+                                      40))),
                               Padding(
-                                padding: const EdgeInsets.all(10),
+                                padding: const EdgeInsets.only(bottom: 10),
                                 child: Image.asset(
                                   "assets/images/${subteamList[index]}.png",
                                   width: 100,
