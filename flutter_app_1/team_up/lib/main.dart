@@ -7,6 +7,7 @@ import 'package:team_up/screens/student_progress_screen.dart';
 import 'package:team_up/services/PushNotificationService.dart';
 import 'package:flutter_logs/flutter_logs.dart';
 import 'dart:io';
+import 'package:flutter_web_plugins/url_strategy.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -42,10 +43,12 @@ void main() async {
   //     logFileExtension: LogFileExtension.LOG,
   //     logsWriteDirectoryName: "./MyLogs",
   //     logsExportDirectoryName: "MyLogs/Exported",
-  //     debugFileOperations: true,
+  //     debugFileOperations: trrue,
   //     isDebuggable: true);
 
   await PushNotificationService.initialize();
+
+  setUrlStrategy(null);
 
   runApp(const MyApp());
 }

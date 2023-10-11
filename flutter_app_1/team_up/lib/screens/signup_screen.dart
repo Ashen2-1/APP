@@ -78,16 +78,20 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         .then((value) {
                       print("Created New Account");
 
-                      DatabaseAccess.getInstance().addToDatabase(
-                          "student tasks", _emailTextController.text, {
+                      String email = _emailTextController.text.toLowerCase();
+
+                      DatabaseAccess.getInstance()
+                          .addToDatabase("student tasks", email, {
                         "isAdmin": StudentData.tempSignUpAdmin,
                         "isOwner": false,
                         "team number": 'Public',
                         "normal team": "",
-                        'email': _emailTextController.text,
+                        'email': email,
                         'username': _userNameTextController.text,
                         'description': ''
                       });
+
+                      StudentData.studentEmail = email;
 
                       Navigator.push(
                           context,

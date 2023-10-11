@@ -1,6 +1,6 @@
 # team_up
 
-A new Flutter project.
+Level up your team collaboration!
 
 ## Getting Started
 

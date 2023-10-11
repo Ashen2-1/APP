@@ -38,7 +38,7 @@ class _SignInScreenState extends State<SignInScreen> {
         child: SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.fromLTRB(
-                15, MediaQuery.of(context).size.height * 0.15, 20, 0),
+                15, MediaQuery.of(context).size.height * 0.12, 20, 0),
             child: Column(
               children: <Widget>[
                 logoWidget("assets/images/logo.png"),
@@ -64,10 +64,11 @@ class _SignInScreenState extends State<SignInScreen> {
                 signInSignUpButton(context, true, () {
                   FirebaseAuth.instance
                       .signInWithEmailAndPassword(
-                          email: _emailTextController.text,
+                          email: _emailTextController.text.toLowerCase(),
                           password: _passwordTextController.text)
                       .then((value) {
-                    StudentData.studentEmail = _emailTextController.text;
+                    StudentData.studentEmail =
+                        _emailTextController.text.toLowerCase();
                     Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -84,7 +85,8 @@ class _SignInScreenState extends State<SignInScreen> {
                 const SizedBox(height: 10),
                 GoogleSignInButton.googleSignInButton(context),
                 const SizedBox(height: 30),
-                signUpOption()
+                signUpOption(),
+                const Text("Version #: 2.0.3"),
               ],
             ),
           ),
