@@ -238,7 +238,7 @@ class _TaskDescription_pageState extends State<TaskDescription_page> {
                                         StudentData.allViewingTask![StudentData
                                             .viewingIndex!]['task']) {
                                   List<Map<String, dynamic>> curTasks =
-                                      await Util.combineTaskIntoExisting(
+                                      Util.combineTaskIntoExisting(
                                           taskToAdd,
                                           await DatabaseAccess.getInstance()
                                               .getAllSignedUpTasks());
